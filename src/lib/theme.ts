@@ -26,7 +26,7 @@ export const theme = createTheme({
     divider: 'rgba(139, 92, 246, 0.2)',
   },
   shape: {
-    borderRadius: 16,
+    borderRadius: 8,
   },
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
@@ -76,16 +76,16 @@ export const theme = createTheme({
     },
   },
   components: {
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          background: 'rgba(139, 92, 246, 0.1)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(139, 92, 246, 0.2)',
-          borderRadius: 16,
-          boxShadow: '0 8px 32px rgba(139, 92, 246, 0.1)',
+              MuiCard: {
+            styleOverrides: {
+              root: {
+                background: 'rgba(139, 92, 246, 0.15)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(139, 92, 246, 0.3)',
+                borderRadius: 8,
+                boxShadow: '0 8px 32px rgba(139, 92, 246, 0.15)',
           '&:hover': {
-            boxShadow: '0 12px 40px rgba(139, 92, 246, 0.2)',
+            boxShadow: '0 12px 40px rgba(139, 92, 246, 0.25)',
             transform: 'translateY(-2px)',
           },
           transition: 'all 0.3s ease',
@@ -120,12 +120,12 @@ export const theme = createTheme({
         },
       },
     },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 12,
-          textTransform: 'none',
-          fontWeight: 600,
+              MuiButton: {
+            styleOverrides: {
+              root: {
+                borderRadius: 8,
+                textTransform: 'none',
+                fontWeight: 600,
           boxShadow: '0 4px 16px rgba(139, 92, 246, 0.2)',
           '&:hover': {
             boxShadow: '0 6px 20px rgba(139, 92, 246, 0.3)',
@@ -152,17 +152,17 @@ export const theme = createTheme({
     MuiTextField: {
       styleOverrides: {
         root: {
-          '& .MuiOutlinedInput-root': {
-            background: 'rgba(139, 92, 246, 0.05)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(139, 92, 246, 0.2)',
-            borderRadius: 12,
+                          '& .MuiOutlinedInput-root': {
+                  background: 'rgba(139, 92, 246, 0.1)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(139, 92, 246, 0.3)',
+                  borderRadius: 8,
             '&:hover': {
-              border: '1px solid rgba(139, 92, 246, 0.4)',
+              border: '1px solid rgba(139, 92, 246, 0.5)',
             },
             '&.Mui-focused': {
-              border: '1px solid rgba(139, 92, 246, 0.6)',
-              boxShadow: '0 0 0 2px rgba(139, 92, 246, 0.1)',
+              border: '1px solid rgba(139, 92, 246, 0.7)',
+              boxShadow: '0 0 0 2px rgba(139, 92, 246, 0.15)',
             },
           },
           '& .MuiInputLabel-root': {
@@ -185,16 +185,16 @@ export const theme = createTheme({
         },
       },
     },
-    MuiTableContainer: {
-      styleOverrides: {
-        root: {
-          background: 'rgba(139, 92, 246, 0.05)',
-          backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(139, 92, 246, 0.1)',
-          borderRadius: 12,
-        },
-      },
-    },
+                   MuiTableContainer: {
+            styleOverrides: {
+              root: {
+                background: 'rgba(139, 92, 246, 0.05)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(139, 92, 246, 0.1)',
+                borderRadius: 8,
+              },
+            },
+          },
     MuiTableCell: {
       styleOverrides: {
         root: {
@@ -207,16 +207,16 @@ export const theme = createTheme({
         },
       },
     },
-    MuiTabs: {
-      styleOverrides: {
-        root: {
-          background: 'rgba(139, 92, 246, 0.05)',
-          backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(139, 92, 246, 0.1)',
-          borderRadius: 12,
-        },
-      },
-    },
+                   MuiTabs: {
+            styleOverrides: {
+              root: {
+                background: 'rgba(139, 92, 246, 0.05)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(139, 92, 246, 0.1)',
+                borderRadius: 8,
+              },
+            },
+          },
     MuiTab: {
       styleOverrides: {
         root: {
@@ -252,11 +252,11 @@ export const theme = createTheme({
         },
       },
     },
-    MuiListItemButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 12,
-          margin: '4px 8px',
+                   MuiListItemButton: {
+            styleOverrides: {
+              root: {
+                borderRadius: 8,
+                margin: '4px 8px',
           '&:hover': {
             background: 'rgba(139, 92, 246, 0.1)',
             backdropFilter: 'blur(10px)',

@@ -204,12 +204,12 @@ function TokenSelector({
       <Paper
         elevation={0}
         onClick={() => setOpen(true)}
-        sx={{ 
+                sx={{ 
           p: 3,
           cursor: 'pointer',
-          border: '2px solid rgba(255, 255, 255, 0.3)',
-          borderRadius: 0.5,
-          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7))',
+          border: '2px solid rgba(139, 92, 246, 0.3)',
+          borderRadius: 8,
+          background: 'rgba(139, 92, 246, 0.1)',
           backdropFilter: 'blur(20px)',
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           position: 'relative',
@@ -221,15 +221,15 @@ function TokenSelector({
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'linear-gradient(135deg, rgba(25, 118, 210, 0.05), rgba(156, 39, 176, 0.05))',
+            background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(59, 130, 246, 0.05))',
             opacity: 0,
             transition: 'opacity 0.3s ease',
           },
           '&:hover': {
-            border: '2px solid rgba(25, 118, 210, 0.3)',
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85))',
+            border: '2px solid rgba(139, 92, 246, 0.5)',
+            background: 'rgba(139, 92, 246, 0.15)',
             transform: 'translateY(-2px)',
-            boxShadow: '0 12px 32px rgba(25, 118, 210, 0.15)',
+            boxShadow: '0 12px 32px rgba(139, 92, 246, 0.2)',
             '&::before': {
               opacity: 1,
             }
@@ -279,8 +279,8 @@ function TokenSelector({
         fullWidth
         PaperProps={{
           sx: {
-            borderRadius: 4,
-            background: 'rgba(255, 255, 255, 0.98)',
+            borderRadius: 0,
+            background: 'rgba(139, 92, 246, 0.15)',
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(0, 0, 0, 0.1)',
             boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
@@ -308,8 +308,8 @@ function TokenSelector({
               mb: 3, 
               mt: 1,
               '& .MuiOutlinedInput-root': {
-                borderRadius: 3,
-                background: 'rgba(0, 0, 0, 0.02)',
+                borderRadius: 8,
+                background: 'rgba(139, 92, 246, 0.1)',
                 border: '1px solid rgba(0, 0, 0, 0.1)',
                 '&:hover': {
                   border: '1px solid rgba(0, 0, 0, 0.2)',
@@ -461,16 +461,16 @@ function AdvancedSettings() {
         boxShadow: 'none',
         '&:before': { display: 'none' },
         '& .MuiAccordionSummary-root': {
-          background: 'rgba(255, 255, 255, 0.8)',
-          borderRadius: 3,
-          border: '1px solid rgba(0, 0, 0, 0.08)',
+          background: 'rgba(139, 92, 246, 0.15)',
+          borderRadius: 8,
+          border: '1px solid rgba(139, 92, 246, 0.3)',
           backdropFilter: 'blur(20px)',
         }
       }}
     >
       <AccordionSummary expandIcon={<ExpandMore />}>
         <Box display="flex" alignItems="center" gap={1.5}>
-          <Settings fontSize="small" sx={{ color: '#1976d2' }} />
+          <Settings fontSize="small" sx={{ color: '#8B5CF6' }} />
           <Typography variant="subtitle1" fontWeight={600}>
             Advanced Settings
           </Typography>
@@ -497,26 +497,26 @@ function AdvancedSettings() {
               ]}
               sx={{
                 '& .MuiSlider-thumb': {
-                  backgroundColor: '#1976d2',
+                  backgroundColor: '#8B5CF6',
                   width: 20,
                   height: 20,
-                  boxShadow: '0 4px 12px rgba(25, 118, 210, 0.3)',
+                  boxShadow: '0 4px 12px rgba(139, 92, 246, 0.3)',
                   '&:hover': {
-                    boxShadow: '0 6px 16px rgba(25, 118, 210, 0.4)',
+                    boxShadow: '0 6px 16px rgba(139, 92, 246, 0.4)',
                   }
                 },
                 '& .MuiSlider-track': {
-                  backgroundColor: '#1976d2',
+                  backgroundColor: '#8B5CF6',
                   height: 6,
                   borderRadius: 3,
                 },
                 '& .MuiSlider-rail': {
-                  backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                  backgroundColor: 'rgba(139, 92, 246, 0.1)',
                   height: 6,
                   borderRadius: 3,
                 },
                 '& .MuiSlider-mark': {
-                  backgroundColor: 'rgba(25, 118, 210, 0.3)',
+                  backgroundColor: 'rgba(139, 92, 246, 0.3)',
                 },
                 '& .MuiSlider-markLabel': {
                   color: 'text.secondary',
@@ -658,37 +658,37 @@ function RouteOptimizer({ quote }: { quote: Quote | null }) {
   return (
     <Card sx={{ 
       mb: 3,
-      background: 'rgba(255, 255, 255, 0.8)',
+      background: 'rgba(139, 92, 246, 0.15)',
       backdropFilter: 'blur(20px)',
-      border: '1px solid rgba(0, 0, 0, 0.08)',
-      borderRadius: 4,
+      border: '1px solid rgba(139, 92, 246, 0.3)',
+      borderRadius: 8,
     }}>
       <CardContent sx={{ p: 3 }}>
         <Typography variant="h6" gutterBottom fontWeight={700}>
-          <CompareArrows sx={{ mr: 1.5, verticalAlign: 'middle', color: '#1976d2' }} />
+          <CompareArrows sx={{ mr: 1.5, verticalAlign: 'middle', color: '#8B5CF6' }} />
           Route Optimization
         </Typography>
         
-        <Grid container spacing={2}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 2 }}>
           {dexProtocols.map((protocol, index) => (
-            <Grid item xs={12} sm={6} md={3} key={protocol.name}>
+            <Box key={protocol.name}>
               <Paper
                 elevation={0}
                 sx={{
                   p: 2.5,
-                  border: '1px solid rgba(0, 0, 0, 0.08)',
-                  borderRadius: 3,
+                  border: '1px solid rgba(139, 92, 246, 0.1)',
+                  borderRadius: 8,
                   textAlign: 'center',
                   background: index === 0 
-                    ? 'rgba(25, 118, 210, 0.05)'
-                    : 'rgba(255, 255, 255, 0.8)',
+                    ? 'rgba(139, 92, 246, 0.1)'
+                    : 'rgba(139, 92, 246, 0.05)',
                   backdropFilter: 'blur(20px)',
                   transition: 'all 0.3s ease',
                   cursor: 'pointer',
                   '&:hover': {
                     transform: 'translateY(-4px)',
-                    boxShadow: '0 12px 30px rgba(0, 0, 0, 0.1)',
-                    border: '1px solid rgba(25, 118, 210, 0.2)',
+                    boxShadow: '0 12px 30px rgba(139, 92, 246, 0.1)',
+                    border: '1px solid rgba(139, 92, 246, 0.3)',
                   }
                 }}
               >
@@ -708,15 +708,15 @@ function RouteOptimizer({ quote }: { quote: Quote | null }) {
                   sx={{ 
                     fontWeight: 600,
                     background: protocol.liquidity === 'Very High' 
-                      ? 'linear-gradient(135deg, #4CAF50, #66BB6A)'
-                      : 'rgba(25, 118, 210, 0.1)',
-                    color: protocol.liquidity === 'Very High' ? 'white' : '#1976d2',
+                      ? 'linear-gradient(135deg, #8B5CF6, #A78BFA)'
+                      : 'rgba(139, 92, 246, 0.1)',
+                    color: protocol.liquidity === 'Very High' ? 'white' : '#8B5CF6',
                   }}
                 />
               </Paper>
-            </Grid>
+            </Box>
           ))}
-        </Grid>
+        </Box>
       </CardContent>
     </Card>
   );
@@ -843,18 +843,8 @@ function SwapCard() {
   return (
     <Box sx={{ 
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f8faff 0%, #e3f2fd 50%, #f3e5f5 100%)',
+      background: 'transparent',
       position: 'relative',
-      '&::before': {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'radial-gradient(circle at 20% 80%, rgba(25, 118, 210, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(156, 39, 176, 0.1) 0%, transparent 50%)',
-        pointerEvents: 'none',
-      }
     }}>
       <Box sx={{ maxWidth: 1400, mx: 'auto', px: { xs: 2, md: 4 }, py: 4 }}>
         {/* Modern Hero Section */}
@@ -894,7 +884,7 @@ function SwapCard() {
             variant="h1" 
             fontWeight={900} 
             sx={{
-              background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 25%, #64b5f6 50%, #9c27b0 75%, #e91e63 100%)',
+              background: 'linear-gradient(135deg, #8B5CF6 0%, #3B82F6 25%, #A78BFA 50%, #60A5FA 75%, #8B5CF6 100%)',
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -902,7 +892,7 @@ function SwapCard() {
               fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4.5rem' },
               letterSpacing: '-0.03em',
               lineHeight: 1.1,
-              textShadow: '0 4px 20px rgba(25, 118, 210, 0.3)',
+              textShadow: '0 4px 20px rgba(139, 92, 246, 0.3)',
             }}
           >
             Swap Tokens
@@ -941,18 +931,18 @@ function SwapCard() {
               <Box
                 key={index}
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.9)',
+                  background: 'rgba(139, 92, 246, 0.1)',
                   backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  borderRadius: 4,
+                  border: '1px solid rgba(139, 92, 246, 0.2)',
+                  borderRadius: 0,
                   p: 3,
                   textAlign: 'center',
                   transition: 'all 0.3s ease',
                   cursor: 'pointer',
                   '&:hover': {
                     transform: 'translateY(-8px)',
-                    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
-                    background: 'rgba(255, 255, 255, 0.95)',
+                    boxShadow: '0 20px 40px rgba(139, 92, 246, 0.2)',
+                    background: 'rgba(139, 92, 246, 0.15)',
                   }
                 }}
               >
@@ -971,17 +961,22 @@ function SwapCard() {
                 </Box>
       </Box>
 
-      <Grid container spacing={4}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '2fr 1fr' }, gap: 4 }}>
         {/* Modern Main Swap Interface */}
-        <Grid item xs={12} lg={8}>
+        <Box>
           <Card sx={{
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85))',
+            background: 'rgba(139, 92, 246, 0.15)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
-            borderRadius: 1,
-            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.08)',
+                          border: '1px solid rgba(139, 92, 246, 0.3)',
+              borderRadius: 0,
+              boxShadow: '0 8px 32px rgba(139, 92, 246, 0.15)',
             position: 'relative',
             overflow: 'hidden',
+            '&:hover': {
+              boxShadow: '0 12px 40px rgba(139, 92, 246, 0.2)',
+              transform: 'translateY(-2px)',
+            },
+            transition: 'all 0.3s ease',
             '&::before': {
               content: '""',
               position: 'absolute',
@@ -989,7 +984,7 @@ function SwapCard() {
               left: 0,
               right: 0,
               height: '6px',
-              background: 'linear-gradient(90deg, #1976d2, #42a5f5, #64b5f6, #9c27b0, #e91e63)',
+              background: 'linear-gradient(90deg, #8B5CF6, #3B82F6, #A78BFA, #60A5FA)',
             },
             '&::after': {
               content: '""',
@@ -998,7 +993,7 @@ function SwapCard() {
               left: 0,
               right: 0,
               bottom: 0,
-              background: 'radial-gradient(circle at 20% 80%, rgba(25, 118, 210, 0.05) 0%, transparent 50%)',
+              background: 'radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%)',
               pointerEvents: 'none',
             }
           }}>
@@ -1220,16 +1215,16 @@ function SwapCard() {
                 <Box mb={4}>
                   <Divider sx={{ mb: 3, borderColor: 'rgba(0, 0, 0, 0.1)' }} />
                   
-                  <Grid container spacing={3}>
-                    <Grid item xs={6}>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 3 }}>
+                    <Box>
                       <Typography variant="body2" color="text.secondary" fontWeight={500} gutterBottom>
                         Rate
                       </Typography>
                       <Typography variant="body1" fontWeight={700} color="text.primary">
                         1 {tokenIn?.symbol} = {(parseFloat(quote.amountOut) / parseFloat(quote.amountIn)).toFixed(6)} {tokenOut?.symbol}
                       </Typography>
-                    </Grid>
-                                         <Grid item xs={6}>
+                    </Box>
+                    <Box>
                        <Typography variant="body2" color="text.secondary" fontWeight={500} gutterBottom>
                          Price Impact
                        </Typography>
@@ -1252,24 +1247,24 @@ function SwapCard() {
                          {isMediumImpact && <Info sx={{ color: 'warning.main' }} />}
                          {isLowImpact && <CheckCircle sx={{ color: 'success.main' }} />}
                        </Box>
-                     </Grid>
-                    <Grid item xs={6}>
+                     </Box>
+                    <Box>
                       <Typography variant="body2" color="text.secondary" fontWeight={500} gutterBottom>
                         Network Fee
                       </Typography>
                       <Typography variant="body1" fontWeight={700} color="text.primary">
                         ~${(parseFloat(quote.gasEstimate) * 3200).toFixed(2)}
                       </Typography>
-                    </Grid>
-                    <Grid item xs={6}>
+                    </Box>
+                    <Box>
                       <Typography variant="body2" color="text.secondary" fontWeight={500} gutterBottom>
                         Slippage
                       </Typography>
                       <Typography variant="body1" fontWeight={700} color="text.primary">
                         {slippage}%
                       </Typography>
-                    </Grid>
-                  </Grid>
+                    </Box>
+                  </Box>
                 </Box>
               )}
 
@@ -1355,20 +1350,25 @@ function SwapCard() {
 
           {/* Route Optimizer */}
           <RouteOptimizer quote={quote} />
-        </Grid>
+        </Box>
 
         {/* Ultra Modern Sidebar */}
-        <Grid item xs={12} lg={4}>
+        <Box>
           <Box display="flex" flexDirection="column" gap={4}>
             {/* Enhanced Market Stats */}
             <Card sx={{
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.92))',
+              background: 'rgba(139, 92, 246, 0.15)',
               backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.4)',
-              borderRadius: 1,
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.06)',
+              border: '1px solid rgba(139, 92, 246, 0.3)',
+              borderRadius: 8,
+              boxShadow: '0 8px 32px rgba(139, 92, 246, 0.15)',
               position: 'relative',
               overflow: 'hidden',
+              '&:hover': {
+                boxShadow: '0 12px 40px rgba(139, 92, 246, 0.2)',
+                transform: 'translateY(-2px)',
+              },
+              transition: 'all 0.3s ease',
               '&::before': {
                 content: '""',
                 position: 'absolute',
@@ -1376,7 +1376,7 @@ function SwapCard() {
                 left: 0,
                 right: 0,
                 height: '3px',
-                background: 'linear-gradient(90deg, #1976d2, #42a5f5, #9c27b0, #e91e63)',
+                background: 'linear-gradient(90deg, #8B5CF6, #3B82F6, #A78BFA, #60A5FA)',
               },
               '&::after': {
                 content: '""',
@@ -1385,7 +1385,7 @@ function SwapCard() {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                background: 'radial-gradient(circle at 20% 80%, rgba(25, 118, 210, 0.03) 0%, transparent 50%)',
+                background: 'radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.03) 0%, transparent 50%)',
                 pointerEvents: 'none',
               }
             }}>
@@ -1395,12 +1395,12 @@ function SwapCard() {
                     width: 52,
                     height: 52,
                     borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #1976d2, #42a5f5)',
+                    background: 'linear-gradient(135deg, #8B5CF6, #3B82F6)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     mr: 3,
-                    boxShadow: '0 8px 20px rgba(25, 118, 210, 0.25)',
+                    boxShadow: '0 8px 20px rgba(139, 92, 246, 0.25)',
                     position: 'relative',
                     '&::before': {
                       content: '""',
@@ -1410,7 +1410,7 @@ function SwapCard() {
                       right: -2,
                       bottom: -2,
                       borderRadius: '50%',
-                      background: 'linear-gradient(135deg, rgba(25, 118, 210, 0.2), rgba(156, 39, 176, 0.2))',
+                      background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2))',
                       zIndex: -1,
                     }
                   }}>
@@ -1418,7 +1418,7 @@ function SwapCard() {
                   </Box>
                   <Box>
                     <Typography variant="h5" fontWeight={800} sx={{
-                      background: 'linear-gradient(135deg, #1976d2, #9c27b0)',
+                      background: 'linear-gradient(135deg, #8B5CF6, #3B82F6)',
                       backgroundClip: 'text',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
@@ -1445,15 +1445,15 @@ function SwapCard() {
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         p: 2,
-                        borderRadius: 1,
-                        background: 'rgba(255, 255, 255, 0.5)',
-                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                        borderRadius: 0,
+                        background: 'rgba(139, 92, 246, 0.05)',
+                        border: '1px solid rgba(139, 92, 246, 0.1)',
                         transition: 'all 0.2s ease',
                         cursor: 'pointer',
                         '&:hover': {
-                          background: 'rgba(255, 255, 255, 0.8)',
+                          background: 'rgba(139, 92, 246, 0.1)',
                           transform: 'translateX(4px)',
-                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                          boxShadow: '0 4px 12px rgba(139, 92, 246, 0.1)',
                         }
                       }}
                     >
@@ -1476,11 +1476,11 @@ function SwapCard() {
 
             {/* Modern Swap History */}
             <Card sx={{
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.92))',
+              background: 'rgba(139, 92, 246, 0.15)',
               backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.4)',
-              borderRadius: 1,
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.06)',
+              border: '1px solid rgba(139, 92, 246, 0.3)',
+              borderRadius: 8,
+              boxShadow: '0 8px 32px rgba(139, 92, 246, 0.15)',
               position: 'relative',
               overflow: 'hidden',
               '&::before': {
@@ -1554,15 +1554,15 @@ function SwapCard() {
                         display: 'flex',
                         alignItems: 'center',
                         p: 2.5,
-                        borderRadius: 1,
-                        background: 'rgba(255, 255, 255, 0.5)',
-                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                        borderRadius: 8,
+                        background: 'rgba(139, 92, 246, 0.05)',
+                        border: '1px solid rgba(139, 92, 246, 0.1)',
                         transition: 'all 0.2s ease',
                         cursor: 'pointer',
                         '&:hover': {
-                          background: 'rgba(255, 255, 255, 0.8)',
+                          background: 'rgba(139, 92, 246, 0.1)',
                           transform: 'translateX(4px)',
-                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                          boxShadow: '0 4px 12px rgba(139, 92, 246, 0.1)',
                         }
                       }}
                     >
@@ -1605,11 +1605,10 @@ function SwapCard() {
 
             {/* Modern Gas Tracker */}
             <Card sx={{
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.92))',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.4)',
-              borderRadius: 1,
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.06)',
+              background: 'rgba(139, 92, 246, 0.15)',
+              border: '1px solid rgba(139, 92, 246, 0.3)',
+              borderRadius: 8,
+              boxShadow: '0 8px 32px rgba(139, 92, 246, 0.15)',
               position: 'relative',
               overflow: 'hidden',
               '&::before': {
@@ -1688,15 +1687,15 @@ function SwapCard() {
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         p: 2.5,
-                        borderRadius: 1,
-                        background: 'rgba(255, 255, 255, 0.5)',
-                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                        borderRadius: 8,
+                        background: 'rgba(139, 92, 246, 0.05)',
+                        border: '1px solid rgba(139, 92, 246, 0.1)',
                         transition: 'all 0.2s ease',
                         cursor: 'pointer',
                         '&:hover': {
-                          background: 'rgba(255, 255, 255, 0.8)',
+                          background: 'rgba(139, 92, 246, 0.1)',
                           transform: 'translateX(4px)',
-                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                          boxShadow: '0 4px 12px rgba(139, 92, 246, 0.1)',
                         }
                       }}
                     >
@@ -1722,8 +1721,8 @@ function SwapCard() {
               </CardContent>
             </Card>
           </Box>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </Box>
   );
 }
