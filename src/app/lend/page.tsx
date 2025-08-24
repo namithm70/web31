@@ -17,8 +17,6 @@ import {
   Alert,
 } from '@mui/material';
 import {
-  AccountBalanceWallet,
-  TrendingDown,
   Warning,
   CheckCircle,
 } from '@mui/icons-material';
@@ -68,33 +66,10 @@ const mockMarkets: (MarketRate & { token: TokenData })[] = [
   },
 ];
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`lending-tabpanel-${index}`}
-      aria-labelledby={`lending-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-}
-
 function HealthFactorCard() {
   const healthFactor = 1.85; // Mock data
   const isHealthy = healthFactor > 1.5;
   const isWarning = healthFactor <= 1.5 && healthFactor > 1.1;
-  const isDanger = healthFactor <= 1.1;
 
   return (
     <Card>
@@ -114,7 +89,6 @@ function HealthFactorCard() {
             <Warning color="error" />
           )}
         </Box>
-        {/* LinearProgress removed as per new_code */}
         <Typography variant="body2" color="text.secondary">
           {isHealthy 
             ? 'Your position is healthy' 
@@ -186,12 +160,9 @@ function MarketTable() {
 }
 
 function SupplyBorrowForm({ action }: { action: 'supply' | 'borrow' }) {
-  const [selectedToken, setSelectedToken] = useState<TokenData | null>(null);
-  const [amount, setAmount] = useState('');
-
   const handleSubmit = () => {
     // TODO: Implement supply/borrow logic
-    console.log(`${action} ${amount} of ${selectedToken?.symbol}`);
+    console.log(`${action} action triggered`);
   };
 
   return (
@@ -206,7 +177,7 @@ function SupplyBorrowForm({ action }: { action: 'supply' | 'borrow' }) {
             Asset
           </Typography>
           <Button variant="outlined" fullWidth>
-            {selectedToken ? selectedToken.symbol : 'Select Token'}
+            Select Token
           </Button>
         </Box>
 
@@ -215,7 +186,7 @@ function SupplyBorrowForm({ action }: { action: 'supply' | 'borrow' }) {
             Amount
           </Typography>
           <Typography variant="h6">
-            {amount}
+            0.0
           </Typography>
         </Box>
 
@@ -223,7 +194,6 @@ function SupplyBorrowForm({ action }: { action: 'supply' | 'borrow' }) {
           variant="contained" 
           fullWidth 
           onClick={handleSubmit}
-          disabled={!selectedToken || !amount}
         >
           {action === 'supply' ? 'Supply' : 'Borrow'}
         </Button>
@@ -234,11 +204,6 @@ function SupplyBorrowForm({ action }: { action: 'supply' | 'borrow' }) {
 
 export default function LendPage() {
   const { address } = useAccount();
-  const [tabValue, setTabValue] = useState(0);
-
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
 
   if (!address) {
     return (

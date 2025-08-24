@@ -17,7 +17,6 @@ import {
   Switch,
   FormControlLabel,
   Tooltip,
-  LinearProgress,
   Avatar,
   List,
   ListItem,
@@ -45,12 +44,10 @@ import {
   ShowChart,
   Warning,
   CheckCircle,
-  Help,
   LocalGasStation,
   KeyboardArrowDown,
   Search,
   Close,
-  FlashOn,
 } from '@mui/icons-material';
 import { useAccount, useBalance } from 'wagmi';
 import { useAppStore } from '@/store';
@@ -144,285 +141,44 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-function TokenSelector({ 
-  token, 
-  onSelect, 
-  label,
-  onMaxClick,
-  balance,
-  showBalance = true
-}: { 
-  token?: TokenData; 
-  onSelect: (token: TokenData) => void; 
-  label: string;
-  onMaxClick?: () => void;
-  balance?: string;
-  showBalance?: boolean;
-}) {
-  const [open, setOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [favorites, setFavorites] = useState<string[]>(['USDC', 'ETH', 'USDT']);
-
+function TokenSelector({ token, onSelect }: { token: TokenData; onSelect: () => void }) {
   return (
-    <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={1.5}>
-        <Typography variant="body2" color="text.secondary" fontWeight={500}>
-          {label}
+    <Paper
+      onClick={onSelect}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 2,
+        p: 2,
+        cursor: 'pointer',
+        background: 'rgba(139, 92, 246, 0.1)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(139, 92, 246, 0.3)',
+        borderRadius: 8,
+        '&:hover': {
+          background: 'rgba(139, 92, 246, 0.15)',
+          border: '1px solid rgba(139, 92, 246, 0.5)',
+        },
+        transition: 'all 0.3s ease',
+      }}
+    >
+      <Avatar src={token.logoURI} alt={token.symbol}>
+        {token.symbol.charAt(0)}
+      </Avatar>
+      <Box>
+        <Typography variant="body1" fontWeight={600}>
+          {token.symbol}
         </Typography>
-        {showBalance && balance && (
-          <Typography variant="body2" color="text.secondary" fontWeight={500}>
-            Balance: {parseFloat(balance).toFixed(4)}
-          </Typography>
-        )}
+        <Typography variant="body2" color="text.secondary">
+          {token.name}
+        </Typography>
       </Box>
-      
-      <Paper
-        elevation={0}
-        onClick={() => setOpen(true)}
-                sx={{ 
-          p: 3,
-          cursor: 'pointer',
-          border: '2px solid rgba(139, 92, 246, 0.3)',
-          borderRadius: 8,
-          background: 'rgba(139, 92, 246, 0.1)',
-          backdropFilter: 'blur(20px)',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          position: 'relative',
-          overflow: 'hidden',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(59, 130, 246, 0.05))',
-            opacity: 0,
-            transition: 'opacity 0.3s ease',
-          },
-          '&:hover': {
-            border: '2px solid rgba(139, 92, 246, 0.5)',
-            background: 'rgba(139, 92, 246, 0.15)',
-            transform: 'translateY(-2px)',
-            boxShadow: '0 12px 32px rgba(139, 92, 246, 0.2)',
-            '&::before': {
-              opacity: 1,
-            }
-          }
-        }}
-      >
-        {token ? (
-          <Box display="flex" alignItems="center" justifyContent="space-between">
-            <Box display="flex" alignItems="center" gap={2}>
-              <Avatar 
-                src={token.logoURI} 
-                sx={{ 
-                  width: 44, 
-                  height: 44,
-                  border: '2px solid rgba(0, 0, 0, 0.05)',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                }}
-              >
-                {token.symbol.charAt(0)}
-              </Avatar>
-              <Box>
-                <Typography variant="h6" fontWeight={700} color="text.primary">
-                  {token.symbol}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" fontWeight={500}>
-                  {token.name}
-                </Typography>
-              </Box>
-            </Box>
-            <KeyboardArrowDown sx={{ color: 'text.secondary' }} />
-          </Box>
-        ) : (
-          <Box display="flex" alignItems="center" justifyContent="space-between">
-            <Typography variant="h6" fontWeight={600} color="text.primary">
-              Select Token
-            </Typography>
-            <KeyboardArrowDown sx={{ color: 'text.secondary' }} />
-          </Box>
-        )}
-      </Paper>
-
-      {/* Token Selection Dialog */}
-      <Dialog 
-        open={open} 
-        onClose={() => setOpen(false)} 
-        maxWidth="sm" 
-        fullWidth
-        PaperProps={{
-          sx: {
-            borderRadius: 0,
-            background: 'rgba(139, 92, 246, 0.15)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(0, 0, 0, 0.1)',
-            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
-          }
-        }}
-      >
-        <DialogTitle sx={{ pb: 1 }}>
-          <Box display="flex" alignItems="center" justifyContent="space-between">
-            <Typography variant="h5" fontWeight={700}>
-              Select Token
-            </Typography>
-            <IconButton onClick={() => setOpen(false)} size="small">
-              <Close />
-            </IconButton>
-          </Box>
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            fullWidth
-            placeholder="Search tokens..."
-            variant="outlined"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            sx={{ 
-              mb: 3, 
-              mt: 1,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 8,
-                background: 'rgba(139, 92, 246, 0.1)',
-                border: '1px solid rgba(0, 0, 0, 0.1)',
-                '&:hover': {
-                  border: '1px solid rgba(0, 0, 0, 0.2)',
-                },
-                '&.Mui-focused': {
-                  border: '1px solid #1976d2',
-                  boxShadow: '0 0 0 3px rgba(25, 118, 210, 0.1)',
-                }
-              }
-            }}
-            InputProps={{
-              startAdornment: <Search sx={{ mr: 1, color: 'text.secondary' }} />,
-            }}
-          />
-          
-          {/* Favorites Section */}
-          {!searchTerm && (
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="subtitle2" fontWeight={600} color="text.secondary" mb={2}>
-                Favorites
-              </Typography>
-              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                {favorites.map((symbol) => {
-                  const token = mockTokens.find(t => t.symbol === symbol);
-                  if (!token) return null;
-                  return (
-                    <Chip
-                      key={symbol}
-                      avatar={<Avatar src={token.logoURI} sx={{ width: 20, height: 20 }} />}
-                      label={symbol}
-                      onClick={() => {
-                        onSelect(token);
-                        setOpen(false);
-                      }}
-                      sx={{
-                        cursor: 'pointer',
-                        background: 'rgba(25, 118, 210, 0.1)',
-                        border: '1px solid rgba(25, 118, 210, 0.2)',
-                        '&:hover': {
-                          background: 'rgba(25, 118, 210, 0.15)',
-                          transform: 'translateY(-1px)',
-                        },
-                        transition: 'all 0.2s ease',
-                      }}
-                    />
-                  );
-                })}
-              </Box>
-            </Box>
-          )}
-          
-          <List sx={{ p: 0 }}>
-            {mockTokens
-              .filter(token => 
-                !searchTerm || 
-                token.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                token.name.toLowerCase().includes(searchTerm.toLowerCase())
-              )
-              .map((tokenOption) => (
-              <ListItem
-                key={tokenOption.symbol}
-                component="div"
-                onClick={() => {
-                  onSelect(tokenOption);
-                  setOpen(false);
-                }}
-                sx={{
-                  borderRadius: 2,
-                  mb: 1,
-                  p: 2,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  '&:hover': {
-                    background: 'rgba(25, 118, 210, 0.04)',
-                    transform: 'translateX(4px)',
-                  }
-                }}
-              >
-                <ListItemAvatar>
-                  <Avatar 
-                    src={tokenOption.logoURI}
-                    sx={{ 
-                      width: 48, 
-                      height: 48,
-                      border: '2px solid rgba(0, 0, 0, 0.05)',
-                    }}
-                  >
-                    {tokenOption.symbol.charAt(0)}
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <Typography variant="h6" fontWeight={600}>
-                      {tokenOption.symbol}
-                    </Typography>
-                  }
-                  secondary={
-                    <Typography variant="body2" color="text.secondary" fontWeight={500}>
-                      {tokenOption.name}
-                    </Typography>
-                  }
-                />
-                                 <Box textAlign="right">
-                   <Typography variant="body1" fontWeight={700} color="text.primary">
-                     ${tokenOption.price?.toLocaleString()}
-                   </Typography>
-                   <Typography variant="caption" color="text.secondary" fontWeight={500}>
-                     ${((tokenOption.volume24h || 0) / 1e6).toFixed(0)}M vol
-                   </Typography>
-                   <IconButton
-                     size="small"
-                     onClick={(e) => {
-                       e.stopPropagation();
-                       setFavorites(prev => 
-                         prev.includes(tokenOption.symbol) 
-                           ? prev.filter(s => s !== tokenOption.symbol)
-                           : [...prev, tokenOption.symbol]
-                       );
-                     }}
-                     sx={{ 
-                       mt: 0.5,
-                       color: favorites.includes(tokenOption.symbol) ? '#1976d2' : 'text.secondary',
-                       '&:hover': {
-                         color: '#1976d2',
-                         transform: 'scale(1.1)',
-                       },
-                       transition: 'all 0.2s ease',
-                     }}
-                   >
-                     {favorites.includes(tokenOption.symbol) ? <Favorite /> : <FavoriteBorder />}
-                   </IconButton>
-                 </Box>
-              </ListItem>
-            ))}
-          </List>
-        </DialogContent>
-      </Dialog>
-    </Box>
+      <Box sx={{ ml: 'auto' }}>
+        <Typography variant="body2" color="text.secondary">
+          ${token.price?.toFixed(2)}
+        </Typography>
+      </Box>
+    </Paper>
   );
 }
 
@@ -755,950 +511,159 @@ function SwapHistory() {
 
 function SwapCard() {
   const { address } = useAccount();
-  const { slippage, setSlippage } = useAppStore();
-  
-  const [tokenIn, setTokenIn] = useState<TokenData | undefined>(mockTokens[1]); // ETH
-  const [tokenOut, setTokenOut] = useState<TokenData | undefined>(mockTokens[0]); // USDC
+  const [tokenIn, setTokenIn] = useState<TokenData>(mockTokens[0]);
+  const [tokenOut, setTokenOut] = useState<TokenData>(mockTokens[1]);
   const [amountIn, setAmountIn] = useState('');
-  const [quote, setQuote] = useState<Quote | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [tabValue, setTabValue] = useState(0);
-  const [showPriceChart, setShowPriceChart] = useState(false);
+  const [amountOut, setAmountOut] = useState('');
+  const [slippage, setSlippage] = useState(0.5);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const { data: balanceIn } = useBalance({
     address,
     token: tokenIn?.address,
   });
 
-  const handleSwapTokens = () => {
+  const handleSwap = () => {
+    // TODO: Implement swap logic
+    console.log('Swapping', amountIn, tokenIn.symbol, 'for', amountOut, tokenOut.symbol);
+  };
+
+  const handleSwitchTokens = () => {
+    const temp = tokenIn;
     setTokenIn(tokenOut);
-    setTokenOut(tokenIn);
-    setQuote(null);
+    setTokenOut(temp);
   };
-
-  const handleGetQuote = async () => {
-    if (!tokenIn || !tokenOut || !amountIn) return;
-    
-    setLoading(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const mockQuote: Quote = {
-        tokenIn: tokenIn.address,
-        tokenOut: tokenOut.address,
-        amountIn,
-        amountOut: (parseFloat(amountIn) * (tokenIn.price || 1) / (tokenOut.price || 1) * 0.997).toString(),
-        route: 'Uniswap V3',
-        priceImpactBps: Math.random() * 10,
-        gasEstimate: (Math.random() * 0.01 + 0.005).toFixed(3),
-        slippageBps: slippage * 100,
-      };
-      
-      setQuote(mockQuote);
-    } catch (error) {
-      console.error('Quote error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSwap = async () => {
-    if (!quote) return;
-    
-    // TODO: Implement actual swap logic
-    console.log('Executing swap:', quote);
-  };
-
-  const priceImpact = quote ? quote.priceImpactBps / 100 : 0;
-  const isHighImpact = priceImpact > 2;
-  const isMediumImpact = priceImpact > 0.5 && priceImpact <= 2;
-  const isLowImpact = priceImpact <= 0.5;
 
   return (
-    <Box sx={{ 
-      minHeight: '100vh',
-      background: 'transparent',
-      position: 'relative',
+    <Card sx={{
+      background: 'rgba(139, 92, 246, 0.15)',
+      backdropFilter: 'blur(20px)',
+      border: '1px solid rgba(139, 92, 246, 0.3)',
+      borderRadius: 8,
+      boxShadow: '0 8px 32px rgba(139, 92, 246, 0.15)',
+      p: 4,
+      maxWidth: 600,
+      mx: 'auto',
     }}>
-      <Box sx={{ maxWidth: 1400, mx: 'auto', px: { xs: 2, md: 4 }, py: 4 }}>
-        {/* Modern Hero Section */}
-        <Box sx={{ 
-          textAlign: 'center', 
-          mb: 8,
-          position: 'relative',
-          zIndex: 1,
-        }}>
-          {/* Floating Elements */}
-          <Box sx={{
-            position: 'absolute',
-            top: -50,
-            left: '10%',
-            width: 100,
-            height: 100,
-            background: 'linear-gradient(45deg, rgba(25, 118, 210, 0.1), rgba(156, 39, 176, 0.1))',
-            borderRadius: '50%',
-            animation: 'float 6s ease-in-out infinite',
-            '@keyframes float': {
-              '0%, 100%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-20px)' },
-            }
-          }} />
-          <Box sx={{
-            position: 'absolute',
-            top: 50,
-            right: '15%',
-            width: 80,
-            height: 80,
-            background: 'linear-gradient(45deg, rgba(156, 39, 176, 0.1), rgba(25, 118, 210, 0.1))',
-            borderRadius: '50%',
-            animation: 'float 8s ease-in-out infinite reverse',
-          }} />
-          
-          <Typography 
-            variant="h1" 
-            fontWeight={900} 
-            sx={{
-              background: 'linear-gradient(135deg, #8B5CF6 0%, #3B82F6 25%, #A78BFA 50%, #60A5FA 75%, #8B5CF6 100%)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              mb: 3,
-              fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4.5rem' },
-              letterSpacing: '-0.03em',
-              lineHeight: 1.1,
-              textShadow: '0 4px 20px rgba(139, 92, 246, 0.3)',
-            }}
-          >
-            Swap Tokens
-          </Typography>
-          
-          <Typography 
-            variant="h4" 
-            color="text.secondary" 
-            fontWeight={400}
-            sx={{ 
-              mb: 4,
-              opacity: 0.8,
-              fontSize: { xs: '1.1rem', md: '1.5rem' },
-              maxWidth: 600,
-              mx: 'auto',
-              lineHeight: 1.4,
-            }}
-          >
-            Trade tokens instantly with the best rates across multiple DEXs
-          </Typography>
-          
-          {/* Enhanced Stats Cards */}
-          <Box sx={{ 
-            display: 'grid', 
-            gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' },
-            gap: 3,
-            maxWidth: 800,
-            mx: 'auto',
-            mt: 6,
-          }}>
-            {[
-              { value: '$2.4B', label: '24h Volume', icon: '📈', color: '#1976d2' },
-              { value: '1,247', label: 'Active Pairs', icon: '🔗', color: '#42a5f5' },
-              { value: '15 Gwei', label: 'Avg Gas', icon: '⛽', color: '#9c27b0' },
-            ].map((stat, index) => (
-              <Box
-                key={index}
-                sx={{
-                  background: 'rgba(139, 92, 246, 0.1)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(139, 92, 246, 0.2)',
-                  borderRadius: 0,
-                  p: 3,
-                  textAlign: 'center',
-                  transition: 'all 0.3s ease',
-                  cursor: 'pointer',
-                  '&:hover': {
-                    transform: 'translateY(-8px)',
-                    boxShadow: '0 20px 40px rgba(139, 92, 246, 0.2)',
-                    background: 'rgba(139, 92, 246, 0.15)',
-                  }
-                }}
-              >
-                <Typography variant="h2" sx={{ mb: 1, fontSize: '2rem' }}>
-                  {stat.icon}
-                </Typography>
-                <Typography variant="h4" fontWeight={700} sx={{ color: stat.color, mb: 1 }}>
-                  {stat.value}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" fontWeight={500}>
-                  {stat.label}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-                </Box>
-      </Box>
+      <CardContent>
+        <Typography variant="h5" gutterBottom textAlign="center" fontWeight={700}>
+          Swap Tokens
+        </Typography>
 
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '2fr 1fr' }, gap: 4 }}>
-        {/* Modern Main Swap Interface */}
-        <Box>
-          <Card sx={{
-            background: 'rgba(139, 92, 246, 0.15)',
-            backdropFilter: 'blur(20px)',
-                          border: '1px solid rgba(139, 92, 246, 0.3)',
-              borderRadius: 0,
-              boxShadow: '0 8px 32px rgba(139, 92, 246, 0.15)',
-            position: 'relative',
-            overflow: 'hidden',
+        {/* Token Input */}
+        <Box mb={3}>
+          <Typography variant="body2" color="text.secondary" mb={1}>
+            You Pay
+          </Typography>
+          <Box display="flex" alignItems="center" gap={2} p={2} sx={{
+            background: 'rgba(139, 92, 246, 0.1)',
+            border: '1px solid rgba(139, 92, 246, 0.3)',
+            borderRadius: 8,
+          }}>
+            <Avatar src={tokenIn?.logoURI} alt={tokenIn?.symbol}>
+              {tokenIn?.symbol?.charAt(0)}
+            </Avatar>
+            <Box flex={1}>
+              <Typography variant="body1" fontWeight={600}>
+                {tokenIn?.symbol}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Balance: {balanceIn?.formatted || '0'}
+              </Typography>
+            </Box>
+            <TextField
+              value={amountIn}
+              onChange={(e) => setAmountIn(e.target.value)}
+              placeholder="0.0"
+              variant="standard"
+              sx={{ width: 120 }}
+            />
+          </Box>
+        </Box>
+
+        {/* Switch Button */}
+        <Box display="flex" justifyContent="center" mb={3}>
+          <IconButton onClick={handleSwitchTokens} sx={{
+            background: 'rgba(139, 92, 246, 0.1)',
+            border: '1px solid rgba(139, 92, 246, 0.3)',
             '&:hover': {
-              boxShadow: '0 12px 40px rgba(139, 92, 246, 0.2)',
-              transform: 'translateY(-2px)',
-            },
-            transition: 'all 0.3s ease',
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              height: '6px',
-              background: 'linear-gradient(90deg, #8B5CF6, #3B82F6, #A78BFA, #60A5FA)',
-            },
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: 'radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%)',
-              pointerEvents: 'none',
+              background: 'rgba(139, 92, 246, 0.2)',
             }
           }}>
-            <CardContent sx={{ p: 5 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={5}>
-                <Box>
-                  <Typography variant="h3" fontWeight={800} sx={{ 
-                    mb: 1,
-                    background: 'linear-gradient(135deg, #1976d2, #9c27b0)',
-                    backgroundClip: 'text',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                  }}>
-                    Swap
-                  </Typography>
-                  <Typography variant="body1" color="text.secondary" fontWeight={500}>
-                    Get the best rates across all DEXs
-                  </Typography>
-                </Box>
-                <Box display="flex" gap={1}>
-                  <Tooltip title="Refresh Quote">
-                    <IconButton 
-                      onClick={handleGetQuote} 
-                      disabled={loading}
-                      sx={{
-                        background: 'rgba(25, 118, 210, 0.1)',
-                        '&:hover': {
-                          background: 'rgba(25, 118, 210, 0.2)',
-                          transform: 'rotate(180deg)',
-                        },
-                        transition: 'all 0.3s ease',
-                      }}
-                    >
-                      <Refresh />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="View Price Chart">
-                    <IconButton 
-                      onClick={() => setShowPriceChart(!showPriceChart)}
-                      sx={{
-                        background: 'rgba(25, 118, 210, 0.1)',
-                        '&:hover': {
-                          background: 'rgba(25, 118, 210, 0.2)',
-                        },
-                      }}
-                    >
-                      <ShowChart />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Settings">
-                    <IconButton
-                      sx={{
-                        background: 'rgba(25, 118, 210, 0.1)',
-                        '&:hover': {
-                          background: 'rgba(25, 118, 210, 0.2)',
-                        },
-                      }}
-                    >
-                      <Settings />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-              </Box>
-
-              {/* Token Input */}
-              <Box mb={3}>
-                <TokenSelector
-                  token={tokenIn}
-                  onSelect={setTokenIn}
-                  label="You Pay"
-                  onMaxClick={() => setAmountIn(balanceIn?.formatted || '0')}
-                  balance={balanceIn?.formatted}
-                />
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  placeholder="0.0"
-                  value={amountIn}
-                  onChange={(e) => setAmountIn(e.target.value)}
-                  sx={{ 
-                    mt: 2,
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: 3,
-                      background: 'rgba(0, 0, 0, 0.02)',
-                      border: '1px solid rgba(0, 0, 0, 0.1)',
-                      fontSize: '1.2rem',
-                      fontWeight: 600,
-                      '&:hover': {
-                        border: '1px solid rgba(0, 0, 0, 0.2)',
-                      },
-                      '&.Mui-focused': {
-                        border: '1px solid #1976d2',
-                        boxShadow: '0 0 0 3px rgba(25, 118, 210, 0.1)',
-                      }
-                    }
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <Button
-                        size="small"
-                        onClick={() => setAmountIn(balanceIn?.formatted || '0')}
-                        sx={{ 
-                          mr: 1,
-                          background: 'linear-gradient(135deg, #1976d2, #42a5f5)',
-                          color: 'white',
-                          fontWeight: 600,
-                          '&:hover': {
-                            background: 'linear-gradient(135deg, #1565c0, #1976d2)',
-                          }
-                        }}
-                      >
-                        Max
-                      </Button>
-                    ),
-                  }}
-                />
-              </Box>
-
-              {/* Ultra Modern Swap Button */}
-              <Box display="flex" justifyContent="center" mb={4} position="relative">
-                {/* Animated Background Rings */}
-                <Box sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: 120,
-                  height: 120,
-                  background: 'conic-gradient(from 0deg, rgba(25, 118, 210, 0.1), rgba(156, 39, 176, 0.1), rgba(25, 118, 210, 0.1))',
-                  borderRadius: '50%',
-                  zIndex: 0,
-                  animation: 'rotate 4s linear infinite',
-                  '@keyframes rotate': {
-                    '0%': { transform: 'translate(-50%, -50%) rotate(0deg)' },
-                    '100%': { transform: 'translate(-50%, -50%) rotate(360deg)' },
-                  }
-                }} />
-                <Box sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: 100,
-                  height: 100,
-                  background: 'radial-gradient(circle, rgba(25, 118, 210, 0.15) 0%, transparent 70%)',
-                  borderRadius: '50%',
-                  zIndex: 0,
-                  animation: 'pulse 2s ease-in-out infinite',
-                  '@keyframes pulse': {
-                    '0%, 100%': { transform: 'translate(-50%, -50%) scale(1)' },
-                    '50%': { transform: 'translate(-50%, -50%) scale(1.1)' },
-                  }
-                }} />
-                
-                <IconButton 
-                  onClick={handleSwapTokens}
-                  sx={{
-                    width: 72,
-                    height: 72,
-                    border: '3px solid rgba(255, 255, 255, 0.3)',
-                    background: 'linear-gradient(135deg, rgba(25, 118, 210, 0.2), rgba(156, 39, 176, 0.1))',
-                    backdropFilter: 'blur(20px)',
-                    position: 'relative',
-                    zIndex: 2,
-                    boxShadow: '0 8px 32px rgba(25, 118, 210, 0.2)',
-                    '&:hover': {
-                      border: '3px solid rgba(255, 255, 255, 0.5)',
-                      background: 'linear-gradient(135deg, rgba(25, 118, 210, 0.3), rgba(156, 39, 176, 0.2))',
-                      transform: 'rotate(180deg) scale(1.2)',
-                      boxShadow: '0 16px 48px rgba(25, 118, 210, 0.4)',
-                    },
-                    '&:active': {
-                      transform: 'rotate(180deg) scale(0.9)',
-                    },
-                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  }}
-                >
-                  <SwapHoriz sx={{ 
-                    fontSize: 36, 
-                    color: 'white',
-                    filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3))',
-                  }} />
-                </IconButton>
-              </Box>
-
-              {/* Token Output */}
-              <Box mb={4}>
-                <TokenSelector
-                  token={tokenOut}
-                  onSelect={setTokenOut}
-                  label="You Receive"
-                  showBalance={false}
-                />
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  placeholder="0.0"
-                  value={quote?.amountOut || ''}
-                  disabled
-                  sx={{ 
-                    mt: 2,
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: 3,
-                      background: 'rgba(0, 0, 0, 0.02)',
-                      border: '1px solid rgba(0, 0, 0, 0.1)',
-                      fontSize: '1.2rem',
-                      fontWeight: 600,
-                      '&.Mui-disabled': {
-                        background: 'rgba(0, 0, 0, 0.01)',
-                        border: '1px solid rgba(0, 0, 0, 0.05)',
-                      }
-                    }
-                  }}
-                />
-              </Box>
-
-              {/* Quote Details */}
-              {quote && (
-                <Box mb={4}>
-                  <Divider sx={{ mb: 3, borderColor: 'rgba(0, 0, 0, 0.1)' }} />
-                  
-                  <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 3 }}>
-                    <Box>
-                      <Typography variant="body2" color="text.secondary" fontWeight={500} gutterBottom>
-                        Rate
-                      </Typography>
-                      <Typography variant="body1" fontWeight={700} color="text.primary">
-                        1 {tokenIn?.symbol} = {(parseFloat(quote.amountOut) / parseFloat(quote.amountIn)).toFixed(6)} {tokenOut?.symbol}
-                      </Typography>
-                    </Box>
-                    <Box>
-                       <Typography variant="body2" color="text.secondary" fontWeight={500} gutterBottom>
-                         Price Impact
-                       </Typography>
-                       <Box display="flex" alignItems="center" gap={1}>
-                         <Box sx={{
-                           width: 8,
-                           height: 8,
-                           borderRadius: '50%',
-                           background: isHighImpact ? '#f44336' : isMediumImpact ? '#ff9800' : '#4caf50',
-                           boxShadow: `0 0 8px ${isHighImpact ? '#f44336' : isMediumImpact ? '#ff9800' : '#4caf50'}40`,
-                         }} />
-                         <Typography 
-                           variant="body1" 
-                           fontWeight={700}
-                           color={isHighImpact ? 'error.main' : isMediumImpact ? 'warning.main' : 'success.main'}
-                         >
-                           {priceImpact.toFixed(2)}%
-                         </Typography>
-                         {isHighImpact && <Warning sx={{ color: 'error.main' }} />}
-                         {isMediumImpact && <Info sx={{ color: 'warning.main' }} />}
-                         {isLowImpact && <CheckCircle sx={{ color: 'success.main' }} />}
-                       </Box>
-                     </Box>
-                    <Box>
-                      <Typography variant="body2" color="text.secondary" fontWeight={500} gutterBottom>
-                        Network Fee
-                      </Typography>
-                      <Typography variant="body1" fontWeight={700} color="text.primary">
-                        ~${(parseFloat(quote.gasEstimate) * 3200).toFixed(2)}
-                      </Typography>
-                    </Box>
-                    <Box>
-                      <Typography variant="body2" color="text.secondary" fontWeight={500} gutterBottom>
-                        Slippage
-                      </Typography>
-                      <Typography variant="body1" fontWeight={700} color="text.primary">
-                        {slippage}%
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Box>
-              )}
-
-              {/* Action Buttons */}
-              {!address ? (
-                <Alert 
-                  severity="info" 
-                  icon={<Info />}
-                  sx={{
-                    borderRadius: 3,
-                    background: 'rgba(25, 118, 210, 0.05)',
-                    border: '1px solid rgba(25, 118, 210, 0.2)',
-                    backdropFilter: 'blur(20px)',
-                  }}
-                >
-                  Please connect your wallet to start swapping
-                </Alert>
-              ) : (
-                <Button
-                  variant="contained"
-                  fullWidth
-                  size="large"
-                  disabled={!tokenIn || !tokenOut || !amountIn || loading}
-                  onClick={quote ? handleSwap : handleGetQuote}
-                  sx={{ 
-                    height: 72,
-                    borderRadius: 4,
-                    background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 25%, #64b5f6 50%, #9c27b0 75%, #e91e63 100%)',
-                    backgroundSize: '200% 200%',
-                    boxShadow: '0 12px 32px rgba(25, 118, 210, 0.4), 0 4px 16px rgba(156, 39, 176, 0.3)',
-                    fontSize: '1.2rem',
-                    fontWeight: 800,
-                    textTransform: 'none',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    '&::before': {
-                      content: '""',
-                      position: 'absolute',
-                      top: 0,
-                      left: '-100%',
-                      width: '100%',
-                      height: '100%',
-                      background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
-                      transition: 'left 0.5s',
-                    },
-                    '&:hover': {
-                      background: 'linear-gradient(135deg, #1565c0 0%, #1976d2 25%, #42a5f5 50%, #7b1fa2 75%, #c2185b 100%)',
-                      backgroundSize: '200% 200%',
-                      boxShadow: '0 16px 48px rgba(25, 118, 210, 0.6), 0 8px 24px rgba(156, 39, 176, 0.4)',
-                      transform: 'translateY(-3px)',
-                      '&::before': {
-                        left: '100%',
-                      }
-                    },
-                    '&:active': {
-                      transform: 'translateY(-1px)',
-                    },
-                    '&:disabled': {
-                      background: 'linear-gradient(135deg, rgba(25, 118, 210, 0.3), rgba(156, 39, 176, 0.2))',
-                      boxShadow: 'none',
-                      transform: 'none',
-                    },
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  }}
-                >
-                  {loading ? (
-                    <Box display="flex" alignItems="center" gap={2}>
-                      <Skeleton width={24} height={24} variant="circular" />
-                      Getting Quote...
-                    </Box>
-                  ) : quote ? (
-                    'Swap Now'
-                  ) : (
-                    'Get Quote'
-                  )}
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Advanced Settings */}
-          <AdvancedSettings />
-
-          {/* Route Optimizer */}
-          <RouteOptimizer quote={quote} />
+            <CompareArrows />
+          </IconButton>
         </Box>
 
-        {/* Ultra Modern Sidebar */}
-        <Box>
-          <Box display="flex" flexDirection="column" gap={4}>
-            {/* Enhanced Market Stats */}
-            <Card sx={{
-              background: 'rgba(139, 92, 246, 0.15)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(139, 92, 246, 0.3)',
-              borderRadius: 8,
-              boxShadow: '0 8px 32px rgba(139, 92, 246, 0.15)',
-              position: 'relative',
-              overflow: 'hidden',
-              '&:hover': {
-                boxShadow: '0 12px 40px rgba(139, 92, 246, 0.2)',
-                transform: 'translateY(-2px)',
-              },
-              transition: 'all 0.3s ease',
-              '&::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '3px',
-                background: 'linear-gradient(90deg, #8B5CF6, #3B82F6, #A78BFA, #60A5FA)',
-              },
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.03) 0%, transparent 50%)',
-                pointerEvents: 'none',
-              }
-            }}>
-              <CardContent sx={{ p: 4 }}>
-                <Box display="flex" alignItems="center" mb={4}>
-                  <Box sx={{
-                    width: 52,
-                    height: 52,
-                    borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #8B5CF6, #3B82F6)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    mr: 3,
-                    boxShadow: '0 8px 20px rgba(139, 92, 246, 0.25)',
-                    position: 'relative',
-                    '&::before': {
-                      content: '""',
-                      position: 'absolute',
-                      top: -2,
-                      left: -2,
-                      right: -2,
-                      bottom: -2,
-                      borderRadius: '50%',
-                      background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2))',
-                      zIndex: -1,
-                    }
-                  }}>
-                    <TrendingUp sx={{ color: 'white', fontSize: 26 }} />
-                  </Box>
-                  <Box>
-                    <Typography variant="h5" fontWeight={800} sx={{
-                      background: 'linear-gradient(135deg, #8B5CF6, #3B82F6)',
-                      backgroundClip: 'text',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      mb: 0.5,
-                    }}>
-                      Market Stats
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" fontWeight={500}>
-                      Live market data
-                    </Typography>
-                  </Box>
-                </Box>
-                
-                <Box display="flex" flexDirection="column" gap={3}>
-                  {[
-                    { label: '24h Volume', value: '$2.4B', icon: '📈', color: '#1976d2' },
-                    { label: 'Total Liquidity', value: '$8.7B', icon: '💧', color: '#42a5f5' },
-                    { label: 'Active Pairs', value: '1,247', icon: '🔗', color: '#9c27b0' },
-                  ].map((stat, index) => (
-                    <Box 
-                      key={index}
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        p: 2,
-                        borderRadius: 0,
-                        background: 'rgba(139, 92, 246, 0.05)',
-                        border: '1px solid rgba(139, 92, 246, 0.1)',
-                        transition: 'all 0.2s ease',
-                        cursor: 'pointer',
-                        '&:hover': {
-                          background: 'rgba(139, 92, 246, 0.1)',
-                          transform: 'translateX(4px)',
-                          boxShadow: '0 4px 12px rgba(139, 92, 246, 0.1)',
-                        }
-                      }}
-                    >
-                      <Box display="flex" alignItems="center" gap={2}>
-                        <Typography variant="h6" sx={{ color: stat.color }}>
-                          {stat.icon}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" fontWeight={500}>
-                          {stat.label}
-                        </Typography>
-                      </Box>
-                      <Typography variant="body1" fontWeight={700} sx={{ color: stat.color }}>
-                        {stat.value}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
-              </CardContent>
-            </Card>
-
-            {/* Modern Swap History */}
-            <Card sx={{
-              background: 'rgba(139, 92, 246, 0.15)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(139, 92, 246, 0.3)',
-              borderRadius: 8,
-              boxShadow: '0 8px 32px rgba(139, 92, 246, 0.15)',
-              position: 'relative',
-              overflow: 'hidden',
-              '&::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '3px',
-                background: 'linear-gradient(90deg, #4CAF50, #66BB6A, #81C784)',
-              },
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'radial-gradient(circle at 80% 20%, rgba(76, 175, 80, 0.03) 0%, transparent 50%)',
-                pointerEvents: 'none',
-              }
-            }}>
-              <CardContent sx={{ p: 4 }}>
-                <Box display="flex" alignItems="center" mb={4}>
-                  <Box sx={{
-                    width: 52,
-                    height: 52,
-                    borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #4CAF50, #66BB6A)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    mr: 3,
-                    boxShadow: '0 8px 20px rgba(76, 175, 80, 0.25)',
-                    position: 'relative',
-                    '&::before': {
-                      content: '""',
-                      position: 'absolute',
-                      top: -2,
-                      left: -2,
-                      right: -2,
-                      bottom: -2,
-                      borderRadius: '50%',
-                      background: 'linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(102, 187, 106, 0.2))',
-                      zIndex: -1,
-                    }
-                  }}>
-                    <History sx={{ color: 'white', fontSize: 26 }} />
-                  </Box>
-                  <Box>
-                    <Typography variant="h5" fontWeight={800} sx={{
-                      background: 'linear-gradient(135deg, #4CAF50, #66BB6A)',
-                      backgroundClip: 'text',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      mb: 0.5,
-                    }}>
-                      Recent Swaps
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" fontWeight={500}>
-                      Your transaction history
-                    </Typography>
-                  </Box>
-                </Box>
-                
-                <Box display="flex" flexDirection="column" gap={2}>
-                  {swapHistory.map((swap, index) => (
-                    <Box 
-                      key={index}
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        p: 2.5,
-                        borderRadius: 8,
-                        background: 'rgba(139, 92, 246, 0.05)',
-                        border: '1px solid rgba(139, 92, 246, 0.1)',
-                        transition: 'all 0.2s ease',
-                        cursor: 'pointer',
-                        '&:hover': {
-                          background: 'rgba(139, 92, 246, 0.1)',
-                          transform: 'translateX(4px)',
-                          boxShadow: '0 4px 12px rgba(139, 92, 246, 0.1)',
-                        }
-                      }}
-                    >
-                      <Avatar sx={{ 
-                        bgcolor: 'rgba(76, 175, 80, 0.1)',
-                        border: '2px solid rgba(76, 175, 80, 0.2)',
-                        mr: 2,
-                        width: 40,
-                        height: 40,
-                      }}>
-                        <SwapHoriz sx={{ color: '#4CAF50', fontSize: 20 }} />
-                      </Avatar>
-                      <Box sx={{ flex: 1 }}>
-                        <Typography variant="body1" fontWeight={600} color="text.primary">
-                          {swap.amount} {swap.from} → {swap.to}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" fontWeight={500}>
-                          {swap.date}
-                        </Typography>
-                      </Box>
-                      <Chip
-                        label={swap.status}
-                        size="small"
-                        color="success"
-                        icon={<CheckCircle />}
-                        sx={{ 
-                          fontWeight: 600,
-                          background: 'linear-gradient(135deg, #4CAF50, #66BB6A)',
-                          color: 'white',
-                          '& .MuiChip-icon': {
-                            color: 'white',
-                          }
-                        }}
-                      />
-                    </Box>
-                  ))}
-                </Box>
-              </CardContent>
-            </Card>
-
-            {/* Modern Gas Tracker */}
-            <Card sx={{
-              background: 'rgba(139, 92, 246, 0.15)',
-              border: '1px solid rgba(139, 92, 246, 0.3)',
-              borderRadius: 8,
-              boxShadow: '0 8px 32px rgba(139, 92, 246, 0.15)',
-              position: 'relative',
-              overflow: 'hidden',
-              '&::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '3px',
-                background: 'linear-gradient(90deg, #FF9800, #FFB74D, #FFCC02)',
-              },
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'radial-gradient(circle at 20% 80%, rgba(255, 152, 0, 0.03) 0%, transparent 50%)',
-                pointerEvents: 'none',
-              }
-            }}>
-              <CardContent sx={{ p: 4 }}>
-                <Box display="flex" alignItems="center" mb={4}>
-                  <Box sx={{
-                    width: 52,
-                    height: 52,
-                    borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #FF9800, #FFB74D)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    mr: 3,
-                    boxShadow: '0 8px 20px rgba(255, 152, 0, 0.25)',
-                    position: 'relative',
-                    '&::before': {
-                      content: '""',
-                      position: 'absolute',
-                      top: -2,
-                      left: -2,
-                      right: -2,
-                      bottom: -2,
-                      borderRadius: '50%',
-                      background: 'linear-gradient(135deg, rgba(255, 152, 0, 0.2), rgba(255, 183, 77, 0.2))',
-                      zIndex: -1,
-                    }
-                  }}>
-                    <LocalGasStation sx={{ color: 'white', fontSize: 26 }} />
-                  </Box>
-                  <Box>
-                    <Typography variant="h5" fontWeight={800} sx={{
-                      background: 'linear-gradient(135deg, #FF9800, #FFB74D)',
-                      backgroundClip: 'text',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      mb: 0.5,
-                    }}>
-                      Gas Tracker
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" fontWeight={500}>
-                      Network fees
-                    </Typography>
-                  </Box>
-                </Box>
-                
-                <Box display="flex" flexDirection="column" gap={3}>
-                  {[
-                    { label: 'Safe', value: '15 Gwei', icon: '🟢', color: '#4CAF50', speed: 'Slow' },
-                    { label: 'Average', value: '25 Gwei', icon: '🟡', color: '#FF9800', speed: 'Normal' },
-                    { label: 'Fast', value: '35 Gwei', icon: '🔴', color: '#F44336', speed: 'Quick' },
-                  ].map((gas, index) => (
-                    <Box 
-                      key={index}
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        p: 2.5,
-                        borderRadius: 8,
-                        background: 'rgba(139, 92, 246, 0.05)',
-                        border: '1px solid rgba(139, 92, 246, 0.1)',
-                        transition: 'all 0.2s ease',
-                        cursor: 'pointer',
-                        '&:hover': {
-                          background: 'rgba(139, 92, 246, 0.1)',
-                          transform: 'translateX(4px)',
-                          boxShadow: '0 4px 12px rgba(139, 92, 246, 0.1)',
-                        }
-                      }}
-                    >
-                      <Box display="flex" alignItems="center" gap={2}>
-                        <Typography variant="h6">
-                          {gas.icon}
-                        </Typography>
-                        <Box>
-                          <Typography variant="body2" color="text.secondary" fontWeight={500}>
-                            {gas.label}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            {gas.speed}
-                          </Typography>
-                        </Box>
-                      </Box>
-                      <Typography variant="body1" fontWeight={700} sx={{ color: gas.color }}>
-                        {gas.value}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
-              </CardContent>
-            </Card>
+        {/* Token Output */}
+        <Box mb={3}>
+          <Typography variant="body2" color="text.secondary" mb={1}>
+            You Receive
+          </Typography>
+          <Box display="flex" alignItems="center" gap={2} p={2} sx={{
+            background: 'rgba(139, 92, 246, 0.1)',
+            border: '1px solid rgba(139, 92, 246, 0.3)',
+            borderRadius: 8,
+          }}>
+            <Avatar src={tokenOut?.logoURI} alt={tokenOut?.symbol}>
+              {tokenOut?.symbol?.charAt(0)}
+            </Avatar>
+            <Box flex={1}>
+              <Typography variant="body1" fontWeight={600}>
+                {tokenOut?.symbol}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {tokenOut?.name}
+              </Typography>
+            </Box>
+            <TextField
+              value={amountOut}
+              onChange={(e) => setAmountOut(e.target.value)}
+              placeholder="0.0"
+              variant="standard"
+              sx={{ width: 120 }}
+            />
           </Box>
         </Box>
-      </Box>
-    </Box>
+
+        {/* Swap Button */}
+        <Button
+          variant="contained"
+          fullWidth
+          size="large"
+          onClick={handleSwap}
+          disabled={!amountIn || !amountOut}
+          sx={{ mb: 2 }}
+        >
+          Swap
+        </Button>
+
+        {/* Advanced Settings */}
+        <Accordion expanded={showAdvanced} onChange={() => setShowAdvanced(!showAdvanced)}>
+          <AccordionSummary expandIcon={<ExpandMore />}>
+            <Typography variant="body2">Advanced Settings</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box>
+              <Typography variant="body2" color="text.secondary" mb={1}>
+                Slippage Tolerance: {slippage}%
+              </Typography>
+              <Slider
+                value={slippage}
+                onChange={(_, value) => setSlippage(value as number)}
+                min={0.1}
+                max={5}
+                step={0.1}
+                marks={[
+                  { value: 0.5, label: '0.5%' },
+                  { value: 1, label: '1%' },
+                  { value: 2, label: '2%' },
+                ]}
+              />
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+      </CardContent>
+    </Card>
   );
 }
 

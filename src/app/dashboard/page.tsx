@@ -159,16 +159,7 @@ export default function DashboardPage() {
     },
   });
 
-  const { data: marketRates, isLoading: ratesLoading, error: ratesError } = useQuery({
-    queryKey: ['marketRates'],
-    queryFn: async (): Promise<MarketRate[]> => {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 800));
-      return mockMarketRates;
-    },
-  });
-
-  if (protocolsError || ratesError) {
+  if (protocolsError) {
     setError('Failed to load dashboard data');
   }
 
@@ -206,18 +197,8 @@ export default function DashboardPage() {
       </Box>
 
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, 1fr)' }, gap: 3 }}>
-        {ratesLoading ? (
-          <Card>
-            <CardContent>
-              <Skeleton variant="text" width="40%" height={32} />
-              <Skeleton variant="text" width="80%" />
-              <Skeleton variant="text" width="70%" />
-              <Skeleton variant="text" width="60%" />
-            </CardContent>
-          </Card>
-        ) : (
-          <MarketRatesCard />
-        )}
+        {/* ratesLoading state was removed, so this block will always render MarketRatesCard */}
+        <MarketRatesCard />
       </Box>
     </Box>
   );

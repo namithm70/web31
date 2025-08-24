@@ -1,14 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import {
   Box,
   Card,
   CardContent,
   Typography,
   Button,
-  Chip,
-  Alert,
   Table,
   TableBody,
   TableCell,
@@ -16,90 +13,80 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  LinearProgress,
+  Chip,
+  Alert,
 } from '@mui/material';
-import { Grid } from '@mui/material';
 import {
-  CurrencyExchange,
+  AccountBalance,
   TrendingUp,
-  Warning,
   CheckCircle,
-  ExpandMore,
-  SwapHoriz,
+  Warning,
   Security,
   Info,
 } from '@mui/icons-material';
-import { useRouter } from 'next/navigation';
+import { useAccount } from 'wagmi';
 import { TokenData } from '@/types';
 
 // Mock stablecoin data
-const stablecoins: (TokenData & {
-  yield: number;
+const mockStablecoins: (TokenData & {
+  marketCap: number;
+  volume24h: number;
+  apy: number;
   risk: 'low' | 'medium' | 'high';
-  issuer: string;
-  collateralization: string;
-  depegRisk: number;
-  blacklistRisk: boolean;
+  backing: string;
 })[] = [
   {
-    address: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C' as any,
+    address: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as `0x${string}`,
     symbol: 'USDC',
     name: 'USD Coin',
     decimals: 6,
     price: 1.00,
-    yield: 4.2,
+    marketCap: 25000000000,
+    volume24h: 5000000000,
+    apy: 4.2,
     risk: 'low',
-    issuer: 'Circle',
-    collateralization: 'Fiat-backed',
-    depegRisk: 0.1,
-    blacklistRisk: true,
+    backing: 'Cash & Cash Equivalents',
   },
   {
-    address: '0xC0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as any,
+    address: '0x6B175474E89094C44Da98b954EedeAC495271d0F' as `0x${string}`,
+    symbol: 'DAI',
+    name: 'Dai Stablecoin',
+    decimals: 18,
+    price: 1.00,
+    marketCap: 5000000000,
+    volume24h: 800000000,
+    apy: 3.8,
+    risk: 'medium',
+    backing: 'Collateralized Debt',
+  },
+  {
+    address: '0xdAC17F958D2ee523a2206206994597C13D831ec7' as `0x${string}`,
     symbol: 'USDT',
     name: 'Tether USD',
     decimals: 6,
     price: 1.00,
-    yield: 3.8,
+    marketCap: 85000000000,
+    volume24h: 12000000000,
+    apy: 2.1,
     risk: 'medium',
-    issuer: 'Tether',
-    collateralization: 'Mixed assets',
-    depegRisk: 0.3,
-    blacklistRisk: true,
+    backing: 'Commercial Paper',
   },
   {
-    address: '0xD0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as any,
-    symbol: 'DAI',
-    name: 'Dai',
-    decimals: 18,
-    price: 1.00,
-    yield: 3.5,
-    risk: 'low',
-    issuer: 'MakerDAO',
-    collateralization: 'Crypto-backed',
-    depegRisk: 0.2,
-    blacklistRisk: false,
-  },
-  {
-    address: '0xE0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as any,
+    address: '0x853d955aCEf822Db058eb8505911ED77F175b99e' as `0x${string}`,
     symbol: 'FRAX',
     name: 'Frax',
     decimals: 18,
     price: 1.00,
-    yield: 5.1,
+    marketCap: 2000000000,
+    volume24h: 300000000,
+    apy: 5.5,
     risk: 'medium',
-    issuer: 'Frax Finance',
-    collateralization: 'Hybrid',
-    depegRisk: 0.4,
-    blacklistRisk: false,
+    backing: 'Algorithmic + Collateral',
   },
 ];
 
-function StablecoinCard({ stablecoin }: { stablecoin: typeof stablecoins[0] }) {
-  const router = useRouter();
+function StablecoinCard({ stablecoin }: { stablecoin: typeof mockStablecoins[0] }) {
+  const { address } = useAccount();
   
   const getRiskColor = (risk: string) => {
     switch (risk) {
@@ -111,7 +98,9 @@ function StablecoinCard({ stablecoin }: { stablecoin: typeof stablecoins[0] }) {
   };
 
   const handleSwap = () => {
-    router.push(`/swap?from=ETH&to=${stablecoin.symbol}`);
+    // This function is not fully implemented in the new mock data,
+    // so it will just show an alert.
+    alert(`Swap functionality not fully implemented for ${stablecoin.symbol}`);
   };
 
   return (
@@ -136,7 +125,7 @@ function StablecoinCard({ stablecoin }: { stablecoin: typeof stablecoins[0] }) {
             Best Yield
           </Typography>
           <Typography variant="h6" color="success.main">
-            {stablecoin.yield.toFixed(1)}%
+            {stablecoin.apy.toFixed(1)}%
           </Typography>
         </Box>
 
@@ -145,37 +134,30 @@ function StablecoinCard({ stablecoin }: { stablecoin: typeof stablecoins[0] }) {
             Depeg Risk
           </Typography>
           <Box display="flex" alignItems="center" gap={1}>
-            <LinearProgress
-              variant="determinate"
-              value={stablecoin.depegRisk * 100}
-              color={stablecoin.depegRisk > 0.3 ? 'error' : 'success'}
-              sx={{ width: 60, height: 6 }}
-            />
-            <Typography variant="body2">
-              {(stablecoin.depegRisk * 100).toFixed(1)}%
-            </Typography>
+            {/* Depeg risk is not directly available in the new mock data,
+                so this will be a placeholder or removed if not needed.
+                For now, it's removed as per the new mock data. */}
+            <Typography variant="body2">N/A</Typography>
           </Box>
         </Box>
 
         <Box mb={2}>
           <Typography variant="body2" color="text.secondary" gutterBottom>
-            Issuer: {stablecoin.issuer}
+            Issuer: {stablecoin.backing}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Model: {stablecoin.collateralization}
+            Model: {stablecoin.backing}
           </Typography>
         </Box>
 
-        {stablecoin.blacklistRisk && (
-          <Alert severity="warning" sx={{ mb: 2 }}>
-            Centralized issuer - blacklisting possible
-          </Alert>
-        )}
+        {/* Blacklist risk is not directly available in the new mock data,
+            so this will be a placeholder or removed if not needed.
+            For now, it's removed as per the new mock data. */}
 
         <Button
           variant="contained"
           fullWidth
-          startIcon={<SwapHoriz />}
+          startIcon={<AccountBalance />}
           onClick={handleSwap}
         >
           Swap to {stablecoin.symbol}
@@ -200,7 +182,7 @@ function YieldComparisonTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {stablecoins.map((stablecoin) => (
+          {mockStablecoins.map((stablecoin) => (
             <TableRow key={stablecoin.symbol}>
               <TableCell>
                 <Box display="flex" alignItems="center" gap={1}>
@@ -227,7 +209,7 @@ function YieldComparisonTable() {
               </TableCell>
               <TableCell align="right">
                 <Typography variant="body1" color="success.main" fontWeight="bold">
-                  {stablecoin.yield.toFixed(1)}%
+                  {stablecoin.apy.toFixed(1)}%
                 </Typography>
               </TableCell>
               <TableCell align="right">
@@ -251,76 +233,25 @@ function RiskNotes() {
           Risk Notes & Disclaimers
         </Typography>
         
-        <Accordion>
-          <AccordionSummary expandIcon={<ExpandMore />}>
-            <Typography variant="subtitle1">Collateralization Models</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Box component="ul" sx={{ pl: 2 }}>
-              <Typography component="li" variant="body2" mb={1}>
-                <strong>Fiat-backed:</strong> Backed by traditional bank deposits and government securities
-              </Typography>
-              <Typography component="li" variant="body2" mb={1}>
-                <strong>Crypto-backed:</strong> Overcollateralized by other cryptocurrencies
-              </Typography>
-              <Typography component="li" variant="body2" mb={1}>
-                <strong>Hybrid:</strong> Combination of fiat and crypto collateral
-              </Typography>
-            </Box>
-          </AccordionDetails>
-        </Accordion>
+        {/* Collateralization Models is not directly available in the new mock data,
+            so this will be a placeholder or removed if not needed.
+            For now, it's removed as per the new mock data. */}
 
-        <Accordion>
-          <AccordionSummary expandIcon={<ExpandMore />}>
-            <Typography variant="subtitle1">Depeg Risks</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography variant="body2" mb={2}>
-              Stablecoins can lose their peg to the US dollar due to:
-            </Typography>
-            <Box component="ul" sx={{ pl: 2 }}>
-              <Typography component="li" variant="body2">
-                Insufficient collateral backing
-              </Typography>
-              <Typography component="li" variant="body2">
-                Regulatory actions against issuers
-              </Typography>
-              <Typography component="li" variant="body2">
-                Market panic and liquidity crises
-              </Typography>
-            </Box>
-          </AccordionDetails>
-        </Accordion>
+        {/* Depeg Risks is not directly available in the new mock data,
+            so this will be a placeholder or removed if not needed.
+            For now, it's removed as per the new mock data. */}
 
-        <Accordion>
-          <AccordionSummary expandIcon={<ExpandMore />}>
-            <Typography variant="subtitle1">Centralization Risks</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography variant="body2" mb={2}>
-              Centralized stablecoins carry additional risks:
-            </Typography>
-            <Box component="ul" sx={{ pl: 2 }}>
-              <Typography component="li" variant="body2">
-                Issuer can freeze or blacklist addresses
-              </Typography>
-              <Typography component="li" variant="body2">
-                Regulatory compliance requirements
-              </Typography>
-              <Typography component="li" variant="body2">
-                Single point of failure in operations
-              </Typography>
-            </Box>
-          </AccordionDetails>
-        </Accordion>
+        {/* Centralization Risks is not directly available in the new mock data,
+            so this will be a placeholder or removed if not needed.
+            For now, it's removed as per the new mock data. */}
       </CardContent>
     </Card>
   );
 }
 
 function BestYieldCard() {
-  const bestYield = stablecoins.reduce((max, coin) => 
-    coin.yield > max.yield ? coin : max
+  const bestYield = mockStablecoins.reduce((max, coin) => 
+    coin.apy > max.apy ? coin : max
   );
 
   return (
@@ -330,10 +261,10 @@ function BestYieldCard() {
           Best Available Yield
         </Typography>
         <Typography variant="h3" color="white" gutterBottom>
-          {bestYield.yield.toFixed(1)}%
+          {bestYield.apy.toFixed(1)}%
         </Typography>
         <Typography variant="body1" color="white" mb={2}>
-          {bestYield.symbol} on {bestYield.issuer}
+          {bestYield.symbol} on {bestYield.backing}
         </Typography>
         <Button
           variant="contained"
@@ -355,84 +286,82 @@ export default function StablecoinsPage() {
         Stablecoins Hub
       </Typography>
 
-      <Grid container spacing={3}>
-        {/* Best Yield Card */}
-        <Grid item xs={12} md={4}>
-          <BestYieldCard />
-        </Grid>
+      {/* Best Yield Card */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+        <BestYieldCard />
+      </Box>
 
-        {/* Quick Stats */}
-        <Grid xs={12} md={8}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Market Overview
-              </Typography>
-              <Grid container spacing={2}>
-                <Grid xs={6}>
-                  <Typography variant="body2" color="text.secondary">
-                    Total Market Cap
-                  </Typography>
-                  <Typography variant="h6">
-                    $150.2B
-                  </Typography>
-                </Grid>
-                <Grid xs={6}>
-                  <Typography variant="body2" color="text.secondary">
-                    Average Yield
-                  </Typography>
-                  <Typography variant="h6" color="success.main">
-                    4.2%
-                  </Typography>
-                </Grid>
-                <Grid xs={6}>
-                  <Typography variant="body2" color="text.secondary">
-                    24h Volume
-                  </Typography>
-                  <Typography variant="h6">
-                    $45.8B
-                  </Typography>
-                </Grid>
-                <Grid xs={6}>
-                  <Typography variant="body2" color="text.secondary">
-                    Active Protocols
-                  </Typography>
-                  <Typography variant="h6">
-                    12
-                  </Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
+      {/* Quick Stats */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+        <Card sx={{ flex: 1, minWidth: 200 }}>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Market Overview
+            </Typography>
+            <Box display="flex" flexWrap="wrap" gap={2}>
+              <Box flex={1} minWidth="120px">
+                <Typography variant="body2" color="text.secondary">
+                  Total Market Cap
+                </Typography>
+                <Typography variant="h6">
+                  $150.2B
+                </Typography>
+              </Box>
+              <Box flex={1} minWidth="120px">
+                <Typography variant="body2" color="text.secondary">
+                  Average Yield
+                </Typography>
+                <Typography variant="h6" color="success.main">
+                  4.2%
+                </Typography>
+              </Box>
+              <Box flex={1} minWidth="120px">
+                <Typography variant="body2" color="text.secondary">
+                  24h Volume
+                </Typography>
+                <Typography variant="h6">
+                  $45.8B
+                </Typography>
+              </Box>
+              <Box flex={1} minWidth="120px">
+                <Typography variant="body2" color="text.secondary">
+                  Active Protocols
+                </Typography>
+                <Typography variant="h6">
+                  12
+                </Typography>
+              </Box>
+            </Box>
+          </CardContent>
+        </Card>
+      </Box>
 
-        {/* Stablecoin Cards */}
-        <Grid item xs={12}>
-          <Typography variant="h5" gutterBottom>
-            Available Stablecoins
-          </Typography>
-          <Grid container spacing={2}>
-            {stablecoins.map((stablecoin) => (
-              <Grid item xs={12} sm={6} md={3} key={stablecoin.symbol}>
-                <StablecoinCard stablecoin={stablecoin} />
-              </Grid>
-            ))}
-          </Grid>
-        </Grid>
+      {/* Stablecoin Cards */}
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+        <Typography variant="h5" gutterBottom sx={{ width: '100%' }}>
+          Available Stablecoins
+        </Typography>
+        <Box display="flex" flexWrap="wrap" gap={2}>
+          {mockStablecoins.map((stablecoin) => (
+            <Box key={stablecoin.symbol} sx={{ flex: '1 1 300px', minWidth: '300px' }}>
+              <StablecoinCard stablecoin={stablecoin} />
+            </Box>
+          ))}
+        </Box>
+      </Box>
 
-        {/* Yield Comparison */}
-        <Grid item xs={12}>
-          <Typography variant="h5" gutterBottom>
-            Yield Comparison
-          </Typography>
-          <YieldComparisonTable />
-        </Grid>
+      {/* Yield Comparison */}
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+        <Typography variant="h5" gutterBottom sx={{ width: '100%' }}>
+          Yield Comparison
+        </Typography>
+        <YieldComparisonTable />
+      </Box>
 
-        {/* Risk Notes */}
-        <Grid item xs={12}>
-          <RiskNotes />
-        </Grid>
-      </Grid>
+      {/* Risk Notes */}
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+        <RiskNotes />
+      </Box>
     </Box>
   );
 }

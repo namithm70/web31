@@ -121,17 +121,17 @@ const mockPools: PoolData[] = [
 ];
 
 function PoolCard({ pool }: { pool: PoolData }) {
-  const [showStake, setShowStake] = useState(false);
-  const [stakeAmount, setStakeAmount] = useState('');
+  const [stakeAmount] = useState('');
+  const [isStaked, setIsStaked] = useState(false);
 
   const handleStake = () => {
     // TODO: Implement staking logic
-    console.log('Staking:', stakeAmount, 'LP tokens');
+    console.log('Staking in pool:', pool.id);
   };
 
   const handleUnstake = () => {
     // TODO: Implement unstaking logic
-    console.log('Unstaking LP tokens');
+    console.log('Unstaking from pool:', pool.id);
   };
 
   const handleClaim = () => {
@@ -195,11 +195,11 @@ function PoolCard({ pool }: { pool: PoolData }) {
           </Box>
         )}
 
-        {!showStake ? (
+        {!isStaked ? (
           <Button
             variant="contained"
             fullWidth
-            onClick={() => setShowStake(true)}
+            onClick={() => setIsStaked(true)}
           >
             Stake LP Tokens
           </Button>
@@ -216,7 +216,7 @@ function PoolCard({ pool }: { pool: PoolData }) {
               </Button>
               <Button
                 variant="outlined"
-                onClick={() => setShowStake(false)}
+                onClick={() => setIsStaked(false)}
               >
                 Cancel
               </Button>
