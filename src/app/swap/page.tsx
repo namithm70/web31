@@ -9,23 +9,13 @@ import {
   TextField,
   Button,
   IconButton,
-  Chip,
   Slider,
-  Switch,
-  FormControlLabel,
   Avatar,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Paper,
   Accordion,
   AccordionSummary,
   AccordionDetails,
 } from '@mui/material';
 import {
-  SwapHoriz,
-  Settings,
   ExpandMore,
   CompareArrows,
 } from '@mui/icons-material';

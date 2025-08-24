@@ -27,7 +27,6 @@ import {
 import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useState } from 'react';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const drawerWidth = 240;
@@ -150,7 +149,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           ml: { sm: `${drawerWidth}px` },
           backgroundColor: 'background.paper',
           color: 'text.primary',
-          borderBottom: `1px solid ${theme.palette.divider}`,
+          borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
         }}
       >
         <Toolbar>
@@ -210,7 +209,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               boxSizing: 'border-box',
               width: drawerWidth,
               backgroundColor: 'background.paper',
-              borderRight: `1px solid ${theme.palette.divider}`,
+              borderRight: '1px solid rgba(0, 0, 0, 0.12)',
             },
           }}
         >
@@ -224,7 +223,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               boxSizing: 'border-box',
               width: drawerWidth,
               backgroundColor: 'background.paper',
-              borderRight: `1px solid ${theme.palette.divider}`,
+              borderRight: '1px solid rgba(0, 0, 0, 0.12)',
             },
           }}
           open

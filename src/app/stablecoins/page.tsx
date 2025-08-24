@@ -18,7 +18,6 @@ import {
 import {
   AccountBalance,
 } from '@mui/icons-material';
-import { useAccount } from 'wagmi';
 import { TokenData } from '@/types';
 
 // Mock stablecoin data
