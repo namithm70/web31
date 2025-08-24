@@ -6,117 +6,99 @@ import {
   Card,
   CardContent,
   Typography,
-  Chip,
   Skeleton,
   Alert,
-  Button,
 } from '@mui/material';
-import { Grid } from '@mui/material';
-import {
-  TrendingUp,
-  TrendingDown,
-  AccountBalance,
-  ShowChart,
-} from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
 import { ProtocolData, MarketRate } from '@/types';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
-// Mock data for development
+// Mock data
 const mockProtocols: ProtocolData[] = [
-  {
-    id: 'aave-v3',
-    name: 'Aave V3',
-    tvl: 12500000000,
-    tvlChange24h: 2.5,
-    apy: 4.2,
-    chains: [1, 137, 42161],
-    category: 'lending',
-  },
   {
     id: 'uniswap-v3',
     name: 'Uniswap V3',
-    tvl: 8900000000,
-    tvlChange24h: -1.2,
-    apy: 12.8,
-    chains: [1, 137, 42161],
+    tvl: 2500000000,
+    tvlChange24h: 2.5,
+    apy: 12.5,
     category: 'dex',
+    chains: [1, 137, 42161],
+  },
+  {
+    id: 'aave-v3',
+    name: 'Aave V3',
+    tvl: 1800000000,
+    tvlChange24h: 1.8,
+    apy: 8.2,
+    category: 'lending',
+    chains: [1, 137, 42161],
   },
   {
     id: 'compound-v3',
     name: 'Compound V3',
-    tvl: 3200000000,
-    tvlChange24h: 0.8,
-    apy: 3.8,
-    chains: [1, 137],
+    tvl: 950000000,
+    tvlChange24h: 0.5,
+    apy: 7.8,
     category: 'lending',
+    chains: [1],
+  },
+  {
+    id: 'curve-finance',
+    name: 'Curve Finance',
+    tvl: 3200000000,
+    tvlChange24h: -0.2,
+    apy: 15.2,
+    category: 'stablecoin',
+    chains: [1, 137],
   },
 ];
 
 const mockMarketRates: MarketRate[] = [
   {
-    asset: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C' as any,
+    asset: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as `0x${string}`,
     supplyAPY: 4.2,
     borrowAPR: 6.8,
-    utilization: 78.5,
+    utilization: 75.5,
   },
   {
-    asset: '0xB0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C' as any,
+    asset: '0xB0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as `0x${string}`,
     supplyAPY: 3.8,
     borrowAPR: 5.9,
-    utilization: 65.2,
+    utilization: 68.2,
   },
 ];
 
 function ProtocolCard({ protocol }: { protocol: ProtocolData }) {
-  const isPositive = protocol.tvlChange24h >= 0;
-  
   return (
     <Card>
       <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography variant="h6">{protocol.name}</Typography>
-          <Chip 
-            label={protocol.category} 
-            size="small" 
-            color="primary" 
-            variant="outlined"
-          />
-        </Box>
-        
+        <Typography variant="h6" gutterBottom>
+          {protocol.name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary" gutterBottom>
+          {protocol.category}
+        </Typography>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
           <Typography variant="body2" color="text.secondary">
             TVL
           </Typography>
-          <Typography variant="h6">
-            ${(protocol.tvl / 1e9).toFixed(1)}B
+          <Typography variant="body1">
+            ${(protocol.tvl / 1000000).toFixed(0)}M
           </Typography>
         </Box>
-        
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
           <Typography variant="body2" color="text.secondary">
             24h Change
           </Typography>
-          <Box display="flex" alignItems="center">
-            {isPositive ? (
-              <TrendingUp color="success" fontSize="small" />
-            ) : (
-              <TrendingDown color="error" fontSize="small" />
-            )}
-            <Typography 
-              variant="body2" 
-              color={isPositive ? 'success.main' : 'error.main'}
-            >
-              {isPositive ? '+' : ''}{protocol.tvlChange24h.toFixed(1)}%
-            </Typography>
-          </Box>
+          <Typography variant="body1" color={protocol.tvlChange24h >= 0 ? 'success.main' : 'error.main'}>
+            {protocol.tvlChange24h >= 0 ? '+' : ''}{protocol.tvlChange24h.toFixed(1)}%
+          </Typography>
         </Box>
-        
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="body2" color="text.secondary">
-            Best APY
+            APY
           </Typography>
-          <Typography variant="h6" color="success.main">
+          <Typography variant="body1" color="success.main">
             {protocol.apy.toFixed(1)}%
           </Typography>
         </Box>
@@ -168,26 +150,26 @@ function MarketRatesCard() {
 export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
-  const { data: protocols, isLoading: protocolsLoading } = useQuery({
+  const { data: protocols, isLoading: protocolsLoading, error: protocolsError } = useQuery({
     queryKey: ['protocols'],
-    queryFn: async () => {
-      // TODO: Replace with actual API call
+    queryFn: async (): Promise<ProtocolData[]> => {
+      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       return mockProtocols;
     },
-    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  if (error) {
-    return (
-      <Alert severity="error" action={
-        <Button color="inherit" size="small" onClick={() => setError(null)}>
-          Retry
-        </Button>
-      }>
-        {error}
-      </Alert>
-    );
+  const { data: marketRates, isLoading: ratesLoading, error: ratesError } = useQuery({
+    queryKey: ['marketRates'],
+    queryFn: async (): Promise<MarketRate[]> => {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 800));
+      return mockMarketRates;
+    },
+  });
+
+  if (protocolsError || ratesError) {
+    setError('Failed to load dashboard data');
   }
 
   return (
@@ -195,77 +177,47 @@ export default function DashboardPage() {
       <Typography variant="h4" gutterBottom>
         DeFi Analytics Dashboard
       </Typography>
-      
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        {/* Protocol Overview */}
-        <Box>
-          <Typography variant="h5" gutterBottom>
-            Protocol Overview
-          </Typography>
-          <Box sx={{ 
-            display: 'grid', 
-            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
-            gap: 2 
-          }}>
-            {protocolsLoading ? (
-              Array.from({ length: 3 }).map((_, index) => (
-                <Box key={index}>
-                  <Skeleton variant="rectangular" height={200} />
-                </Box>
-              ))
-            ) : (
-              protocols?.map((protocol) => (
-                <Box key={protocol.id}>
-                  <ProtocolCard protocol={protocol} />
-                </Box>
-              ))
-            )}
-          </Box>
-        </Box>
 
-        {/* Market Rates and Quick Actions */}
-        <Box sx={{ 
-          display: 'grid', 
-          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
-          gap: 3 
-        }}>
-          {/* Market Rates */}
-          <Box>
-            <MarketRatesCard />
-          </Box>
+      <WalletConnectionTest />
 
-          {/* Quick Actions */}
-          <Box>
-            <Card>
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {error}
+        </Alert>
+      )}
+
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }, gap: 3, mb: 4 }}>
+        {protocolsLoading ? (
+          Array.from({ length: 4 }).map((_, index) => (
+            <Card key={index}>
               <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Quick Actions
-                </Typography>
-                <Box display="flex" flexDirection="column" gap={2}>
-                  <Button 
-                    variant="contained" 
-                    startIcon={<ShowChart />}
-                    fullWidth
-                  >
-                    View Best Yields
-                  </Button>
-                  <Button 
-                    variant="outlined" 
-                    startIcon={<AccountBalance />}
-                    fullWidth
-                  >
-                    Check Portfolio
-                  </Button>
-                </Box>
+                <Skeleton variant="text" width="60%" height={32} />
+                <Skeleton variant="text" width="40%" />
+                <Skeleton variant="text" width="80%" />
+                <Skeleton variant="text" width="70%" />
               </CardContent>
             </Card>
-          </Box>
-        </Box>
+          ))
+        ) : (
+          protocols?.map((protocol) => (
+            <ProtocolCard key={protocol.name} protocol={protocol} />
+          ))
+        )}
+      </Box>
 
-        {/* Wallet Connection Test */}
-        <Box>
-          <WalletConnectionTest />
-        </Box>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, 1fr)' }, gap: 3 }}>
+        {ratesLoading ? (
+          <Card>
+            <CardContent>
+              <Skeleton variant="text" width="40%" height={32} />
+              <Skeleton variant="text" width="80%" />
+              <Skeleton variant="text" width="70%" />
+              <Skeleton variant="text" width="60%" />
+            </CardContent>
+          </Card>
+        ) : (
+          <MarketRatesCard />
+        )}
       </Box>
     </Box>
   );

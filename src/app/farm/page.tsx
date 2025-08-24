@@ -5,13 +5,8 @@ import {
   Box,
   Card,
   CardContent,
-  Grid,
   Typography,
   Button,
-  TextField,
-  Chip,
-  LinearProgress,
-  Alert,
   Table,
   TableBody,
   TableCell,
@@ -19,110 +14,108 @@ import {
   TableHead,
   TableRow,
   Paper,
-  IconButton,
-  Tooltip,
+  Chip,
+  Alert,
 } from '@mui/material';
 import {
-  Agriculture,
-  TrendingUp,
-  Lock,
-  Info,
   Add,
-  Remove,
+  TrendingUp,
+  Info,
+  ExpandMore,
 } from '@mui/icons-material';
 import { useAccount } from 'wagmi';
-import { PoolData, TokenData } from '@/types';
+import { PoolData } from '@/types';
 
-// Mock pool data
+// Mock data
 const mockPools: PoolData[] = [
   {
     id: 'uni-eth-usdc',
     protocol: 'Uniswap V3',
     token0: {
-      address: '0xB0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as any,
-      symbol: 'ETH',
-      name: 'Ethereum',
+      address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' as `0x${string}`,
+      symbol: 'WETH',
+      name: 'Wrapped Ether',
       decimals: 18,
-      price: 3200.00,
+      price: 3500,
     },
     token1: {
-      address: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C' as any,
+      address: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as `0x${string}`,
       symbol: 'USDC',
       name: 'USD Coin',
       decimals: 6,
-      price: 1.00,
+      price: 1,
     },
-    apr: 18.5,
-    tvl: 45000000,
-    stakingContract: '0xD0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as any,
+    apr: 45.2,
+    tvl: 2500000,
+    stakingContract: '0x1234567890123456789012345678901234567890' as `0x${string}`,
     rewardTokens: [
       {
-        address: '0xE0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as any,
+        address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984' as `0x${string}`,
         symbol: 'UNI',
         name: 'Uniswap',
         decimals: 18,
-        price: 8.50,
-      },
-    ],
-  },
-  {
-    id: 'sushi-eth-usdt',
-    protocol: 'SushiSwap',
-    token0: {
-      address: '0xB0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as any,
-      symbol: 'ETH',
-      name: 'Ethereum',
-      decimals: 18,
-      price: 3200.00,
-    },
-    token1: {
-      address: '0xC0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as any,
-      symbol: 'USDT',
-      name: 'Tether USD',
-      decimals: 6,
-      price: 1.00,
-    },
-    apr: 15.2,
-    tvl: 28000000,
-    stakingContract: '0xF0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as any,
-    rewardTokens: [
-      {
-        address: '0xF1b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as any,
-        symbol: 'SUSHI',
-        name: 'SushiToken',
-        decimals: 18,
-        price: 1.20,
-      },
+        price: 12.5,
+      }
     ],
   },
   {
     id: 'curve-3pool',
-    protocol: 'Curve',
+    protocol: 'Curve Finance',
     token0: {
-      address: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C' as any,
+      address: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as `0x${string}`,
       symbol: 'USDC',
       name: 'USD Coin',
       decimals: 6,
-      price: 1.00,
+      price: 1,
     },
     token1: {
-      address: '0xC0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as any,
-      symbol: 'USDT',
-      name: 'Tether USD',
-      decimals: 6,
-      price: 1.00,
+      address: '0x6B175474E89094C44Da98b954EedeAC495271d0F' as `0x${string}`,
+      symbol: 'DAI',
+      name: 'Dai Stablecoin',
+      decimals: 18,
+      price: 1,
     },
-    apr: 8.7,
-    tvl: 120000000,
-    stakingContract: '0xF2b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as any,
+    apr: 12.8,
+    tvl: 1800000,
+    stakingContract: '0x1234567890123456789012345678901234567890' as `0x${string}`,
     rewardTokens: [
       {
-        address: '0xF3b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as any,
+        address: '0xD533a949740bb3306d119CC777fa900bA034cd52' as `0x${string}`,
         symbol: 'CRV',
         name: 'Curve DAO Token',
         decimals: 18,
-        price: 0.65,
-      },
+        price: 0.85,
+      }
+    ],
+  },
+  {
+    id: 'aave-usdc',
+    protocol: 'Aave V3',
+    token0: {
+      address: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as `0x${string}`,
+      symbol: 'USDC',
+      name: 'USD Coin',
+      decimals: 6,
+      price: 1,
+    },
+    token1: {
+      address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599' as `0x${string}`,
+      symbol: 'WBTC',
+      name: 'Wrapped Bitcoin',
+      decimals: 8,
+      price: 45000,
+    },
+    apr: 8.5,
+    tvl: 950000,
+    stakingContract: '0x1234567890123456789012345678901234567890' as `0x${string}`,
+    rewardTokens: [
+      {
+        address: '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9' as `0x${string}`,
+        symbol: 'AAVE',
+        name: 'Aave Token',
+        decimals: 18,
+        price: 85.5,
+      }
     ],
   },
 ];
@@ -165,24 +158,24 @@ function PoolCard({ pool }: { pool: PoolData }) {
           />
         </Box>
 
-        <Grid container spacing={2} mb={2}>
-          <Grid item xs={6}>
+        <Box display="flex" gap={2} mb={2}>
+          <Box flex={1}>
             <Typography variant="body2" color="text.secondary">
               TVL
             </Typography>
             <Typography variant="h6">
               ${(pool.tvl / 1e6).toFixed(1)}M
             </Typography>
-          </Grid>
-          <Grid item xs={6}>
+          </Box>
+          <Box flex={1}>
             <Typography variant="body2" color="text.secondary">
               Your Stake
             </Typography>
             <Typography variant="h6">
               $0.00
             </Typography>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
 
         {pool.rewardTokens && (
           <Box mb={2}>
@@ -212,22 +205,7 @@ function PoolCard({ pool }: { pool: PoolData }) {
           </Button>
         ) : (
           <Box>
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder="0.0"
-              value={stakeAmount}
-              onChange={(e) => setStakeAmount(e.target.value)}
-              sx={{ mb: 2 }}
-              InputProps={{
-                endAdornment: (
-                  <Button size="small">
-                    Max
-                  </Button>
-                ),
-              }}
-            />
-            <Box display="flex" gap={1}>
+            <Box display="flex" gap={1} mb={2}>
               <Button
                 variant="contained"
                 fullWidth
@@ -251,7 +229,7 @@ function PoolCard({ pool }: { pool: PoolData }) {
           <Button
             variant="outlined"
             size="small"
-            startIcon={<Remove />}
+            startIcon={<ExpandMore />}
             onClick={handleUnstake}
           >
             Unstake
@@ -293,9 +271,12 @@ function PoolsTable() {
                     {pool.token0.symbol}/{pool.token1.symbol}
                   </Typography>
                   {pool.stakingContract && (
-                    <Tooltip title="Staking available">
-                      <Lock fontSize="small" color="primary" />
-                    </Tooltip>
+                    <Chip
+                      label="Staking"
+                      size="small"
+                      color="primary"
+                      variant="outlined"
+                    />
                   )}
                 </Box>
               </TableCell>
@@ -342,40 +323,40 @@ function StatsCard() {
         <Typography variant="h6" gutterBottom>
           Your Farming Stats
         </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
+        <Box display="flex" gap={2} flexWrap="wrap">
+          <Box flex={1}>
             <Typography variant="body2" color="text.secondary">
               Total Staked
             </Typography>
             <Typography variant="h6">
               $0.00
             </Typography>
-          </Grid>
-          <Grid item xs={6}>
+          </Box>
+          <Box flex={1}>
             <Typography variant="body2" color="text.secondary">
               Total Rewards
             </Typography>
             <Typography variant="h6" color="success.main">
               $0.00
             </Typography>
-          </Grid>
-          <Grid item xs={6}>
+          </Box>
+          <Box flex={1}>
             <Typography variant="body2" color="text.secondary">
               Average APR
             </Typography>
             <Typography variant="h6">
               0.0%
             </Typography>
-          </Grid>
-          <Grid item xs={6}>
+          </Box>
+          <Box flex={1}>
             <Typography variant="body2" color="text.secondary">
               Active Pools
             </Typography>
             <Typography variant="h6">
               0
             </Typography>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </CardContent>
     </Card>
   );
@@ -403,14 +384,14 @@ export default function FarmPage() {
         Yield Farming & Staking
       </Typography>
 
-      <Grid container spacing={3}>
+      <Box display="flex" gap={3}>
         {/* Stats */}
-        <Grid item xs={12} md={4}>
+        <Box flex={1}>
           <StatsCard />
-        </Grid>
+        </Box>
 
         {/* Quick Actions */}
-        <Grid item xs={12} md={8}>
+        <Box flex={1}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -429,30 +410,30 @@ export default function FarmPage() {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </Box>
 
         {/* Pools Overview */}
-        <Grid item xs={12}>
+        <Box flex={2}>
           <Typography variant="h5" gutterBottom>
             Available Pools
           </Typography>
-          <Grid container spacing={2}>
+          <Box display="flex" flexWrap="wrap" gap={2}>
             {mockPools.map((pool) => (
-              <Grid item xs={12} sm={6} md={4} key={pool.id}>
+              <Box key={pool.id} flex={1} minWidth="300px">
                 <PoolCard pool={pool} />
-              </Grid>
+              </Box>
             ))}
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
 
         {/* Detailed Table */}
-        <Grid item xs={12}>
+        <Box flex={1}>
           <Typography variant="h5" gutterBottom>
             All Pools
           </Typography>
           <PoolsTable />
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </Box>
   );
 }

@@ -5,15 +5,8 @@ import {
   Box,
   Card,
   CardContent,
-  Grid,
   Typography,
   Button,
-  TextField,
-  Chip,
-  LinearProgress,
-  Alert,
-  Tabs,
-  Tab,
   Table,
   TableBody,
   TableCell,
@@ -21,55 +14,56 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Alert,
 } from '@mui/material';
 import {
-  AccountBalance,
-  TrendingUp,
+  AccountBalanceWallet,
+  TrendingDown,
   Warning,
   CheckCircle,
 } from '@mui/icons-material';
 import { useAccount } from 'wagmi';
-import { MarketRate, TokenData } from '@/types';
+import { TokenData, MarketRate } from '@/types';
 
-// Mock market data
+// Mock data
 const mockMarkets: (MarketRate & { token: TokenData })[] = [
   {
-    asset: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C' as any,
+    asset: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as `0x${string}`,
     supplyAPY: 4.2,
     borrowAPR: 6.8,
-    utilization: 78.5,
+    utilization: 75.5,
     token: {
-      address: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C' as any,
+      address: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as `0x${string}`,
       symbol: 'USDC',
       name: 'USD Coin',
       decimals: 6,
-      price: 1.00,
+      price: 1,
     },
   },
   {
-    asset: '0xB0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as any,
-    supplyAPY: 2.1,
-    borrowAPR: 4.5,
-    utilization: 65.2,
-    token: {
-      address: '0xB0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as any,
-      symbol: 'ETH',
-      name: 'Ethereum',
-      decimals: 18,
-      price: 3200.00,
-    },
-  },
-  {
-    asset: '0xC0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as any,
+    asset: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' as `0x${string}`,
     supplyAPY: 3.8,
     borrowAPR: 5.9,
-    utilization: 72.1,
+    utilization: 68.2,
     token: {
-      address: '0xC0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as any,
-      symbol: 'USDT',
-      name: 'Tether USD',
-      decimals: 6,
-      price: 1.00,
+      address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' as `0x${string}`,
+      symbol: 'WETH',
+      name: 'Wrapped Ether',
+      decimals: 18,
+      price: 3500,
+    },
+  },
+  {
+    asset: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599' as `0x${string}`,
+    supplyAPY: 2.1,
+    borrowAPR: 4.5,
+    utilization: 45.8,
+    token: {
+      address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599' as `0x${string}`,
+      symbol: 'WBTC',
+      name: 'Wrapped Bitcoin',
+      decimals: 8,
+      price: 45000,
     },
   },
 ];
@@ -120,12 +114,7 @@ function HealthFactorCard() {
             <Warning color="error" />
           )}
         </Box>
-        <LinearProgress
-          variant="determinate"
-          value={Math.min((healthFactor / 2) * 100, 100)}
-          color={isHealthy ? 'success' : isWarning ? 'warning' : 'error'}
-          sx={{ mb: 1 }}
-        />
+        {/* LinearProgress removed as per new_code */}
         <Typography variant="body2" color="text.secondary">
           {isHealthy 
             ? 'Your position is healthy' 
@@ -197,8 +186,13 @@ function MarketTable() {
 }
 
 function SupplyBorrowForm({ action }: { action: 'supply' | 'borrow' }) {
+  const [selectedToken, setSelectedToken] = useState<TokenData | null>(null);
   const [amount, setAmount] = useState('');
-  const [selectedToken, setSelectedToken] = useState(mockMarkets[0]);
+
+  const handleSubmit = () => {
+    // TODO: Implement supply/borrow logic
+    console.log(`${action} ${amount} of ${selectedToken?.symbol}`);
+  };
 
   return (
     <Card>
@@ -207,71 +201,29 @@ function SupplyBorrowForm({ action }: { action: 'supply' | 'borrow' }) {
           {action === 'supply' ? 'Supply Assets' : 'Borrow Assets'}
         </Typography>
         
-        <Box mb={2}>
+        <Box mb={3}>
           <Typography variant="body2" color="text.secondary" gutterBottom>
             Asset
           </Typography>
-          <Button
-            variant="outlined"
-            fullWidth
-            sx={{ justifyContent: 'space-between', textTransform: 'none' }}
-          >
-            <Box display="flex" alignItems="center" gap={1}>
-              <Typography variant="body1">{selectedToken.token.symbol}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                {selectedToken.token.name}
-              </Typography>
-            </Box>
+          <Button variant="outlined" fullWidth>
+            {selectedToken ? selectedToken.symbol : 'Select Token'}
           </Button>
         </Box>
 
-        <Box mb={2}>
+        <Box mb={3}>
           <Typography variant="body2" color="text.secondary" gutterBottom>
             Amount
           </Typography>
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="0.0"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            InputProps={{
-              endAdornment: (
-                <Button size="small">
-                  Max
-                </Button>
-              ),
-            }}
-          />
+          <Typography variant="h6">
+            {amount}
+          </Typography>
         </Box>
 
-        {action === 'supply' && (
-          <Box mb={2}>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              Supply APY
-            </Typography>
-            <Typography variant="h6" color="success.main">
-              {selectedToken.supplyAPY.toFixed(2)}%
-            </Typography>
-          </Box>
-        )}
-
-        {action === 'borrow' && (
-          <Box mb={2}>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              Borrow APR
-            </Typography>
-            <Typography variant="h6" color="error.main">
-              {selectedToken.borrowAPR.toFixed(2)}%
-            </Typography>
-          </Box>
-        )}
-
-        <Button
-          variant="contained"
-          fullWidth
-          size="large"
-          disabled={!amount}
+        <Button 
+          variant="contained" 
+          fullWidth 
+          onClick={handleSubmit}
+          disabled={!selectedToken || !amount}
         >
           {action === 'supply' ? 'Supply' : 'Borrow'}
         </Button>
@@ -307,130 +259,134 @@ export default function LendPage() {
         Lending & Borrowing
       </Typography>
 
-      <Grid container spacing={3}>
+      <Box display="flex" gap={3}>
         {/* Health Factor */}
-        <Grid item xs={12} md={4}>
+        <Box flex={1}>
           <HealthFactorCard />
-        </Grid>
+        </Box>
 
         {/* Quick Stats */}
-        <Grid item xs={12} md={8}>
+        <Box flex={1}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 Your Positions
               </Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
+              <Box display="flex" gap={2}>
+                <Box flex={1}>
                   <Typography variant="body2" color="text.secondary">
                     Total Supplied
                   </Typography>
                   <Typography variant="h6">
                     $12,450.00
                   </Typography>
-                </Grid>
-                <Grid item xs={6}>
+                </Box>
+                <Box flex={1}>
                   <Typography variant="body2" color="text.secondary">
                     Total Borrowed
                   </Typography>
                   <Typography variant="h6" color="error.main">
                     $3,200.00
                   </Typography>
-                </Grid>
-                <Grid item xs={6}>
+                </Box>
+                <Box flex={1}>
                   <Typography variant="body2" color="text.secondary">
                     Net APY
                   </Typography>
                   <Typography variant="h6" color="success.main">
                     +2.8%
                   </Typography>
-                </Grid>
-                <Grid item xs={6}>
+                </Box>
+                <Box flex={1}>
                   <Typography variant="body2" color="text.secondary">
                     Available to Borrow
                   </Typography>
                   <Typography variant="h6">
                     $8,250.00
                   </Typography>
-                </Grid>
-              </Grid>
+                </Box>
+              </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </Box>
+      </Box>
 
-        {/* Main Content */}
-        <Grid item xs={12}>
-          <Card>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <Tabs value={tabValue} onChange={handleTabChange}>
-                <Tab label="Markets" />
-                <Tab label="Supply" />
-                <Tab label="Borrow" />
-              </Tabs>
+      {/* Main Content */}
+      <Box mt={3}>
+        <Card>
+          {/* Tabs removed as per new_code */}
+          {/* TabPanel value={tabValue} index={0} */}
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            {/* Tabs removed as per new_code */}
+            {/* Tab label="Markets" */}
+            {/* Tab label="Supply" */}
+            {/* Tab label="Borrow" */}
+          </Box>
+
+          {/* TabPanel value={tabValue} index={0} */}
+          <Box sx={{ p: 3 }}>
+            <MarketTable />
+          </Box>
+
+          {/* TabPanel value={tabValue} index={1} */}
+          <Box sx={{ p: 3 }}>
+            <Box display="flex" gap={3}>
+              <Box flex={1}>
+                <SupplyBorrowForm action="supply" />
+              </Box>
+              <Box flex={1}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      Supply Benefits
+                    </Typography>
+                    <Box component="ul" sx={{ pl: 2 }}>
+                      <Typography component="li" variant="body2">
+                        Earn interest on your assets
+                      </Typography>
+                      <Typography component="li" variant="body2">
+                        Use as collateral for borrowing
+                      </Typography>
+                      <Typography component="li" variant="body2">
+                        Withdraw anytime (subject to utilization)
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Box>
             </Box>
+          </Box>
 
-            <TabPanel value={tabValue} index={0}>
-              <MarketTable />
-            </TabPanel>
-
-            <TabPanel value={tabValue} index={1}>
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <SupplyBorrowForm action="supply" />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Card>
-                    <CardContent>
-                      <Typography variant="h6" gutterBottom>
-                        Supply Benefits
+          {/* TabPanel value={tabValue} index={2} */}
+          <Box sx={{ p: 3 }}>
+            <Box display="flex" gap={3}>
+              <Box flex={1}>
+                <SupplyBorrowForm action="borrow" />
+              </Box>
+              <Box flex={1}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      Borrowing Requirements
+                    </Typography>
+                    <Box component="ul" sx={{ pl: 2 }}>
+                      <Typography component="li" variant="body2">
+                        Maintain health factor &gt; 1.0
                       </Typography>
-                      <Box component="ul" sx={{ pl: 2 }}>
-                        <Typography component="li" variant="body2">
-                          Earn interest on your assets
-                        </Typography>
-                        <Typography component="li" variant="body2">
-                          Use as collateral for borrowing
-                        </Typography>
-                        <Typography component="li" variant="body2">
-                          Withdraw anytime (subject to utilization)
-                        </Typography>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              </Grid>
-            </TabPanel>
-
-            <TabPanel value={tabValue} index={2}>
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <SupplyBorrowForm action="borrow" />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Card>
-                    <CardContent>
-                      <Typography variant="h6" gutterBottom>
-                        Borrowing Requirements
+                      <Typography component="li" variant="body2">
+                        Provide sufficient collateral
                       </Typography>
-                      <Box component="ul" sx={{ pl: 2 }}>
-                        <Typography component="li" variant="body2">
-                          Maintain health factor &gt; 1.0
-                        </Typography>
-                        <Typography component="li" variant="body2">
-                          Provide sufficient collateral
-                        </Typography>
-                        <Typography component="li" variant="body2">
-                          Pay interest on borrowed amount
-                        </Typography>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              </Grid>
-            </TabPanel>
-          </Card>
-        </Grid>
-      </Grid>
+                      <Typography component="li" variant="body2">
+                        Pay interest on borrowed amount
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Box>
+            </Box>
+          </Box>
+        </Card>
+      </Box>
     </Box>
   );
 }
