@@ -15,16 +15,25 @@ import {
   AccordionSummary,
   AccordionDetails,
   InputAdornment,
+  Menu,
+  MenuItem,
+  ListItemAvatar,
+  ListItemText,
+  Chip,
+  Divider,
 } from '@mui/material';
 import {
   ExpandMore,
   CompareArrows,
   Settings,
+  KeyboardArrowDown,
+  TrendingUp,
+  Info,
 } from '@mui/icons-material';
 import { useAccount, useBalance } from 'wagmi';
 import { TokenData } from '@/types';
 
-// Enhanced mock token data
+// Enhanced mock token data with more coins
 const mockTokens: TokenData[] = [
   {
     address: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as `0x${string}`,
@@ -66,7 +75,244 @@ const mockTokens: TokenData[] = [
     volume24h: 12000000000,
     liquidity: 85000000000,
   },
+  {
+    address: '0x6B175474E89094C44Da98b954EedeAC495271d0F' as `0x${string}`,
+    symbol: 'DAI',
+    name: 'Dai Stablecoin',
+    decimals: 18,
+    price: 1.00,
+    logoURI: 'https://cryptologos.cc/logos/multi-collateral-dai-dai-logo.png',
+    volume24h: 2000000000,
+    liquidity: 5000000000,
+  },
+  {
+    address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984' as `0x${string}`,
+    symbol: 'UNI',
+    name: 'Uniswap',
+    decimals: 18,
+    price: 12.50,
+    logoURI: 'https://cryptologos.cc/logos/uniswap-uni-logo.png',
+    volume24h: 1500000000,
+    liquidity: 3000000000,
+  },
+  {
+    address: '0x514910771AF9Ca656af840dff83E8264EcF986CA' as `0x${string}`,
+    symbol: 'LINK',
+    name: 'Chainlink',
+    decimals: 18,
+    price: 18.75,
+    logoURI: 'https://cryptologos.cc/logos/chainlink-link-logo.png',
+    volume24h: 1200000000,
+    liquidity: 2500000000,
+  },
+  {
+    address: '0x7D1AfA7B718fb893dB30A3aBc0Cfc608aCafEBB0' as `0x${string}`,
+    symbol: 'MATIC',
+    name: 'Polygon',
+    decimals: 18,
+    price: 0.85,
+    logoURI: 'https://cryptologos.cc/logos/polygon-matic-logo.png',
+    volume24h: 1800000000,
+    liquidity: 4000000000,
+  },
+  {
+    address: '0x4Fabb145d64652a948d72533023f6E7A623C7C53' as `0x${string}`,
+    symbol: 'BUSD',
+    name: 'Binance USD',
+    decimals: 18,
+    price: 1.00,
+    logoURI: 'https://cryptologos.cc/logos/bnb-bnb-logo.png',
+    volume24h: 3000000000,
+    liquidity: 12000000000,
+  },
+  {
+    address: '0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE' as `0x${string}`,
+    symbol: 'SHIB',
+    name: 'Shiba Inu',
+    decimals: 18,
+    price: 0.000025,
+    logoURI: 'https://cryptologos.cc/logos/shiba-inu-shib-logo.png',
+    volume24h: 800000000,
+    liquidity: 1500000000,
+  },
 ];
+
+function TokenSelector({ 
+  selectedToken, 
+  onSelect, 
+  label 
+}: { 
+  selectedToken: TokenData; 
+  onSelect: (token: TokenData) => void;
+  label: string;
+}) {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleTokenSelect = (token: TokenData) => {
+    onSelect(token);
+    handleClose();
+  };
+
+  return (
+    <Box>
+      <Typography variant="body2" sx={{ color: '#E2E8F0', mb: 1.5, fontWeight: 600 }}>
+        {label}
+      </Typography>
+      <Button
+        onClick={handleClick}
+        sx={{
+          background: 'rgba(139, 92, 246, 0.1)',
+          border: '1px solid rgba(139, 92, 246, 0.3)',
+          borderRadius: 2,
+          p: 2.5,
+          width: '100%',
+          justifyContent: 'space-between',
+          textTransform: 'none',
+          color: '#FFFFFF',
+          '&:hover': {
+            background: 'rgba(139, 92, 246, 0.15)',
+            borderColor: 'rgba(139, 92, 246, 0.5)',
+          }
+        }}
+      >
+        <Box display="flex" alignItems="center" gap={2}>
+          <Avatar 
+            src={selectedToken?.logoURI} 
+            alt={selectedToken?.symbol}
+            sx={{ 
+              width: 32, 
+              height: 32,
+              border: '2px solid rgba(139, 92, 246, 0.3)',
+              background: 'rgba(139, 92, 246, 0.2)',
+              borderRadius: 2,
+            }}
+          >
+            {selectedToken?.symbol?.charAt(0)}
+          </Avatar>
+          <Box textAlign="left">
+            <Typography variant="body1" fontWeight={600} sx={{ color: '#FFFFFF' }}>
+              {selectedToken?.symbol}
+            </Typography>
+                             <Typography variant="body2" sx={{ color: '#A0AEC0' }}>
+                   ${(selectedToken?.price || 0).toFixed(2)}
+                 </Typography>
+          </Box>
+        </Box>
+        <KeyboardArrowDown sx={{ color: '#E2E8F0' }} />
+      </Button>
+
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          sx: {
+            background: 'rgba(30, 27, 75, 0.95)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(139, 92, 246, 0.3)',
+            borderRadius: 2,
+            maxHeight: 400,
+            width: 320,
+          }
+        }}
+      >
+        <Box sx={{ p: 2 }}>
+          <Typography variant="h6" sx={{ color: '#FFFFFF', mb: 2 }}>
+            Select Token
+          </Typography>
+          <TextField
+            placeholder="Search tokens..."
+            variant="outlined"
+            size="small"
+            fullWidth
+            sx={{
+              mb: 2,
+              '& .MuiOutlinedInput-root': {
+                color: '#FFFFFF',
+                '& fieldset': {
+                  borderColor: 'rgba(139, 92, 246, 0.3)',
+                },
+                '&:hover fieldset': {
+                  borderColor: 'rgba(139, 92, 246, 0.5)',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#8B5CF6',
+                },
+              },
+              '& .MuiInputBase-input::placeholder': {
+                color: '#A0AEC0',
+                opacity: 1,
+              },
+            }}
+          />
+        </Box>
+        <Divider sx={{ borderColor: 'rgba(139, 92, 246, 0.3)' }} />
+        {mockTokens.map((token) => (
+          <MenuItem
+            key={token.address}
+            onClick={() => handleTokenSelect(token)}
+            sx={{
+              color: '#FFFFFF',
+              '&:hover': {
+                background: 'rgba(139, 92, 246, 0.1)',
+              },
+              '&.Mui-selected': {
+                background: 'rgba(139, 92, 246, 0.2)',
+                '&:hover': {
+                  background: 'rgba(139, 92, 246, 0.25)',
+                },
+              },
+            }}
+          >
+            <ListItemAvatar>
+              <Avatar 
+                src={token.logoURI} 
+                alt={token.symbol}
+                sx={{ 
+                  width: 32, 
+                  height: 32,
+                  borderRadius: 2,
+                }}
+              >
+                {token.symbol.charAt(0)}
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Typography variant="body1" fontWeight={600} sx={{ color: '#FFFFFF' }}>
+                  {token.symbol}
+                </Typography>
+              }
+                             secondary={
+                 <Typography variant="body2" sx={{ color: '#A0AEC0' }}>
+                   {token.name} • ${(token.price || 0).toFixed(2)}
+                 </Typography>
+               }
+            />
+                         <Chip
+               label={`$${((token.volume24h || 0) / 1000000).toFixed(0)}M`}
+               size="small"
+               sx={{
+                 background: 'rgba(139, 92, 246, 0.2)',
+                 color: '#E2E8F0',
+                 fontSize: '0.75rem',
+               }}
+             />
+          </MenuItem>
+        ))}
+      </Menu>
+    </Box>
+  );
+}
 
 function SwapCard() {
   const { address } = useAccount();
@@ -92,6 +338,10 @@ function SwapCard() {
     setTokenIn(tokenOut);
     setTokenOut(temp);
   };
+
+  // Calculate estimated output (mock calculation)
+  const estimatedOutput = amountIn && tokenIn.price && tokenOut.price ? 
+    (parseFloat(amountIn) * tokenIn.price / tokenOut.price).toFixed(6) : '';
 
   return (
     <Box sx={{ 
@@ -133,14 +383,17 @@ function SwapCard() {
 
           {/* Token Input */}
           <Box sx={{ mb: 3 }}>
-            <Typography variant="body2" sx={{ color: '#E2E8F0', mb: 1.5, fontWeight: 600 }}>
-              You Pay
-            </Typography>
+            <TokenSelector 
+              selectedToken={tokenIn} 
+              onSelect={setTokenIn} 
+              label="You Pay"
+            />
             <Box sx={{
               background: 'rgba(139, 92, 246, 0.1)',
               border: '1px solid rgba(139, 92, 246, 0.3)',
               borderRadius: 2,
               p: 2.5,
+              mt: 1.5,
               transition: 'all 0.3s ease',
               '&:hover': {
                 borderColor: 'rgba(139, 92, 246, 0.5)',
@@ -148,24 +401,8 @@ function SwapCard() {
               }
             }}>
               <Box display="flex" alignItems="center" gap={2}>
-                <Avatar 
-                  src={tokenIn?.logoURI} 
-                  alt={tokenIn?.symbol}
-                  sx={{ 
-                    width: 48, 
-                    height: 48,
-                    border: '2px solid rgba(139, 92, 246, 0.3)',
-                    background: 'rgba(139, 92, 246, 0.2)',
-                    borderRadius: 2,
-                  }}
-                >
-                  {tokenIn?.symbol?.charAt(0)}
-                </Avatar>
                 <Box flex={1}>
-                  <Typography variant="h6" fontWeight={700} sx={{ color: '#FFFFFF' }}>
-                    {tokenIn?.symbol}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: '#E2E8F0', fontWeight: 500 }}>
+                  <Typography variant="body2" sx={{ color: '#A0AEC0', mb: 0.5 }}>
                     Balance: {balanceIn?.formatted || '0'} {tokenIn?.symbol}
                   </Typography>
                 </Box>
@@ -188,15 +425,6 @@ function SwapCard() {
                       color: '#A0AEC0',
                       opacity: 1,
                     },
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <Typography variant="body2" sx={{ color: '#A0AEC0', fontWeight: 600 }}>
-                          ${tokenIn?.price?.toFixed(2)}
-                        </Typography>
-                      </InputAdornment>
-                    ),
                   }}
                 />
               </Box>
@@ -229,14 +457,17 @@ function SwapCard() {
 
           {/* Token Output */}
           <Box sx={{ mb: 4 }}>
-            <Typography variant="body2" sx={{ color: '#E2E8F0', mb: 1.5, fontWeight: 600 }}>
-              You Receive
-            </Typography>
+            <TokenSelector 
+              selectedToken={tokenOut} 
+              onSelect={setTokenOut} 
+              label="You Receive"
+            />
             <Box sx={{
               background: 'rgba(139, 92, 246, 0.1)',
               border: '1px solid rgba(139, 92, 246, 0.3)',
               borderRadius: 2,
               p: 2.5,
+              mt: 1.5,
               transition: 'all 0.3s ease',
               '&:hover': {
                 borderColor: 'rgba(139, 92, 246, 0.5)',
@@ -244,25 +475,9 @@ function SwapCard() {
               }
             }}>
               <Box display="flex" alignItems="center" gap={2}>
-                <Avatar 
-                  src={tokenOut?.logoURI} 
-                  alt={tokenOut?.symbol}
-                  sx={{ 
-                    width: 48, 
-                    height: 48,
-                    border: '2px solid rgba(139, 92, 246, 0.3)',
-                    background: 'rgba(139, 92, 246, 0.2)',
-                    borderRadius: 2,
-                  }}
-                >
-                  {tokenOut?.symbol?.charAt(0)}
-                </Avatar>
                 <Box flex={1}>
-                  <Typography variant="h6" fontWeight={700} sx={{ color: '#FFFFFF' }}>
-                    {tokenOut?.symbol}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: '#E2E8F0', fontWeight: 500 }}>
-                    {tokenOut?.name}
+                  <Typography variant="body2" sx={{ color: '#A0AEC0', mb: 0.5 }}>
+                    Estimated: {estimatedOutput} {tokenOut?.symbol}
                   </Typography>
                 </Box>
                 <TextField
@@ -285,19 +500,39 @@ function SwapCard() {
                       opacity: 1,
                     },
                   }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <Typography variant="body2" sx={{ color: '#A0AEC0', fontWeight: 600 }}>
-                          ${tokenOut?.price?.toFixed(2)}
-                        </Typography>
-                      </InputAdornment>
-                    ),
-                  }}
                 />
               </Box>
             </Box>
           </Box>
+
+          {/* Swap Info */}
+          {amountIn && (
+            <Box sx={{ 
+              background: 'rgba(139, 92, 246, 0.1)', 
+              border: '1px solid rgba(139, 92, 246, 0.3)',
+              borderRadius: 2,
+              p: 2,
+              mb: 3
+            }}>
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                <Typography variant="body2" sx={{ color: '#E2E8F0' }}>
+                  Exchange Rate
+                </Typography>
+                                 <Typography variant="body2" sx={{ color: '#FFFFFF', fontWeight: 600 }}>
+                   1 {tokenIn.symbol} = {((tokenIn.price || 0) / (tokenOut.price || 1)).toFixed(6)} {tokenOut.symbol}
+                 </Typography>
+              </Box>
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Typography variant="body2" sx={{ color: '#E2E8F0' }}>
+                  Price Impact
+                </Typography>
+                <Typography variant="body2" sx={{ color: '#10B981', fontWeight: 600 }}>
+                  <TrendingUp sx={{ fontSize: 16, mr: 0.5, verticalAlign: 'middle' }} />
+                  &lt; 0.1%
+                </Typography>
+              </Box>
+            </Box>
+          )}
 
           {/* Swap Button */}
           <Button
