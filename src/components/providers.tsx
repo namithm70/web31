@@ -34,13 +34,24 @@ export function Providers({ children }: { children: React.ReactNode }) {
           alignItems: 'center', 
           height: '100vh',
           background: `
-            radial-gradient(circle at 20% 80%, rgba(111, 76, 255, 0.08) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(111, 76, 255, 0.06) 0%, transparent 50%),
-            #F8F9FF
+            radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
+            linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #1E1B4B 100%)
           `,
-          color: '#1A1A2E'
+          color: '#FFFFFF',
+          fontSize: '1.2rem',
+          fontWeight: 500,
         }}>
-          Loading...
+          <div style={{
+            background: 'rgba(139, 92, 246, 0.1)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(139, 92, 246, 0.2)',
+            borderRadius: 16,
+            padding: '2rem 3rem',
+            boxShadow: '0 8px 32px rgba(139, 92, 246, 0.1)',
+          }}>
+            Loading DeFi Superapp...
+          </div>
         </div>
       </ThemeProvider>
     );

@@ -28,15 +28,15 @@ export default function HomePage() {
         minHeight="100vh"
         sx={{
           background: `
-            radial-gradient(circle at 20% 80%, rgba(111, 76, 255, 0.08) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(111, 76, 255, 0.06) 0%, transparent 50%),
-            #F8F9FF
+            radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
+            linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #1E1B4B 100%)
           `,
-          color: '#1A1A2E',
+          color: '#FFFFFF',
         }}
       >
-        <CircularProgress size={60} sx={{ color: '#6F4CFF', mb: 2 }} />
-        <Typography variant="h6" color="text.secondary">
+        <CircularProgress size={60} sx={{ color: '#8B5CF6', mb: 2 }} />
+        <Typography variant="h6" sx={{ color: '#FFFFFF', fontWeight: 600 }}>
           Loading DeFi Superapp...
         </Typography>
       </Box>
