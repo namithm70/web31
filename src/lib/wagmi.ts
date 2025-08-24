@@ -8,14 +8,16 @@ const walletConnectProjectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
 export const config = createConfig({
   chains: [mainnet, polygon, arbitrum],
   connectors: [
-    // MetaMask and other injected wallets (this will work without any setup)
+    // MetaMask and other injected wallets
     injected({
       target: 'metaMask',
     }),
-    // Coinbase Wallet (this will work without any setup)
+    // General injected wallet (for other browser wallets)
+    injected(),
+    // Coinbase Wallet
     coinbaseWallet({ 
       appName: 'DeFi Superapp',
-      appLogoUrl: 'https://your-app-domain.com/logo.png',
+      appLogoUrl: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
     }),
     // Safe Wallet (formerly Gnosis Safe)
     safe(),
@@ -27,8 +29,8 @@ export const config = createConfig({
         metadata: {
           name: 'DeFi Superapp',
           description: 'Secure, composable DeFi superapp',
-          url: process.env.NEXT_PUBLIC_APP_URL || 'https://your-app-domain.com',
-          icons: ['https://your-app-domain.com/logo.png'],
+          url: process.env.NEXT_PUBLIC_APP_URL || 'https://defi-superapp.vercel.app',
+          icons: ['https://cryptologos.cc/logos/ethereum-eth-logo.png'],
         },
       })
     ] : []),
