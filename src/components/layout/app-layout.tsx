@@ -27,7 +27,7 @@ import {
 import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 const drawerWidth = 240;
 
@@ -45,15 +45,40 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { address, isConnected } = useAccount();
   const pathname = usePathname();
+  const router = useRouter();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleNavigation = (path: string) => {
+    router.push(path);
+    setMobileOpen(false);
+  };
+
   const drawer = (
     <div>
       <Toolbar>
-        <Typography variant="h6" noWrap component="div">
+        <Typography 
+          variant="h6" 
+          noWrap 
+          component="div"
+          onClick={() => handleNavigation('/')}
+          sx={{
+            cursor: 'pointer',
+            fontWeight: 700,
+            background: 'linear-gradient(135deg, #8B5CF6, #A78BFA)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            '&:hover': {
+              background: 'linear-gradient(135deg, #A78BFA, #C4B5FD)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+            },
+            transition: 'all 0.3s ease',
+          }}
+        >
           DeFi Superapp
         </Typography>
       </Toolbar>
@@ -62,10 +87,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           <ListItem key={item.text} disablePadding>
             <ListItemButton
               selected={pathname === item.path}
-              onClick={() => {
-                // router.push(item.path); // Removed useRouter
-                setMobileOpen(false);
-              }}
+              onClick={() => handleNavigation(item.path)}
               sx={{
                 borderRadius: 12,
                 margin: '4px 8px',
@@ -162,7 +184,21 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+          <Typography 
+            variant="h6" 
+            noWrap 
+            component="div" 
+            sx={{ 
+              flexGrow: 1,
+              cursor: 'pointer',
+              fontWeight: 600,
+              '&:hover': {
+                color: '#8B5CF6',
+              },
+              transition: 'color 0.3s ease',
+            }}
+            onClick={() => handleNavigation('/')}
+          >
             {navigationItems.find(item => item.path === pathname)?.text || 'DeFi Superapp'}
           </Typography>
           
