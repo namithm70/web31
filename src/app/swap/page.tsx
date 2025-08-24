@@ -109,7 +109,7 @@ function SwapCard() {
         background: 'rgba(139, 92, 246, 0.15)',
         backdropFilter: 'blur(20px)',
         border: '1px solid rgba(139, 92, 246, 0.3)',
-        borderRadius: 8,
+        borderRadius: 2,
         boxShadow: '0 8px 32px rgba(139, 92, 246, 0.15)',
         overflow: 'visible',
       }}>
@@ -139,7 +139,7 @@ function SwapCard() {
             <Box sx={{
               background: 'rgba(139, 92, 246, 0.1)',
               border: '1px solid rgba(139, 92, 246, 0.3)',
-              borderRadius: 8,
+              borderRadius: 2,
               p: 2.5,
               transition: 'all 0.3s ease',
               '&:hover': {
@@ -156,6 +156,7 @@ function SwapCard() {
                     height: 48,
                     border: '2px solid rgba(139, 92, 246, 0.3)',
                     background: 'rgba(139, 92, 246, 0.2)',
+                    borderRadius: 2,
                   }}
                 >
                   {tokenIn?.symbol?.charAt(0)}
@@ -213,6 +214,7 @@ function SwapCard() {
                 height: 48,
                 border: '1px solid rgba(139, 92, 246, 0.3)',
                 boxShadow: '0 4px 16px rgba(139, 92, 246, 0.2)',
+                borderRadius: 2,
                 '&:hover': {
                   background: 'rgba(139, 92, 246, 0.3)',
                   transform: 'scale(1.1)',
@@ -233,7 +235,7 @@ function SwapCard() {
             <Box sx={{
               background: 'rgba(139, 92, 246, 0.1)',
               border: '1px solid rgba(139, 92, 246, 0.3)',
-              borderRadius: 8,
+              borderRadius: 2,
               p: 2.5,
               transition: 'all 0.3s ease',
               '&:hover': {
@@ -250,6 +252,7 @@ function SwapCard() {
                     height: 48,
                     border: '2px solid rgba(139, 92, 246, 0.3)',
                     background: 'rgba(139, 92, 246, 0.2)',
+                    borderRadius: 2,
                   }}
                 >
                   {tokenOut?.symbol?.charAt(0)}
@@ -307,7 +310,7 @@ function SwapCard() {
               mb: 3,
               height: 56,
               background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.8), rgba(59, 130, 246, 0.8))',
-              borderRadius: 8,
+              borderRadius: 2,
               fontSize: '1.1rem',
               fontWeight: 700,
               textTransform: 'none',
@@ -340,7 +343,7 @@ function SwapCard() {
               '&:before': { display: 'none' },
               '& .MuiAccordionSummary-root': {
                 background: 'rgba(139, 92, 246, 0.1)',
-                borderRadius: 8,
+                borderRadius: 2,
                 border: '1px solid rgba(139, 92, 246, 0.3)',
                 minHeight: 48,
                 '&:hover': {
@@ -386,12 +389,12 @@ function SwapCard() {
                     '& .MuiSlider-track': {
                       backgroundColor: '#8B5CF6',
                       height: 6,
-                      borderRadius: 3,
+                      borderRadius: 1.5,
                     },
                     '& .MuiSlider-rail': {
                       backgroundColor: 'rgba(139, 92, 246, 0.2)',
                       height: 6,
-                      borderRadius: 3,
+                      borderRadius: 1.5,
                     },
                     '& .MuiSlider-mark': {
                       backgroundColor: 'rgba(139, 92, 246, 0.3)',
