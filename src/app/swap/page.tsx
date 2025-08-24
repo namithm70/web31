@@ -19,7 +19,6 @@ import {
 import {
   ExpandMore,
   CompareArrows,
-  KeyboardArrowDown,
   Settings,
 } from '@mui/icons-material';
 import { useAccount, useBalance } from 'wagmi';
@@ -100,42 +99,19 @@ function SwapCard() {
       justifyContent: 'center', 
       alignItems: 'center', 
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: 'transparent',
       position: 'relative',
-      '&::before': {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-        opacity: 0.3,
-      }
     }}>
       <Card sx={{
         maxWidth: 480,
         width: '100%',
         mx: 2,
-        background: 'rgba(255, 255, 255, 0.95)',
+        background: 'rgba(139, 92, 246, 0.15)',
         backdropFilter: 'blur(20px)',
-        borderRadius: 4,
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-        border: '1px solid rgba(255, 255, 255, 0.2)',
+        border: '1px solid rgba(139, 92, 246, 0.3)',
+        borderRadius: 8,
+        boxShadow: '0 8px 32px rgba(139, 92, 246, 0.15)',
         overflow: 'visible',
-        position: 'relative',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: -2,
-          left: -2,
-          right: -2,
-          bottom: -2,
-          background: 'linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c)',
-          borderRadius: 6,
-          zIndex: -1,
-          opacity: 0.3,
-        }
       }}>
         <CardContent sx={{ p: 4 }}>
           {/* Header */}
@@ -143,35 +119,32 @@ function SwapCard() {
             <Typography 
               variant="h4" 
               sx={{ 
-                fontWeight: 800,
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+                fontWeight: 700,
+                color: '#FFFFFF',
                 mb: 1
               }}
             >
               Swap Tokens
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{ color: '#E2E8F0' }}>
               Trade tokens instantly with the best rates
             </Typography>
           </Box>
 
           {/* Token Input */}
           <Box sx={{ mb: 3 }}>
-            <Typography variant="body2" color="text.secondary" mb={1.5} sx={{ fontWeight: 600 }}>
+            <Typography variant="body2" sx={{ color: '#E2E8F0', mb: 1.5, fontWeight: 600 }}>
               You Pay
             </Typography>
             <Box sx={{
-              background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
-              border: '2px solid #e2e8f0',
-              borderRadius: 3,
+              background: 'rgba(139, 92, 246, 0.1)',
+              border: '1px solid rgba(139, 92, 246, 0.3)',
+              borderRadius: 8,
               p: 2.5,
               transition: 'all 0.3s ease',
               '&:hover': {
-                borderColor: '#667eea',
-                boxShadow: '0 4px 20px rgba(102, 126, 234, 0.15)',
+                borderColor: 'rgba(139, 92, 246, 0.5)',
+                boxShadow: '0 4px 20px rgba(139, 92, 246, 0.2)',
               }
             }}>
               <Box display="flex" alignItems="center" gap={2}>
@@ -181,17 +154,17 @@ function SwapCard() {
                   sx={{ 
                     width: 48, 
                     height: 48,
-                    border: '2px solid #fff',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                    border: '2px solid rgba(139, 92, 246, 0.3)',
+                    background: 'rgba(139, 92, 246, 0.2)',
                   }}
                 >
                   {tokenIn?.symbol?.charAt(0)}
                 </Avatar>
                 <Box flex={1}>
-                  <Typography variant="h6" fontWeight={700} color="text.primary">
+                  <Typography variant="h6" fontWeight={700} sx={{ color: '#FFFFFF' }}>
                     {tokenIn?.symbol}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                  <Typography variant="body2" sx={{ color: '#E2E8F0', fontWeight: 500 }}>
                     Balance: {balanceIn?.formatted || '0'} {tokenIn?.symbol}
                   </Typography>
                 </Box>
@@ -205,16 +178,20 @@ function SwapCard() {
                     '& .MuiInput-root': {
                       fontSize: '1.25rem',
                       fontWeight: 600,
-                      color: '#1a202c',
+                      color: '#FFFFFF',
                     },
                     '& .MuiInput-underline:before': { borderBottom: 'none' },
                     '& .MuiInput-underline:after': { borderBottom: 'none' },
                     '& .MuiInput-underline:hover:not(.Mui-disabled):before': { borderBottom: 'none' },
+                    '& .MuiInput-input::placeholder': {
+                      color: '#A0AEC0',
+                      opacity: 1,
+                    },
                   }}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                        <Typography variant="body2" sx={{ color: '#A0AEC0', fontWeight: 600 }}>
                           ${tokenIn?.price?.toFixed(2)}
                         </Typography>
                       </InputAdornment>
@@ -230,15 +207,16 @@ function SwapCard() {
             <IconButton 
               onClick={handleSwitchTokens} 
               sx={{
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white',
+                background: 'rgba(139, 92, 246, 0.2)',
+                color: '#FFFFFF',
                 width: 48,
                 height: 48,
-                boxShadow: '0 8px 25px rgba(102, 126, 234, 0.3)',
+                border: '1px solid rgba(139, 92, 246, 0.3)',
+                boxShadow: '0 4px 16px rgba(139, 92, 246, 0.2)',
                 '&:hover': {
-                  background: 'linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%)',
+                  background: 'rgba(139, 92, 246, 0.3)',
                   transform: 'scale(1.1)',
-                  boxShadow: '0 12px 35px rgba(102, 126, 234, 0.4)',
+                  boxShadow: '0 6px 20px rgba(139, 92, 246, 0.3)',
                 },
                 transition: 'all 0.3s ease',
               }}
@@ -249,18 +227,18 @@ function SwapCard() {
 
           {/* Token Output */}
           <Box sx={{ mb: 4 }}>
-            <Typography variant="body2" color="text.secondary" mb={1.5} sx={{ fontWeight: 600 }}>
+            <Typography variant="body2" sx={{ color: '#E2E8F0', mb: 1.5, fontWeight: 600 }}>
               You Receive
             </Typography>
             <Box sx={{
-              background: 'linear-gradient(135deg, #f0fff4 0%, #dcfce7 100%)',
-              border: '2px solid #dcfce7',
-              borderRadius: 3,
+              background: 'rgba(139, 92, 246, 0.1)',
+              border: '1px solid rgba(139, 92, 246, 0.3)',
+              borderRadius: 8,
               p: 2.5,
               transition: 'all 0.3s ease',
               '&:hover': {
-                borderColor: '#10b981',
-                boxShadow: '0 4px 20px rgba(16, 185, 129, 0.15)',
+                borderColor: 'rgba(139, 92, 246, 0.5)',
+                boxShadow: '0 4px 20px rgba(139, 92, 246, 0.2)',
               }
             }}>
               <Box display="flex" alignItems="center" gap={2}>
@@ -270,17 +248,17 @@ function SwapCard() {
                   sx={{ 
                     width: 48, 
                     height: 48,
-                    border: '2px solid #fff',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                    border: '2px solid rgba(139, 92, 246, 0.3)',
+                    background: 'rgba(139, 92, 246, 0.2)',
                   }}
                 >
                   {tokenOut?.symbol?.charAt(0)}
                 </Avatar>
                 <Box flex={1}>
-                  <Typography variant="h6" fontWeight={700} color="text.primary">
+                  <Typography variant="h6" fontWeight={700} sx={{ color: '#FFFFFF' }}>
                     {tokenOut?.symbol}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                  <Typography variant="body2" sx={{ color: '#E2E8F0', fontWeight: 500 }}>
                     {tokenOut?.name}
                   </Typography>
                 </Box>
@@ -294,16 +272,20 @@ function SwapCard() {
                     '& .MuiInput-root': {
                       fontSize: '1.25rem',
                       fontWeight: 600,
-                      color: '#1a202c',
+                      color: '#FFFFFF',
                     },
                     '& .MuiInput-underline:before': { borderBottom: 'none' },
                     '& .MuiInput-underline:after': { borderBottom: 'none' },
                     '& .MuiInput-underline:hover:not(.Mui-disabled):before': { borderBottom: 'none' },
+                    '& .MuiInput-input::placeholder': {
+                      color: '#A0AEC0',
+                      opacity: 1,
+                    },
                   }}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                        <Typography variant="body2" sx={{ color: '#A0AEC0', fontWeight: 600 }}>
                           ${tokenOut?.price?.toFixed(2)}
                         </Typography>
                       </InputAdornment>
@@ -324,20 +306,21 @@ function SwapCard() {
             sx={{ 
               mb: 3,
               height: 56,
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              borderRadius: 3,
+              background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.8), rgba(59, 130, 246, 0.8))',
+              borderRadius: 8,
               fontSize: '1.1rem',
               fontWeight: 700,
               textTransform: 'none',
-              boxShadow: '0 8px 25px rgba(102, 126, 234, 0.3)',
+              color: '#FFFFFF',
+              boxShadow: '0 8px 25px rgba(139, 92, 246, 0.3)',
               '&:hover': {
-                background: 'linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%)',
-                boxShadow: '0 12px 35px rgba(102, 126, 234, 0.4)',
+                background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(59, 130, 246, 0.9))',
+                boxShadow: '0 12px 35px rgba(139, 92, 246, 0.4)',
                 transform: 'translateY(-2px)',
               },
               '&:disabled': {
-                background: '#e2e8f0',
-                color: '#a0aec0',
+                background: 'rgba(139, 92, 246, 0.2)',
+                color: '#A0AEC0',
                 boxShadow: 'none',
                 transform: 'none',
               },
@@ -356,27 +339,27 @@ function SwapCard() {
               boxShadow: 'none',
               '&:before': { display: 'none' },
               '& .MuiAccordionSummary-root': {
-                background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
-                borderRadius: 2,
-                border: '1px solid #e2e8f0',
+                background: 'rgba(139, 92, 246, 0.1)',
+                borderRadius: 8,
+                border: '1px solid rgba(139, 92, 246, 0.3)',
                 minHeight: 48,
                 '&:hover': {
-                  background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
+                  background: 'rgba(139, 92, 246, 0.15)',
                 }
               }
             }}
           >
-            <AccordionSummary expandIcon={<ExpandMore />}>
+            <AccordionSummary expandIcon={<ExpandMore sx={{ color: '#E2E8F0' }} />}>
               <Box display="flex" alignItems="center" gap={1}>
-                <Settings sx={{ fontSize: 20, color: '#64748b' }} />
-                <Typography variant="body2" sx={{ fontWeight: 600, color: '#64748b' }}>
+                <Settings sx={{ fontSize: 20, color: '#E2E8F0' }} />
+                <Typography variant="body2" sx={{ fontWeight: 600, color: '#E2E8F0' }}>
                   Advanced Settings
                 </Typography>
               </Box>
             </AccordionSummary>
             <AccordionDetails sx={{ pt: 2 }}>
               <Box>
-                <Typography variant="body2" color="text.secondary" mb={2} sx={{ fontWeight: 600 }}>
+                <Typography variant="body2" sx={{ color: '#E2E8F0', mb: 2, fontWeight: 600 }}>
                   Slippage Tolerance: {slippage}%
                 </Typography>
                 <Slider
@@ -392,29 +375,29 @@ function SwapCard() {
                   ]}
                   sx={{
                     '& .MuiSlider-thumb': {
-                      backgroundColor: '#667eea',
+                      backgroundColor: '#8B5CF6',
                       width: 20,
                       height: 20,
-                      boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)',
+                      boxShadow: '0 4px 12px rgba(139, 92, 246, 0.3)',
                       '&:hover': {
-                        boxShadow: '0 6px 16px rgba(102, 126, 234, 0.4)',
+                        boxShadow: '0 6px 16px rgba(139, 92, 246, 0.4)',
                       }
                     },
                     '& .MuiSlider-track': {
-                      backgroundColor: '#667eea',
+                      backgroundColor: '#8B5CF6',
                       height: 6,
                       borderRadius: 3,
                     },
                     '& .MuiSlider-rail': {
-                      backgroundColor: '#e2e8f0',
+                      backgroundColor: 'rgba(139, 92, 246, 0.2)',
                       height: 6,
                       borderRadius: 3,
                     },
                     '& .MuiSlider-mark': {
-                      backgroundColor: '#cbd5e0',
+                      backgroundColor: 'rgba(139, 92, 246, 0.3)',
                     },
                     '& .MuiSlider-markLabel': {
-                      color: '#64748b',
+                      color: '#E2E8F0',
                       fontWeight: 500,
                     }
                   }}
