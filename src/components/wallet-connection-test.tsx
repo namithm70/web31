@@ -20,7 +20,7 @@ import {
 import { useAccount, useBalance, useChainId, useSwitchChain } from 'wagmi';
 
 export function WalletConnectionTest() {
-  const { address, isConnected, connector } = useAccount();
+  const { address, isConnected } = useAccount();
   const chainId = useChainId();
   const { chains, switchChain } = useSwitchChain();
   const [testResults, setTestResults] = useState<{
@@ -48,7 +48,6 @@ export function WalletConnectionTest() {
 
     // Test 3: Signature test
     try {
-      const message = 'DeFi Superapp Test Signature';
       // For now, we'll skip the signature test as it requires proper wallet integration
       setTestResults(prev => ({ ...prev, signature: true }));
     } catch (error) {

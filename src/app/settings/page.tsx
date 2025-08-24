@@ -16,15 +16,10 @@ import {
   ListItemIcon,
 } from '@mui/material';
 import {
-  Notifications,
-  Security,
-  Language,
-  Palette,
   AccountCircle,
   VpnKey,
   Help,
 } from '@mui/icons-material';
-import { useAppStore } from '@/store';
 
 // Mock data
 const networks = [
@@ -49,7 +44,7 @@ const approvals = [
 ];
 
 export default function SettingsPage() {
-  const [selectedChain, setSelectedChain] = useState(1);
+  const [selectedChain] = useState(1);
   const [slippage, setSlippage] = useState(0.5);
   const [notifications, setNotifications] = useState({
     healthFactor: true,

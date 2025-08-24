@@ -14,15 +14,9 @@ import {
   TableRow,
   Paper,
   Chip,
-  Alert,
 } from '@mui/material';
 import {
   AccountBalance,
-  TrendingUp,
-  CheckCircle,
-  Warning,
-  Security,
-  Info,
 } from '@mui/icons-material';
 import { useAccount } from 'wagmi';
 import { TokenData } from '@/types';
@@ -86,8 +80,6 @@ const mockStablecoins: (TokenData & {
 ];
 
 function StablecoinCard({ stablecoin }: { stablecoin: typeof mockStablecoins[0] }) {
-  const { address } = useAccount();
-  
   const getRiskColor = (risk: string) => {
     switch (risk) {
       case 'low': return 'success';
@@ -115,7 +107,7 @@ function StablecoinCard({ stablecoin }: { stablecoin: typeof mockStablecoins[0] 
           </Box>
           <Chip 
             label={stablecoin.risk.toUpperCase()} 
-            color={getRiskColor(stablecoin.risk) as any}
+            color={getRiskColor(stablecoin.risk) as 'success' | 'warning' | 'error' | 'default'}
             size="small"
           />
         </Box>

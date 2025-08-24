@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import {
   Box,
   Card,
@@ -18,7 +17,6 @@ import {
   Alert,
 } from '@mui/material';
 import {
-  AccountBalance,
   TrendingDown,
   Lock,
   LockOpen,

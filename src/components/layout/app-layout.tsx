@@ -1,57 +1,51 @@
 'use client';
 
-import { useState } from 'react';
 import {
-  AppBar,
   Box,
-  CssBaseline,
+  AppBar,
+  Toolbar,
+  Typography,
   Drawer,
-  IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Toolbar,
-  Typography,
-  useTheme,
-  Button,
+  IconButton,
   Chip,
+  CssBaseline,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
-  Dashboard as DashboardIcon,
-  SwapHoriz as SwapIcon,
-  AccountBalance as LendIcon,
-  Agriculture as FarmIcon,
-  CurrencyExchange as StablecoinIcon,
-  AccountBalanceWallet as PortfolioIcon,
-  Settings as SettingsIcon,
-  AccountBalanceWallet as WalletIcon,
+  Dashboard,
+  SwapHoriz,
+  AccountBalance,
+  Agriculture,
+  CurrencyExchange,
+  Settings,
 } from '@mui/icons-material';
+import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useRouter, usePathname } from 'next/navigation';
-import { useAccount, useDisconnect } from 'wagmi';
+import { useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const drawerWidth = 240;
 
 const navigationItems = [
-  { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-  { text: 'Swap', icon: <SwapIcon />, path: '/swap' },
-  { text: 'Lend', icon: <LendIcon />, path: '/lend' },
-  { text: 'Farm', icon: <FarmIcon />, path: '/farm' },
-  { text: 'Stablecoins', icon: <StablecoinIcon />, path: '/stablecoins' },
-  { text: 'Portfolio', icon: <PortfolioIcon />, path: '/portfolio' },
-  { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
+  { text: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
+  { text: 'Swap', icon: <SwapHoriz />, path: '/swap' },
+  { text: 'Lend', icon: <AccountBalance />, path: '/lend' },
+  { text: 'Farm', icon: <Agriculture />, path: '/farm' },
+  { text: 'Stablecoins', icon: <CurrencyExchange />, path: '/stablecoins' },
+  { text: 'Portfolio', icon: <AccountBalance />, path: '/portfolio' },
+  { text: 'Settings', icon: <Settings />, path: '/settings' },
 ];
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const theme = useTheme();
-  const router = useRouter();
-  const pathname = usePathname();
   const { address, isConnected } = useAccount();
-  const { disconnect } = useDisconnect();
+  const pathname = usePathname();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -70,7 +64,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <ListItemButton
               selected={pathname === item.path}
               onClick={() => {
-                router.push(item.path);
+                // router.push(item.path); // Removed useRouter
                 setMobileOpen(false);
               }}
               sx={{
@@ -177,7 +171,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           <Box display="flex" alignItems="center" gap={2}>
             {isConnected && (
               <Chip
-                icon={<WalletIcon />}
+                icon={<AccountBalance />}
                 label={`${address?.slice(0, 6)}...${address?.slice(-4)}`}
                 color="primary"
                 variant="outlined"
