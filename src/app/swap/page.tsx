@@ -14,7 +14,6 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  InputAdornment,
   Menu,
   MenuItem,
   ListItemAvatar,
@@ -28,7 +27,6 @@ import {
   Settings,
   KeyboardArrowDown,
   TrendingUp,
-  Info,
 } from '@mui/icons-material';
 import { useAccount, useBalance } from 'wagmi';
 import { TokenData } from '@/types';

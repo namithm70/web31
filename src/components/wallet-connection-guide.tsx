@@ -159,7 +159,7 @@ export function WalletConnectionGuide() {
             <ListItemText
               primary={
                 <Typography variant="body1" sx={{ color: '#FFFFFF' }}>
-                  Click "Connect Wallet" in the top-right corner
+                  Click &quot;Connect Wallet&quot; in the top-right corner
                 </Typography>
               }
             />
