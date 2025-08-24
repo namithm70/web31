@@ -63,7 +63,8 @@ export function WalletConnectionGuide() {
 
         <Alert severity="info" sx={{ mb: 3, background: 'rgba(139, 92, 246, 0.1)' }}>
           <Typography variant="body2" sx={{ color: '#E2E8F0' }}>
-            To use the DeFi Superapp, you need to connect a cryptocurrency wallet.
+            To use the DeFi Superapp, you need to connect a cryptocurrency wallet. 
+            The app supports BSC (Binance Smart Chain), Ethereum, Polygon, and Arbitrum networks.
           </Typography>
         </Alert>
 
