@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Box,
   Card,
@@ -16,13 +16,14 @@ import {
   FormControl,
   InputLabel,
 } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import {
   Settings,
   History,
 } from '@mui/icons-material';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
-// Mock data
+// Static defaults (fallback)
 const stablecoins = [
   {
     symbol: 'USDC',
@@ -342,10 +343,35 @@ function RiskAnalysis() {
 
 export default function StablecoinsPage() {
   const [selectedRisk, setSelectedRisk] = useState<string>('all');
+  // Live markets from DeFiLlama stablecoins overview
+  const { data: llamaData } = useQuery({
+    queryKey: ['stablecoins'],
+    queryFn: async () => {
+      const res = await fetch('https://stablecoins.llama.fi/stablecoins');
+      if (!res.ok) throw new Error('stablecoins');
+      return res.json();
+    },
+    staleTime: 60_000,
+  });
+
+  const liveStablecoins = useMemo(() => {
+    const list = (llamaData?.peggedAssets || []).slice(0, 12).map((c: any) => ({
+      symbol: c.symbol || c.name || 'USD',
+      name: c.name || c.symbol || 'Stablecoin',
+      price: 1,
+      marketCap: Number(c.mcap?.current || 0),
+      volume24h: Number(c.volume?.total24h || 0),
+      pegDeviation: Math.abs(Number(c.price?.[c.price?.length - 1]?.pegDeviation || 0)) || 0,
+      risk: 'low' as const,
+      apy: 0,
+      icon: 'S',
+    }));
+    return list.length ? list : stablecoins;
+  }, [llamaData]);
 
   const filteredStablecoins = selectedRisk === 'all' 
-    ? stablecoins 
-    : stablecoins.filter(coin => coin.risk === selectedRisk);
+    ? liveStablecoins 
+    : liveStablecoins.filter(coin => coin.risk === selectedRisk);
 
   return (
     <Box>
