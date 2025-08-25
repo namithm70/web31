@@ -2,10 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  experimental: {
-    // Ensure server-only deps are resolved during RSC/Turbopack build
-    serverComponentsExternalPackages: ['mongoose', 'bcryptjs'],
-  },
+  // Ensure server-only deps are resolved during RSC/Turbopack build (Next 15+)
+  serverExternalPackages: ['mongoose', 'bcryptjs', 'jose'],
   async rewrites() {
     return [
       {
