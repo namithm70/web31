@@ -43,15 +43,6 @@ import {
   AutoGraph,
   Info,
   AttachMoney,
-  TrendingUpOutlined,
-  TrendingDownOutlined,
-  SpeedOutlined,
-  SecurityOutlined,
-  AnalyticsOutlined,
-  AutoGraphOutlined,
-  AttachMoneyOutlined,
-  AccountBalanceWalletOutlined,
-  CurrencyExchangeOutlined,
 } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
 import { ProtocolData, PortfolioAsset, Transaction } from '@/types';

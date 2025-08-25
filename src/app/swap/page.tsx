@@ -54,6 +54,7 @@ import {
   TrendingFlat,
   ExpandMore,
   ContentCopy,
+  SwapHoriz,
   Share as ShareIcon,
   Download as DownloadIcon,
   Upload,
@@ -109,11 +110,11 @@ import {
 
 // Enhanced mock data for advanced swap features
 const tokens = [
-  { symbol: 'ETH', name: 'Ethereum', price: 3200, change24h: 2.5, volume: 1500000000 },
-  { symbol: 'USDC', name: 'USD Coin', price: 1.00, change24h: 0.1, volume: 850000000 },
-  { symbol: 'UNI', name: 'Uniswap', price: 8.50, change24h: -1.2, volume: 420000000 },
-  { symbol: 'WBTC', name: 'Wrapped Bitcoin', price: 65000, change24h: 1.8, volume: 320000000 },
-  { symbol: 'DAI', name: 'Dai', price: 1.00, change24h: 0.05, volume: 280000000 },
+  { symbol: 'ETH', name: 'Ethereum', price: 3200, change24h: 2.5, volume24h: 1500000000, marketCap: 385000000000, liquidity: 8500000000 },
+  { symbol: 'USDC', name: 'USD Coin', price: 1.00, change24h: 0.1, volume24h: 850000000, marketCap: 32000000000, liquidity: 2500000000 },
+  { symbol: 'UNI', name: 'Uniswap', price: 8.50, change24h: -1.2, volume24h: 420000000, marketCap: 5100000000, liquidity: 1800000000 },
+  { symbol: 'WBTC', name: 'Wrapped Bitcoin', price: 65000, change24h: 1.8, volume24h: 320000000, marketCap: 10000000000, liquidity: 1200000000 },
+  { symbol: 'DAI', name: 'Dai', price: 1.00, change24h: 0.05, volume24h: 280000000, marketCap: 5000000000, liquidity: 950000000 },
 ];
 
 const dexAggregators = [
