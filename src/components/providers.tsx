@@ -1,24 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { WagmiProvider } from 'wagmi';
-import { RainbowKitProvider, getDefaultWallets } from '@rainbow-me/rainbowkit';
-import { config } from '@/lib/wagmi';
+import { ThemeProvider } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
 import { theme } from '@/lib/theme';
+import { useState, useEffect } from 'react';
+import { WagmiProvider, createConfig, http } from 'wagmi';
+import { mainnet, sepolia } from 'wagmi/chains';
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      retry: 3,
-    },
+const config = createConfig({
+  chains: [mainnet, sepolia],
+  transports: {
+    [mainnet.id]: http(),
+    [sepolia.id]: http(),
   },
 });
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  const [queryClient] = useState(() => new QueryClient());
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -27,131 +28,92 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   if (!mounted) {
     return (
-      <ThemeProvider theme={theme}>
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
           height: '100vh',
           background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
-          color: '#000000',
-          fontSize: '1.2rem',
-          fontWeight: 500,
-          fontFamily: 'Inter, sans-serif',
-        }}>
-          <div 
-            className="animate-scale-in"
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999,
+        }}
+      >
+        <div
+          className="animate-scale-in"
+          style={{
+            background: 'rgba(255, 255, 255, 0.9)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '20px',
+            padding: '40px',
+            textAlign: 'center',
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <div
             style={{
-              background: 'rgba(255, 255, 255, 0.8)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(0, 0, 0, 0.06)',
-              borderRadius: 20,
-              padding: '3rem 4rem',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
-              textAlign: 'center',
-              maxWidth: '400px',
-              position: 'relative',
-              overflow: 'hidden',
-            }}
-          >
-            {/* Animated background gradient */}
-            <div style={{
               position: 'absolute',
               top: 0,
               left: 0,
               right: 0,
               bottom: 0,
-              background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, transparent 50%, rgba(0, 0, 0, 0.02) 100%)',
+              background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
               zIndex: -1,
-            }} />
-            
-            <div 
-              className="animate-spin"
-              style={{
-                width: '48px',
-                height: '48px',
-                border: '3px solid rgba(0, 0, 0, 0.08)',
-                borderTop: '3px solid #000000',
-                borderRadius: '50%',
-                margin: '0 auto 1.5rem auto',
-                position: 'relative',
-              }}
-            />
-            
-            <div 
-              className="animate-fade-in-up"
-              style={{
-                fontSize: '1.75rem',
-                fontWeight: 700,
-                color: '#000000',
-                marginBottom: '0.75rem',
-                letterSpacing: '-0.02em',
-              }}
-            >
+            }}
+          />
+          <div
+            className="animate-spin"
+            style={{
+              width: '60px',
+              height: '60px',
+              border: '4px solid rgba(102, 126, 234, 0.2)',
+              borderTop: '4px solid #667eea',
+              borderRadius: '50%',
+              margin: '0 auto 20px',
+              animation: 'spin 1s linear infinite',
+            }}
+          />
+          <div className="animate-fade-in-up">
+            <h2 style={{ margin: '0 0 10px', fontSize: '24px', fontWeight: 700, color: '#1a202c' }}>
               DeFi Superapp
-            </div>
-            
-            <div 
-              className="animate-fade-in-up stagger-1"
-              style={{
-                fontSize: '1rem',
-                color: '#666666',
-                fontWeight: 500,
-              }}
-            >
+            </h2>
+          </div>
+          <div className="animate-fade-in-up stagger-1">
+            <p style={{ margin: 0, color: '#666666', fontSize: '16px', fontWeight: 500 }}>
               Loading your experience...
-            </div>
-            
-            {/* Subtle dots animation */}
-            <div 
-              className="animate-pulse"
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                gap: '4px',
-                marginTop: '1rem',
-              }}
-            >
-              <div style={{
-                width: '6px',
-                height: '6px',
-                background: '#000000',
-                borderRadius: '50%',
-                animationDelay: '0s',
-              }} />
-              <div style={{
-                width: '6px',
-                height: '6px',
-                background: '#000000',
-                borderRadius: '50%',
-                animationDelay: '0.2s',
-              }} />
-              <div style={{
-                width: '6px',
-                height: '6px',
-                background: '#000000',
-                borderRadius: '50%',
-                animationDelay: '0.4s',
-              }} />
-            </div>
+            </p>
+          </div>
+          <div
+            className="animate-pulse"
+            style={{
+              marginTop: '20px',
+              fontSize: '24px',
+              color: '#667eea',
+            }}
+          >
+            • • •
           </div>
         </div>
-      </ThemeProvider>
+      </div>
     );
   }
 
   return (
     <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider
-          showRecentTransactions={true}
-          coolMode={true}
-        >
+      <RainbowKitProvider>
+        <QueryClientProvider client={queryClient}>
           <ThemeProvider theme={theme}>
+            <CssBaseline />
             {children}
           </ThemeProvider>
-        </RainbowKitProvider>
-      </QueryClientProvider>
+        </QueryClientProvider>
+      </RainbowKitProvider>
     </WagmiProvider>
   );
 }

@@ -1,216 +1,178 @@
 'use client';
 
+import { useState } from 'react';
 import {
-  Box,
   AppBar,
+  Box,
   Toolbar,
   Typography,
-  IconButton,
-  Chip,
-  CssBaseline,
-  Menu,
-  MenuItem,
   Button,
   Container,
-  Fade,
+  Chip,
+  IconButton,
+  Menu,
+  MenuItem,
   Slide,
+  Fade,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
-  Dashboard,
-  SwapHoriz,
-  AccountBalance,
-  Agriculture,
-  CurrencyExchange,
-  Settings,
-  KeyboardArrowDown,
+  AccountBalanceWallet,
 } from '@mui/icons-material';
-import { useAccount } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { useRouter } from 'next/navigation';
 
 const navigationItems = [
-  { text: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
-  { text: 'Swap', icon: <SwapHoriz />, path: '/swap' },
-  { text: 'Lend', icon: <AccountBalance />, path: '/lend' },
-  { text: 'Farm', icon: <Agriculture />, path: '/farm' },
-  { text: 'Stablecoins', icon: <CurrencyExchange />, path: '/stablecoins' },
-  { text: 'Portfolio', icon: <AccountBalance />, path: '/portfolio' },
-  { text: 'Settings', icon: <Settings />, path: '/settings' },
+  { name: 'Dashboard', href: '/dashboard' },
+  { name: 'Swap', href: '/swap' },
+  { name: 'Farm', href: '/farm' },
+  { name: 'Lend', href: '/lend' },
+  { name: 'Portfolio', href: '/portfolio' },
+  { name: 'Stablecoins', href: '/stablecoins' },
+  { name: 'Settings', href: '/settings' },
 ];
 
-export function AppLayout({ children }: { children: React.ReactNode }) {
-  const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(null);
-  const [desktopMenuAnchor, setDesktopMenuAnchor] = useState<null | HTMLElement>(null);
-  const { address, isConnected } = useAccount();
-  const pathname = usePathname();
+export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const { address, isConnected } = useAccount();
+  const { connect, connectors } = useConnect();
+  const { disconnect } = useDisconnect();
+
+  const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(null);
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMenuAnchor(event.currentTarget);
   };
 
-  const handleDesktopMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setDesktopMenuAnchor(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
+  const handleMobileMenuClose = () => {
     setMobileMenuAnchor(null);
-    setDesktopMenuAnchor(null);
   };
 
-  const handleNavigation = (path: string) => {
-    router.push(path);
-    handleMenuClose();
+  const handleNavigation = (href: string) => {
+    router.push(href);
+    handleMobileMenuClose();
   };
 
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const handleWalletConnect = () => {
+    if (isConnected) {
+      disconnect();
+    } else {
+      connect({ connector: connectors[0] });
+    }
+  };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <CssBaseline />
-      
-      {/* Modern gradient background */}
-      <Box
-        sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: `
-            linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)
-          `,
-          zIndex: -1,
-        }}
-      />
-      
-      {/* Apple-style top navigation */}
       <AppBar
-        position="fixed"
+        position="static"
         elevation={0}
         sx={{
           background: 'rgba(255, 255, 255, 0.8)',
           backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
-          color: '#000000',
+          borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
         <Container maxWidth="xl">
-          <Toolbar sx={{ 
-            justifyContent: 'space-between',
-            px: { xs: 0, sm: 2 },
-            py: 1,
-          }}>
+          <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 0 } }}>
             {/* Logo */}
             <Fade in timeout={800}>
-              <Typography 
-                variant="h6" 
+              <Typography
+                variant="h6"
                 component="div"
-                onClick={() => handleNavigation('/')}
                 sx={{
-                  cursor: 'pointer',
                   fontWeight: 700,
-                  fontSize: { xs: '1.25rem', sm: '1.5rem' },
-                  color: '#000000',
-                  '&:hover': {
-                    color: '#666666',
-                    transform: 'scale(1.05)',
-                  },
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  cursor: 'pointer',
                 }}
+                onClick={() => router.push('/')}
               >
                 DeFi Superapp
               </Typography>
             </Fade>
 
             {/* Desktop Navigation */}
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1 }}>
-              <Fade in timeout={1000}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  {navigationItems.map((item, index) => (
-                    <Slide direction="down" in timeout={800 + index * 100} key={item.text}>
-                      <Button
-                        onClick={() => handleNavigation(item.path)}
-                        sx={{
-                          color: pathname === item.path ? '#000000' : '#666666',
-                          fontWeight: pathname === item.path ? 600 : 500,
-                          fontSize: '0.875rem',
-                          px: 2,
-                          py: 1,
-                          borderRadius: 2,
-                          textTransform: 'none',
-                          position: 'relative',
-                          '&:hover': {
-                            background: 'rgba(0, 0, 0, 0.04)',
-                            color: '#000000',
-                            transform: 'translateY(-1px)',
-                          },
-                          '&::after': pathname === item.path ? {
-                            content: '""',
-                            position: 'absolute',
-                            bottom: 0,
-                            left: '50%',
-                            transform: 'translateX(-50%)',
-                            width: '20px',
-                            height: '2px',
-                            background: '#000000',
-                            borderRadius: '1px',
-                          } : {},
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
+              {navigationItems.map((item, index) => (
+                <Slide
+                  key={item.name}
+                  direction="down"
+                  in
+                  timeout={600 + index * 100}
+                >
+                  <Fade in timeout={800 + index * 100}>
+                    <Button
+                      key={item.name}
+                      onClick={() => handleNavigation(item.href)}
+                      sx={{
+                        color: 'text.primary',
+                        fontWeight: 500,
+                        position: 'relative',
+                        '&::after': {
+                          content: '""',
+                          position: 'absolute',
+                          bottom: 0,
+                          left: '50%',
+                          width: 0,
+                          height: 2,
+                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                        }}
-                      >
-                        {item.text}
-                      </Button>
-                    </Slide>
-                  ))}
-                </Box>
-              </Fade>
+                          transform: 'translateX(-50%)',
+                        },
+                        '&:hover::after': {
+                          width: '100%',
+                        },
+                        '&:hover': {
+                          background: 'rgba(102, 126, 234, 0.08)',
+                          transform: 'translateY(-1px)',
+                        },
+                      }}
+                    >
+                      {item.name}
+                    </Button>
+                  </Fade>
+                </Slide>
+              ))}
             </Box>
 
-            {/* Mobile Menu Button */}
-            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+            {/* Wallet Connection & Mobile Menu */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              {/* Wallet Connection */}
+              <Fade in timeout={1000}>
+                <Chip
+                  icon={<AccountBalanceWallet />}
+                  label={isConnected ? `${address?.slice(0, 6)}...${address?.slice(-4)}` : 'Connect Wallet'}
+                  onClick={handleWalletConnect}
+                  sx={{
+                    background: isConnected ? 'rgba(76, 175, 80, 0.1)' : 'rgba(102, 126, 234, 0.1)',
+                    color: isConnected ? 'success.main' : 'primary.main',
+                    border: `1px solid ${isConnected ? 'rgba(76, 175, 80, 0.3)' : 'rgba(102, 126, 234, 0.3)'}`,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    '&:hover': {
+                      transform: 'translateY(-1px)',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                    },
+                  }}
+                />
+              </Fade>
+
+              {/* Mobile Menu Button */}
               <IconButton
+                size="large"
+                edge="end"
+                color="inherit"
+                aria-label="menu"
                 onClick={handleMobileMenuOpen}
-                sx={{
-                  color: '#000000',
-                  '&:hover': {
-                    background: 'rgba(0, 0, 0, 0.04)',
-                    transform: 'scale(1.1)',
-                  },
-                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                }}
+                sx={{ display: { md: 'none' } }}
               >
                 <MenuIcon />
               </IconButton>
             </Box>
-
-            {/* Wallet Connection */}
-            <Fade in timeout={1200}>
-              <Box display="flex" alignItems="center" gap={2}>
-                {isConnected && (
-                  <Chip
-                    icon={<AccountBalance />}
-                    label={`${address?.slice(0, 6)}...${address?.slice(-4)}`}
-                    variant="outlined"
-                    sx={{
-                      background: 'rgba(0, 0, 0, 0.04)',
-                      border: '1px solid rgba(0, 0, 0, 0.1)',
-                      fontWeight: 600,
-                      color: '#000000',
-                      '&:hover': {
-                        background: 'rgba(0, 0, 0, 0.08)',
-                        transform: 'scale(1.02)',
-                      },
-                      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                    }}
-                  />
-                )}
-                <ConnectButton />
-              </Box>
-            </Fade>
           </Toolbar>
         </Container>
       </AppBar>
@@ -219,50 +181,33 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <Menu
         anchorEl={mobileMenuAnchor}
         open={Boolean(mobileMenuAnchor)}
-        onClose={handleMenuClose}
-        PaperProps={{
-          sx: {
+        onClose={handleMobileMenuClose}
+        sx={{
+          '& .MuiPaper-root': {
             background: 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(0, 0, 0, 0.08)',
+            border: '1px solid rgba(0, 0, 0, 0.1)',
             borderRadius: 3,
-            mt: 1,
-            minWidth: 200,
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-          }
+            minWidth: 200,
+          },
         }}
-        TransitionComponent={Fade}
-        transitionDuration={300}
       >
-        {navigationItems.map((item, index) => (
-          <MenuItem
-            key={item.text}
-            onClick={() => handleNavigation(item.path)}
-            selected={pathname === item.path}
-            sx={{
-              py: 1.5,
-              px: 2,
-              borderRadius: 1,
-              mx: 1,
-              my: 0.5,
-              '&.Mui-selected': {
-                background: 'rgba(0, 0, 0, 0.08)',
-                color: '#000000',
-                fontWeight: 600,
-              },
-              '&:hover': {
-                background: 'rgba(0, 0, 0, 0.04)',
-              },
-              transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-              {item.icon}
-              <Typography variant="body2" fontWeight={pathname === item.path ? 600 : 500}>
-                {item.text}
-              </Typography>
-            </Box>
-          </MenuItem>
+        {navigationItems.map((item) => (
+          <Fade key={item.name} in timeout={300}>
+            <MenuItem
+              onClick={() => handleNavigation(item.href)}
+              sx={{
+                fontWeight: 500,
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                '&:hover': {
+                  background: 'rgba(102, 126, 234, 0.08)',
+                },
+              }}
+            >
+              {item.name}
+            </MenuItem>
+          </Fade>
         ))}
       </Menu>
 
@@ -271,15 +216,12 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         component="main"
         sx={{
           flexGrow: 1,
-          pt: { xs: 8, sm: 9 },
-          pb: 4,
-          px: { xs: 2, sm: 3, md: 4 },
-          background: 'transparent',
-          minHeight: '100vh',
+          background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
+          minHeight: 'calc(100vh - 64px)',
         }}
       >
         <Fade in timeout={600}>
-          <Container maxWidth="xl" sx={{ py: 2 }}>
+          <Container maxWidth="xl" sx={{ py: 4 }}>
             {children}
           </Container>
         </Fade>

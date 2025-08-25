@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Card,
@@ -17,13 +17,9 @@ import {
   ListItem,
   ListItemText,
   ListItemAvatar,
-  Badge,
   Tabs,
   Tab,
-  Paper,
   Alert,
-  Skeleton,
-  Tooltip,
   Switch,
   FormControlLabel,
 } from '@mui/material';
@@ -34,32 +30,19 @@ import {
   SwapHoriz,
   Agriculture,
   CurrencyExchange,
-  Settings,
   Notifications,
   Refresh,
   Visibility,
-  VisibilityOff,
-  ArrowUpward,
-  ArrowDownward,
   Star,
   StarBorder,
   MoreVert,
   Add,
-  Remove,
   Timeline,
-  PieChart,
-  BarChart,
-  ShowChart,
   AttachMoney,
-  Security,
   Speed,
-  CheckCircle,
-  Warning,
-  Error,
-  Info,
 } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
-import { ProtocolData, MarketRate, PortfolioAsset, Transaction } from '@/types';
+import { ProtocolData, PortfolioAsset, Transaction } from '@/types';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
 // Enhanced mock data
@@ -189,8 +172,16 @@ const mockTransactions: Transaction[] = [
   },
 ];
 
+interface StatCardProps {
+  title: string;
+  value: number;
+  change: number;
+  icon: React.ReactNode;
+  color?: 'primary' | 'secondary' | 'success' | 'warning' | 'info';
+}
+
 // Dashboard Components
-function StatCard({ title, value, change, icon, color = 'primary' }: any) {
+function StatCard({ title, value, change, icon, color = 'primary' }: StatCardProps) {
   return (
     <Card className="animate-fade-in-up hover-lift">
       <CardContent sx={{ p: 3 }}>
@@ -294,7 +285,7 @@ function PortfolioOverview() {
           Asset Allocation
         </Typography>
         <List>
-          {mockPortfolioAssets.map((asset, index) => (
+          {mockPortfolioAssets.map((asset) => (
             <ListItem key={asset.id} sx={{ px: 0 }}>
               <ListItemAvatar>
                 <Avatar sx={{ bgcolor: 'primary.main' }}>
@@ -382,7 +373,7 @@ function ProtocolAnalytics() {
         </Tabs>
 
         <Box display="grid" gridTemplateColumns={{ xs: '1fr', md: 'repeat(2, 1fr)' }} gap={2}>
-          {mockProtocols.map((protocol, index) => (
+          {mockProtocols.map((protocol) => (
             <Card
               key={protocol.id}
               variant="outlined"
@@ -471,7 +462,7 @@ function RecentTransactions() {
         </Box>
 
         <List>
-          {mockTransactions.map((tx, index) => (
+          {mockTransactions.map((tx) => (
             <ListItem key={tx.id} sx={{ px: 0 }}>
               <ListItemAvatar>
                 <Avatar
@@ -639,7 +630,7 @@ function MarketInsights() {
           Trending Assets
         </Typography>
         <List>
-          {['Ethereum', 'Bitcoin', 'Uniswap', 'Aave'].map((asset, index) => (
+          {['Ethereum', 'Bitcoin', 'Uniswap', 'Aave'].map((asset) => (
             <ListItem key={asset} sx={{ px: 0 }}>
               <ListItemAvatar>
                 <Avatar sx={{ bgcolor: 'primary.main' }}>
@@ -673,7 +664,7 @@ function MarketInsights() {
 export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
-  const { data: protocols, isLoading: protocolsLoading, error: protocolsError } = useQuery({
+  const { error: protocolsError } = useQuery({
     queryKey: ['protocols'],
     queryFn: async (): Promise<ProtocolData[]> => {
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -693,7 +684,7 @@ export default function DashboardPage() {
             Dashboard
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            Welcome back! Here's your DeFi overview
+            Welcome back! Here&apos;s your DeFi overview
           </Typography>
         </Box>
         <Box display="flex" gap={2}>
