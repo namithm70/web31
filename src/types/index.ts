@@ -88,3 +88,13 @@ export interface TransactionState {
   hash?: string;
   error?: string;
 }
+
+// Auth types
+export interface UserDoc {
+  _id: string;
+  name?: string;
+  email: string;
+  password: string; // hashed
+  createdAt: string;
+  updatedAt: string;
+}

@@ -2,8 +2,21 @@
 
 import { Box, Card, CardContent, TextField, Typography, Button, Link as MuiLink } from '@mui/material';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export default function SignInPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await fetch('/api/auth/signin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+  };
+
   return (
     <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" sx={{ px: 2 }}>
       <Card sx={{ width: 420 }} className="animate-fade-in-up">
@@ -15,10 +28,10 @@ export default function SignInPage() {
             Welcome back. Enter your credentials to continue.
           </Typography>
 
-          <Box component="form" display="flex" flexDirection="column" gap={2}>
-            <TextField label="Email" type="email" fullWidth autoComplete="email" />
-            <TextField label="Password" type="password" fullWidth autoComplete="current-password" />
-            <Button variant="contained" fullWidth size="large">
+          <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={2}>
+            <TextField label="Email" type="email" fullWidth autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <TextField label="Password" type="password" fullWidth autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Button type="submit" variant="contained" fullWidth size="large">
               Continue
             </Button>
           </Box>
