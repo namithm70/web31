@@ -9,6 +9,7 @@ import { WagmiProvider, createConfig, http } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
+import { SessionProvider } from 'next-auth/react';
 
 const config = createConfig({
   chains: [mainnet, sepolia],
@@ -117,14 +118,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <WagmiProvider config={config}>
-        <RainbowKitProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            {children}
-          </ThemeProvider>
-        </RainbowKitProvider>
-      </WagmiProvider>
+      <SessionProvider>
+        <WagmiProvider config={config}>
+          <RainbowKitProvider>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              {children}
+            </ThemeProvider>
+          </RainbowKitProvider>
+        </WagmiProvider>
+      </SessionProvider>
     </QueryClientProvider>
   );
 }

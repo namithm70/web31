@@ -1,8 +1,9 @@
 'use client';
 
-import { Box, Card, CardContent, TextField, Typography, Button, Link as MuiLink, Alert } from '@mui/material';
+import { Box, Card, CardContent, TextField, Typography, Button, Link as MuiLink, Alert, Divider } from '@mui/material';
 import Link from 'next/link';
 import { useState } from 'react';
+import { signIn } from 'next-auth/react';
 
 export default function SignInPage() {
   const [email, setEmail] = useState('');
@@ -31,6 +32,10 @@ export default function SignInPage() {
     }
   };
 
+  const handleGoogle = async () => {
+    await signIn('google', { callbackUrl: '/dashboard' });
+  };
+
   return (
     <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" sx={{ px: 2 }}>
       <Card sx={{ width: 420 }} className="animate-fade-in-up">
@@ -41,6 +46,12 @@ export default function SignInPage() {
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
             Welcome back. Enter your credentials to continue.
           </Typography>
+
+          <Button onClick={handleGoogle} variant="outlined" fullWidth sx={{ mb: 2 }}>
+            Continue with Google
+          </Button>
+
+          <Divider sx={{ my: 2 }}>or</Divider>
 
           {error && (
             <Alert severity="error" sx={{ mb: 2 }}>
