@@ -27,14 +27,51 @@ export default function HomePage() {
         alignItems="center"
         minHeight="100vh"
         sx={{
-          background: '#FFFFFF',
+          background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
           color: '#000000',
         }}
       >
-        <CircularProgress size={60} sx={{ color: '#000000', mb: 2 }} />
-        <Typography variant="h6" sx={{ color: '#000000', fontWeight: 600 }}>
-          Loading DeFi Superapp...
-        </Typography>
+        <Box
+          className="animate-scale-in"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 2,
+          }}
+        >
+          <CircularProgress 
+            size={60} 
+            sx={{ 
+              color: '#000000', 
+              mb: 2,
+              '& .MuiCircularProgress-circle': {
+                strokeLinecap: 'round',
+              }
+            }} 
+          />
+          <Typography 
+            variant="h4" 
+            className="animate-fade-in-up"
+            sx={{ 
+              color: '#000000', 
+              fontWeight: 700,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            DeFi Superapp
+          </Typography>
+          <Typography 
+            variant="body1" 
+            className="animate-fade-in-up stagger-1"
+            sx={{ 
+              color: '#666666', 
+              fontWeight: 500,
+            }}
+          >
+            Loading your experience...
+          </Typography>
+        </Box>
       </Box>
     );
   }
