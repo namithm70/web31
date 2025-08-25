@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   // Ensure server-only deps are resolved during RSC/Turbopack build (Next 15+)
   serverExternalPackages: ['mongoose', 'bcryptjs', 'jose'],
+  optimizePackageImports: ['@mui/material', '@mui/icons-material'],
   async rewrites() {
     return [
       {
