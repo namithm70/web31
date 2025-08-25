@@ -90,13 +90,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 }}
                 onClick={() => router.push('/')}
               >
-                DeFi Superapp
+                DeFI App
               </Typography>
             </Fade>
 
             {/* Desktop Navigation */}
             <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
-              {navigationItems.map((item, index) => (
+              {isConnected && navigationItems.map((item, index) => (
                 <Slide
                   key={item.name}
                   direction="down"
@@ -200,7 +200,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           },
         }}
       >
-        {navigationItems.map((item) => (
+        {isConnected && navigationItems.map((item) => (
           <Fade key={item.name} in timeout={300}>
             <MenuItem
               onClick={() => handleNavigation(item.href)}

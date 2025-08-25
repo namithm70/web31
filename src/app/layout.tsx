@@ -7,8 +7,8 @@ import AppLayout from '@/components/layout/app-layout';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'DeFi Superapp',
-  description: 'Secure, composable DeFi superapp for analytics, swapping, lending, and yield farming',
+  title: 'DeFI App',
+  description: 'Secure, DeFI App for analytics, swapping, lending, and yield farming',
 };
 
 export default function RootLayout({
