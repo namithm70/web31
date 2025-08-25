@@ -121,21 +121,29 @@ function AdvancedTokenSelector({ tokens, selectedToken, onSelect }: { tokens: To
       </Button>
 
       <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
-        <DialogTitle>Select a token</DialogTitle>
+        <DialogTitle sx={{ fontWeight: 700, color: 'text.primary' }}>Select a token</DialogTitle>
         <DialogContent dividers>
           <List>
             {tokens.map((t) => (
-              <ListItemButton key={`${t.symbol}-${t.name}`} onClick={() => { onSelect(t); setOpen(false); }}>
+              <ListItemButton
+                key={`${t.symbol}-${t.name}`}
+                onClick={() => { onSelect(t); setOpen(false); }}
+                sx={{
+                  '&:hover': { backgroundColor: 'action.hover' },
+                }}
+              >
                 <ListItemText
                   primary={
                     <Box display="flex" alignItems="center" gap={1}>
-                      <Avatar sx={{ width: 24, height: 24 }}>{t.symbol.charAt(0)}</Avatar>
-                      <Typography variant="body2" fontWeight={600}>{t.symbol}</Typography>
-                      <Typography variant="caption" color="text.secondary">{t.name}</Typography>
+                      <Avatar sx={{ width: 24, height: 24, bgcolor: 'text.primary', color: 'background.paper' }}>
+                        {t.symbol.charAt(0)}
+                      </Avatar>
+                      <Typography variant="body2" fontWeight={700} color="text.primary">{t.symbol}</Typography>
+                      <Typography variant="caption" color="grey.700">{t.name}</Typography>
                     </Box>
                   }
                   secondary={
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant="caption" color="text.primary">
                       ${t.price.toLocaleString()} • 24h: {t.change24h.toFixed(2)}%
                     </Typography>
                   }
