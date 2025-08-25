@@ -31,7 +31,7 @@ import {
   Restore,
 } from '@mui/icons-material';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 
 // Default preferences (used for demos/settings)
 const userData = {
@@ -77,6 +77,15 @@ function ProfileSettings() {
     email: session?.user?.email || '',
   });
 
+  // Debug: log session data
+  console.log('ProfileSettings render:', { 
+    session: session?.user, 
+    fullName, 
+    firstName, 
+    lastName,
+    joinDate 
+  });
+
   useEffect(() => {
     // Keep form in sync with active session when not editing
     if (!editing) {
@@ -86,7 +95,12 @@ function ProfileSettings() {
 
   useEffect(() => {
     // Store a simple client-side join date per user (keyed by email) the first time they visit settings
-    const email = session?.user?.email || 'anonymous';
+    const email = session?.user?.email;
+    if (!email) {
+      setJoinDate('');
+      return;
+    }
+    
     const key = `defiapp_join_date_${email}`;
     let stored = typeof window !== 'undefined' ? window.localStorage.getItem(key) : null;
     if (!stored) {
@@ -94,6 +108,9 @@ function ProfileSettings() {
       if (typeof window !== 'undefined') window.localStorage.setItem(key, stored);
     }
     setJoinDate(stored || new Date().toISOString());
+    
+    // Debug: log the current session and join date
+    console.log('Session changed:', { email, joinDate: stored });
   }, [session?.user?.email]);
 
   const handleSave = () => {
@@ -126,12 +143,27 @@ function ProfileSettings() {
               {firstName}{lastName ? ` ${lastName}` : ''}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Member since {new Date(joinDate).toLocaleDateString()}
+              {joinDate ? `Member since ${new Date(joinDate).toLocaleDateString()}` : 'Loading...'}
             </Typography>
             {session?.user?.email && (
               <Typography variant="body2" color="text.secondary">{session.user.email}</Typography>
             )}
           </Box>
+        </Box>
+        
+        {/* Debug: Show current session info */}
+        <Box mb={2} p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
+          <Typography variant="body2" color="text.secondary">
+            Debug: Session email: {session?.user?.email || 'None'} | Name: {session?.user?.name || 'None'}
+          </Typography>
+          <Button 
+            size="small" 
+            variant="outlined" 
+            onClick={() => signOut()} 
+            sx={{ mt: 1 }}
+          >
+            Sign Out (Debug)
+          </Button>
         </Box>
 
         <Box display="grid" gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }} gap={3}>
