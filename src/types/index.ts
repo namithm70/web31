@@ -13,7 +13,7 @@ export interface Quote {
 }
 
 export interface MarketRate {
-  asset: Address;
+  asset: `0x${string}`;
   supplyAPY: number;
   borrowAPR: number;
   utilization: number;
@@ -32,8 +32,33 @@ export interface ProtocolData {
   tvl: number;
   tvlChange24h: number;
   apy: number;
-  chains: ChainId[];
-  category: 'lending' | 'dex' | 'yield' | 'stablecoin';
+  category: string;
+  chains: number[];
+  risk: 'low' | 'medium' | 'high';
+  volume24h: number;
+}
+
+export interface PortfolioAsset {
+  id: string;
+  name: string;
+  symbol: string;
+  balance: number;
+  value: number;
+  change24h: number;
+  allocation: number;
+  icon: string;
+}
+
+export interface Transaction {
+  id: string;
+  type: 'swap' | 'stake' | 'lend' | 'borrow' | 'transfer';
+  from: string;
+  to: string;
+  amount: number;
+  value: number;
+  timestamp: Date;
+  status: 'pending' | 'completed' | 'failed';
+  txHash: string;
 }
 
 export interface TokenData {
