@@ -12,69 +12,32 @@ import {
   Avatar,
   Tabs,
   Tab,
-  Switch,
-  FormControlLabel,
-  Slider,
 } from '@mui/material';
 import {
-  Refresh,
   Add,
-  Remove,
-  Download,
-  Notifications,
-  Star,
-  StarBorder,
   Info,
-  Warning,
-  CheckCircle,
-  Speed,
-  AutoAwesome,
-  ShowChart,
-  Timeline,
   Bolt,
-  LocalFireDepartment,
-  WaterDrop,
-  ElectricBolt,
+  Security,
+  Warning,
+  Analytics,
+  Download,
+  AccountBalanceWallet,
+  Remove,
+  Notifications,
   FilterList,
   Sort,
-  ViewList,
-  ViewModule,
-  PieChart,
-  BarChart,
-  AttachMoney,
-  AccountBalanceWallet,
-  Security,
-  Analytics,
-  AutoGraph,
-  Psychology,
-  Lightbulb,
-  Diamond,
-  EmojiEvents,
-  RocketLaunch,
-  TrendingFlat,
-  ExpandMore,
-  ContentCopy,
-  Share as ShareIcon,
-  Download as DownloadIcon,
-  Upload,
-  Visibility as VisibilityIcon,
-  VisibilityOff,
-  AutoAwesome as AutoAwesomeIcon,
-  PsychologyAlt,
-  Calculate,
-  Timeline as TimelineIcon,
   CompressOutlined,
-  ExpandOutlined,
   ExpandMoreOutlined,
 } from '@mui/icons-material';
 
+
 // Enhanced mock data removed – will wire to Aave/Compound subgraphs
-const lendingPools: any[] = [
+const lendingPools: LendingPool[] = [
   {
     id: '1',
     name: 'USDC Lending Pool',
     asset: 'USDC',
-    symbol: 'USDC',
+      symbol: 'USDC',
     supplyRate: 4.2,
     borrowRate: 6.8,
     totalSupply: 25000000,
@@ -85,7 +48,6 @@ const lendingPools: any[] = [
     liquidationThreshold: 0.82,
     userSupply: 5000,
     userBorrow: 0,
-    userCollateral: 0,
   },
   {
     id: '2',
@@ -102,7 +64,6 @@ const lendingPools: any[] = [
     liquidationThreshold: 0.72,
     userSupply: 0,
     userBorrow: 2000,
-    userCollateral: 3000,
   },
   {
     id: '3',
@@ -119,11 +80,10 @@ const lendingPools: any[] = [
     liquidationThreshold: 0.87,
     userSupply: 3000,
     userBorrow: 1500,
-    userCollateral: 2000,
   },
 ];
 
-const flashLoanData = {
+const flashLoanData: { availableAssets: string[]; fees: Record<string, number>; maxAmounts: Record<string, number>; recentLoans: { id: string; asset: string; amount: number; fee: number; timestamp: Date; txHash: string }[] } = {
   availableAssets: ['USDC', 'ETH', 'DAI', 'WBTC'],
   fees: {
     USDC: 0.09,
@@ -157,7 +117,7 @@ const flashLoanData = {
   ],
 };
 
-const riskManagementData = {
+const riskManagementData: { portfolioRisk: string; healthFactor: number; liquidationRisk: number; diversificationScore: number; recommendations: { action: string; priority: string; impact: string }[] } = {
   portfolioRisk: 'low',
   healthFactor: 2.1,
   liquidationRisk: 0.02,
@@ -169,7 +129,7 @@ const riskManagementData = {
   ],
 };
 
-const lendingAnalytics = {
+const lendingAnalytics: { totalSupplied: number; totalBorrowed: number; netAPY: number; totalInterestEarned: number; totalInterestPaid: number; netEarnings: number; averageHealthFactor: number; utilizationRate: number } = {
   totalSupplied: 8000,
   totalBorrowed: 3500,
   netAPY: 2.8,
@@ -180,7 +140,7 @@ const lendingAnalytics = {
   utilizationRate: 65,
 };
 
-const borrowingHistory: any[] = [
+const borrowingHistory: { id: string; action: 'supply'|'borrow'|'repay'; asset: string; amount: number; timestamp: Date; txHash: string; gasUsed: number }[] = [
   {
     id: '1',
     action: 'supply',
@@ -256,10 +216,10 @@ function AdvancedLendingPoolCard({ pool }: { pool: LendingPool }) {
           <Box textAlign="right">
             <Typography variant="h5" fontWeight={700} color="text.primary">
               {pool.supplyRate}% Supply
-            </Typography>
+        </Typography>
             <Typography variant="body2" color="text.secondary">
               {pool.borrowRate}% Borrow
-            </Typography>
+          </Typography>
           </Box>
         </Box>
 
@@ -273,7 +233,7 @@ function AdvancedLendingPoolCard({ pool }: { pool: LendingPool }) {
             </Typography>
           </Box>
           <Box>
-            <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary">
               Your Borrow
             </Typography>
             <Typography variant="body1" fontWeight={600} color="text.secondary">
@@ -329,7 +289,7 @@ function AdvancedLendingPoolCard({ pool }: { pool: LendingPool }) {
                 </Typography>
                 <Typography variant="body2" fontWeight={600}>
                   {pool.liquidationThreshold * 100}%
-                </Typography>
+        </Typography>
               </Box>
             </Box>
           </Box>
@@ -347,7 +307,7 @@ function FlashLoanInterface() {
     <Card className="animate-fade-in-up stagger-1">
       <CardContent sx={{ p: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-          <Box display="flex" alignItems="center" gap={1}>
+                <Box display="flex" alignItems="center" gap={1}>
             <Bolt sx={{ color: 'primary.main' }} />
             <Typography variant="h6" fontWeight={600}>
               Flash Loan Interface
@@ -368,7 +328,7 @@ function FlashLoanInterface() {
             </Typography>
           </Box>
           <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
-            <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary">
               Fee Rate
             </Typography>
             <Typography variant="h5" fontWeight={600} color="text.primary">
@@ -395,10 +355,10 @@ function FlashLoanInterface() {
                 <Box textAlign="right">
                   <Typography variant="body2" fontWeight={600}>
                     {loan.amount.toLocaleString()} {loan.asset}
-                  </Typography>
+                </Typography>
                   <Typography variant="caption" color="text.secondary">
                     Fee: {loan.fee} {loan.asset}
-                  </Typography>
+                </Typography>
                 </Box>
               </Box>
             </Box>
@@ -418,7 +378,7 @@ function RiskManagementSystem() {
             <Security sx={{ color: 'primary.main' }} />
             <Typography variant="h6" fontWeight={600}>
               Risk Management
-            </Typography>
+        </Typography>
           </Box>
           <IconButton size="small">
             <Warning />
@@ -437,10 +397,10 @@ function RiskManagementSystem() {
           <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Liquidation Risk
-            </Typography>
+          </Typography>
             <Typography variant="h5" fontWeight={600} color="text.secondary">
               {riskManagementData.liquidationRisk}%
-            </Typography>
+          </Typography>
           </Box>
         </Box>
 
@@ -483,7 +443,7 @@ function LendingAnalytics() {
             <Analytics sx={{ color: 'primary.main' }} />
             <Typography variant="h6" fontWeight={600}>
               Lending Analytics
-            </Typography>
+      </Typography>
           </Box>
           <IconButton size="small">
             <Download />
@@ -492,25 +452,25 @@ function LendingAnalytics() {
 
         <Box display="grid" gridTemplateColumns="1fr 1fr" gap={3} mb={3}>
           <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
-            <Typography variant="body2" color="text.secondary">
-              Total Supplied
-            </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Total Supplied
+                  </Typography>
             <Typography variant="h5" fontWeight={600} color="text.primary">
               ${lendingAnalytics.totalSupplied.toLocaleString()}
-            </Typography>
-          </Box>
+                  </Typography>
+                </Box>
           <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
-            <Typography variant="body2" color="text.secondary">
-              Total Borrowed
-            </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Total Borrowed
+                  </Typography>
             <Typography variant="h5" fontWeight={600} color="text.secondary">
               ${lendingAnalytics.totalBorrowed.toLocaleString()}
-            </Typography>
-          </Box>
+                  </Typography>
+                </Box>
           <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
-            <Typography variant="body2" color="text.secondary">
-              Net APY
-            </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Net APY
+                  </Typography>
             <Typography variant="h5" fontWeight={600} color="text.primary">
               {lendingAnalytics.netAPY}%
             </Typography>
@@ -585,7 +545,7 @@ function BorrowingHistory() {
               </Box>
               
               <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary">
                   {item.amount.toLocaleString()} {item.asset}
                 </Typography>
                 <Box textAlign="right">
@@ -599,9 +559,9 @@ function BorrowingHistory() {
               </Box>
             </Box>
           ))}
-        </Box>
-      </CardContent>
-    </Card>
+              </Box>
+            </CardContent>
+          </Card>
   );
 }
 
@@ -640,7 +600,7 @@ export default function LendPage() {
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
             <Typography variant="h5" fontWeight={600}>
               Available Pools
-            </Typography>
+                    </Typography>
             <Box display="flex" gap={1}>
               <Button variant="outlined" size="small" startIcon={<FilterList />}>
                 Filter
@@ -659,8 +619,8 @@ export default function LendPage() {
                 <AdvancedLendingPoolCard key={pool.id} pool={pool} />
               ))
             )}
-          </Box>
-        </Box>
+              </Box>
+            </Box>
 
         <Box>
           <Tabs
@@ -678,7 +638,7 @@ export default function LendPage() {
           {selectedTab === 1 && (riskManagementData ? <RiskManagementSystem /> : <Typography variant="body2" color="text.secondary">No risk data.</Typography>)}
           {selectedTab === 2 && (lendingAnalytics ? <LendingAnalytics /> : <Typography variant="body2" color="text.secondary">No analytics available.</Typography>)}
           {selectedTab === 3 && (borrowingHistory.length ? <BorrowingHistory /> : <Typography variant="body2" color="text.secondary">No history yet.</Typography>)}
-        </Box>
+          </Box>
       </Box>
     </Box>
   );

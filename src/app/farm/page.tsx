@@ -20,55 +20,20 @@ import {
   Refresh,
   Add,
   Remove,
-  Download,
-  Notifications,
-  Star,
-  StarBorder,
   Info,
-  Warning,
-  CheckCircle,
-  Speed,
   AutoAwesome,
-  ShowChart,
-  Timeline,
-  Bolt,
-  LocalFireDepartment,
-  WaterDrop,
-  ElectricBolt,
   FilterList,
   Sort,
-  ViewList,
-  ViewModule,
-  PieChart,
-  BarChart,
-  AttachMoney,
-  AccountBalanceWallet,
-  Security,
-  Analytics,
-  AutoGraph,
-  Psychology,
-  Lightbulb,
-  Diamond,
-  EmojiEvents,
-  RocketLaunch,
-  TrendingFlat,
-  ExpandMore,
-  ContentCopy,
-  Share as ShareIcon,
-  Download as DownloadIcon,
-  Upload,
-  Visibility as VisibilityIcon,
-  VisibilityOff,
-  AutoAwesome as AutoAwesomeIcon,
-  PsychologyAlt,
-  Calculate,
-  Timeline as TimelineIcon,
   CompressOutlined,
   ExpandOutlined,
+  Analytics,
+  Download,
+  Notifications,
+  AutoGraph,
 } from '@mui/icons-material';
 
 // Removed mock data – will wire to real sources (DeFiLlama/subgraphs)
-const farmingPools: any[] = [
+const farmingPools: Pool[] = [
   {
     id: '1',
     name: 'ETH-USDC LP',
@@ -119,13 +84,31 @@ const farmingPools: any[] = [
   },
 ];
 
-const yieldOptimizationData: any = null;
+const yieldOptimizationData: null | {
+  currentAPY: number;
+  potentialAPY: number;
+  recommendations: { action: string; potentialGain: number; risk: string }[];
+  impermanentLossProtection?: { enabled: boolean; coverage: number; cost: number };
+} = null;
 
-const farmingAnalytics: any = null;
+const farmingAnalytics: null | {
+  totalStaked: number;
+  totalEarned: number;
+  averageAPY: number;
+  projectedEarnings: number;
+  impermanentLoss: number;
+  gasSpent: number;
+} = null;
 
-const autoCompoundSettings: any = null;
+const autoCompoundSettings: null | {
+  enabled: boolean;
+  frequency: 'hourly' | 'daily' | 'weekly';
+  threshold: number;
+  maxGasPrice: number;
+  gasOptimization: boolean;
+} = null;
 
-const stakingHistory: any[] = [];
+const stakingHistory: { id: string; action: 'stake'|'harvest'|'unstake'; pool: string; amount: number; timestamp: Date; txHash: string; gasUsed: number }[] = [];
 
 
 
@@ -285,7 +268,7 @@ function YieldOptimization() {
               Current APY
             </Typography>
             <Typography variant="h5" fontWeight={600} color="text.primary">
-              {yieldOptimizationData.currentAPY}%
+              {yieldOptimizationData?.currentAPY ?? 0}%
             </Typography>
           </Box>
           <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
@@ -293,7 +276,7 @@ function YieldOptimization() {
               Potential APY
             </Typography>
             <Typography variant="h5" fontWeight={600} color="text.primary">
-              {yieldOptimizationData.potentialAPY}%
+              {yieldOptimizationData?.potentialAPY ?? 0}%
             </Typography>
           </Box>
         </Box>
@@ -377,6 +360,7 @@ function AutoCompoundSettings() {
           </IconButton>
         </Box>
 
+        {autoCompoundSettings && (
         <FormControlLabel
           control={
             <Switch
@@ -386,7 +370,7 @@ function AutoCompoundSettings() {
           }
           label="Enable Auto-Compound"
           sx={{ mb: 2 }}
-        />
+        />)}
 
         <Box display="flex" flexDirection="column" gap={2}>
           <Box>
@@ -399,8 +383,8 @@ function AutoCompoundSettings() {
                   key={freq}
                   label={freq}
                   size="small"
-                  color={autoCompoundSettings.frequency === freq ? 'primary' : 'default'}
-                  variant={autoCompoundSettings.frequency === freq ? 'filled' : 'outlined'}
+                  color={autoCompoundSettings?.frequency === freq ? 'primary' : 'default'}
+                  variant={autoCompoundSettings?.frequency === freq ? 'filled' : 'outlined'}
                   sx={{ cursor: 'pointer' }}
                 />
               ))}
@@ -412,7 +396,7 @@ function AutoCompoundSettings() {
               Minimum Threshold (USD)
             </Typography>
             <Slider
-              value={autoCompoundSettings.threshold}
+              value={autoCompoundSettings?.threshold ?? 0}
               min={10}
               max={200}
               step={10}
@@ -426,7 +410,7 @@ function AutoCompoundSettings() {
               Max Gas Price (Gwei)
             </Typography>
             <Slider
-              value={autoCompoundSettings.maxGasPrice}
+              value={autoCompoundSettings?.maxGasPrice ?? 0}
               min={10}
               max={100}
               step={5}
@@ -435,15 +419,16 @@ function AutoCompoundSettings() {
             />
           </Box>
 
+          {autoCompoundSettings && (
           <FormControlLabel
             control={
               <Switch
-                checked={autoCompoundSettings.gasOptimization}
-            size="small"
+                checked={!!autoCompoundSettings.gasOptimization}
+                size="small"
               />
             }
             label="Gas Optimization"
-          />
+          />)}
         </Box>
       </CardContent>
     </Card>

@@ -13,9 +13,6 @@ import {
   Avatar,
   Tabs,
   Tab,
-  Switch,
-  FormControlLabel,
-  Slider,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -23,97 +20,7 @@ import {
   ListItemButton,
   ListItemText,
 } from '@mui/material';
-import {
-  Refresh,
-  Add,
-  Remove,
-  Download,
-  Notifications,
-  Star,
-  StarBorder,
-  Info,
-  Warning,
-  CheckCircle,
-  Speed,
-  AutoAwesome,
-  ShowChart,
-  Timeline,
-  Bolt,
-  LocalFireDepartment,
-  WaterDrop,
-  ElectricBolt,
-  FilterList,
-  Sort,
-  ViewList,
-  ViewModule,
-  PieChart,
-  BarChart,
-  AttachMoney,
-  AccountBalanceWallet,
-  Security,
-  Analytics,
-  AutoGraph,
-  Psychology,
-  Lightbulb,
-  Diamond,
-  EmojiEvents,
-  RocketLaunch,
-  TrendingFlat,
-  ExpandMore,
-  ContentCopy,
-  SwapHoriz,
-  Share as ShareIcon,
-  Download as DownloadIcon,
-  Upload,
-  Visibility as VisibilityIcon,
-  VisibilityOff,
-  AutoAwesome as AutoAwesomeIcon,
-  PsychologyAlt,
-  Calculate,
-  Timeline as TimelineIcon,
-  TrendingUpOutlined,
-  TrendingDownOutlined,
-  SpeedOutlined,
-  SecurityOutlined,
-  AnalyticsOutlined,
-  AutoGraphOutlined,
-  ShowChartOutlined,
-  TimelineOutlined,
-  BoltOutlined,
-  LocalFireDepartmentOutlined,
-  WaterDropOutlined,
-  ElectricBoltOutlined,
-  CompressOutlined,
-  ExpandOutlined,
-  FilterListOutlined,
-  SortOutlined,
-  ViewListOutlined,
-  ViewModuleOutlined,
-  PieChartOutlined,
-  BarChartOutlined,
-  AttachMoneyOutlined,
-  AccountBalanceWalletOutlined,
-  CurrencyExchangeOutlined,
-  SecurityOutlined as SecurityOutlinedIcon,
-  PsychologyOutlined,
-  LightbulbOutlined,
-  DiamondOutlined,
-  EmojiEventsOutlined,
-  RocketLaunchOutlined,
-  TrendingFlatOutlined,
-  ExpandMoreOutlined,
-  AddOutlined,
-  RemoveOutlined,
-  ContentCopyOutlined,
-  ShareOutlined,
-  DownloadOutlined,
-  UploadOutlined,
-  VisibilityOutlined,
-  VisibilityOffOutlined,
-  AutoAwesomeOutlined,
-  PsychologyAltOutlined,
-  CalculateOutlined,
-} from '@mui/icons-material';
+import { Refresh, Notifications, ShowChart, AutoGraph, Speed, Info, SwapHoriz } from '@mui/icons-material';
 
 // Fetch real tokens from CoinGecko and map to Token interface
 async function fetchMarketTokens(): Promise<Token[]> {
@@ -319,7 +226,7 @@ function LimitOrders() {
       <CardContent sx={{ p: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
           <Box display="flex" alignItems="center" gap={1}>
-            <Timeline sx={{ color: 'primary.main' }} />
+            <ShowChart sx={{ color: 'primary.main' }} />
             <Typography variant="h6" fontWeight={600}>
               Limit Orders
             </Typography>
@@ -506,7 +413,7 @@ export default function SwapPage() {
       setFromToken(tokens[0]);
       setToToken(tokens[1] || tokens[0]);
     }
-  }, [tokens]);
+  }, [tokens, fromToken, toToken]);
   const [amount, setAmount] = useState('');
 
   return (
