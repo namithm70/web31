@@ -45,6 +45,7 @@ import {
   AttachMoney,
 } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
+import { useAccount, useBalance } from 'wagmi';
 import { ProtocolData, PortfolioAsset, Transaction } from '@/types';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
@@ -463,8 +464,37 @@ function RiskAnalytics() {
 
 // Enhanced existing components with more features
 function PortfolioOverview() {
-  const totalValue = mockPortfolioAssets.reduce((sum, asset) => sum + asset.value, 0);
-  const totalChange = mockPortfolioAssets.reduce((sum, asset) => sum + (asset.value * asset.change24h / 100), 0);
+  const { address, isConnected } = useAccount();
+  const { data: nativeBalance } = useBalance({ address, query: { enabled: !!address } });
+  const { data: ethPriceData } = useQuery({
+    queryKey: ['ethPrice'],
+    queryFn: async () => {
+      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+      if (!res.ok) throw new Error('price');
+      return res.json();
+    },
+    staleTime: 60_000,
+  });
+
+  const nativeSymbol = nativeBalance?.symbol || 'ETH';
+  const nativeFormatted = Number(nativeBalance?.formatted || 0);
+  const nativeUsd = (ethPriceData?.ethereum?.usd ?? 0) * nativeFormatted;
+
+  const assets = isConnected && nativeFormatted > 0
+    ? [{
+        id: 'native',
+        name: nativeSymbol === 'ETH' ? 'Ethereum' : nativeSymbol,
+        symbol: nativeSymbol,
+        balance: nativeFormatted,
+        value: nativeUsd,
+        change24h: 0,
+        allocation: 100,
+        icon: '◼️',
+      }]
+    : [] as PortfolioAsset[];
+
+  const totalValue = assets.reduce((sum, a) => sum + a.value, 0);
+  const totalChange = assets.reduce((sum, a) => sum + (a.value * a.change24h / 100), 0);
   const totalChangePercent = totalValue ? (totalChange / totalValue) * 100 : 0;
 
   return (
@@ -517,7 +547,7 @@ function PortfolioOverview() {
           </Box>
           <Box textAlign="center">
             <Typography variant="h4" fontWeight={600}>
-              {mockPortfolioAssets.length}
+              {assets.length}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Assets
@@ -530,11 +560,11 @@ function PortfolioOverview() {
         <Typography variant="h6" fontWeight={600} mb={2}>
           Asset Allocation
         </Typography>
-        {mockPortfolioAssets.length === 0 ? (
+        {assets.length === 0 ? (
           <Typography variant="body2" color="text.secondary">No assets yet.</Typography>
         ) : (
           <List>
-            {mockPortfolioAssets.map((asset) => (
+            {assets.map((asset) => (
               <ListItem key={asset.id} sx={{ px: 0 }}>
                 <ListItemAvatar>
                   <Avatar sx={{ bgcolor: 'primary.main' }}>
