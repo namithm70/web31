@@ -67,8 +67,8 @@ import {
   ExpandOutlined,
 } from '@mui/icons-material';
 
-// Enhanced mock data for advanced farming features
-const farmingPools = [
+// Removed mock data – will wire to real sources (DeFiLlama/subgraphs)
+const farmingPools: any[] = [
   {
     id: '1',
     name: 'ETH-USDC LP',
@@ -119,67 +119,13 @@ const farmingPools = [
   },
 ];
 
-const yieldOptimizationData = {
-  currentAPY: 28.5,
-  potentialAPY: 42.3,
-  recommendations: [
-    { action: 'Move to ETH-USDC LP', potentialGain: 8.2, risk: 'medium' },
-    { action: 'Enable auto-compound', potentialGain: 3.1, risk: 'low' },
-    { action: 'Use boost multiplier', potentialGain: 5.7, risk: 'low' },
-  ],
-  impermanentLossProtection: {
-    enabled: true,
-    coverage: 85,
-    cost: 0.5,
-  },
-};
+const yieldOptimizationData: any = null;
 
-const farmingAnalytics = {
-  totalStaked: 16200,
-  totalEarned: 259,
-  averageAPY: 32.1,
-  projectedEarnings: 420,
-  impermanentLoss: 4.0,
-  gasSpent: 125,
-};
+const farmingAnalytics: any = null;
 
-const autoCompoundSettings = {
-  enabled: true,
-  frequency: 'daily',
-  threshold: 50,
-  gasOptimization: true,
-  maxGasPrice: 25,
-};
+const autoCompoundSettings: any = null;
 
-const stakingHistory = [
-  {
-    id: '1',
-    action: 'stake',
-    pool: 'ETH-USDC LP',
-    amount: 2000,
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24),
-    txHash: '0x1234...5678',
-    gasUsed: 0.002,
-  },
-  {
-    id: '2',
-    action: 'harvest',
-    pool: 'WBTC-ETH LP',
-    amount: 45,
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 12),
-    txHash: '0x8765...4321',
-    gasUsed: 0.001,
-  },
-  {
-    id: '3',
-    action: 'unstake',
-    pool: 'USDC-DAI LP',
-    amount: 1500,
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 6),
-    txHash: '0xabcd...efgh',
-    gasUsed: 0.003,
-  },
-];
+const stakingHistory: any[] = [];
 
 
 
@@ -267,7 +213,7 @@ function AdvancedPoolCard({ pool }: { pool: Pool }) {
               variant="outlined"
             />
           )}
-          <Chip
+          <Chip 
             label={`${pool.boost}x Boost`}
             size="small"
             color="primary"
@@ -356,7 +302,7 @@ function YieldOptimization() {
           Optimization Recommendations
         </Typography>
         <Box display="flex" flexDirection="column" gap={2}>
-          {yieldOptimizationData.recommendations.map((rec, index) => (
+          {(yieldOptimizationData?.recommendations ?? []).map((rec: any, index: number) => (
             <Box key={index} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
               <Box display="flex" justifyContent="space-between" alignItems="center">
                 <Box>
@@ -390,7 +336,7 @@ function YieldOptimization() {
                 Coverage
               </Typography>
               <Typography variant="body2" fontWeight={600}>
-                {yieldOptimizationData.impermanentLossProtection.coverage}%
+                {(yieldOptimizationData?.impermanentLossProtection?.coverage ?? 0)}%
               </Typography>
             </Box>
             <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -398,15 +344,12 @@ function YieldOptimization() {
                 Cost
               </Typography>
               <Typography variant="body2" fontWeight={600}>
-                {yieldOptimizationData.impermanentLossProtection.cost}% of rewards
+                {(yieldOptimizationData?.impermanentLossProtection?.cost ?? 0)}% of rewards
               </Typography>
             </Box>
             <FormControlLabel
               control={
-                <Switch
-                  checked={yieldOptimizationData.impermanentLossProtection.enabled}
-                  size="small"
-                />
+                <Switch checked={!!yieldOptimizationData?.impermanentLossProtection?.enabled} size="small" />
               }
               label="Enable Protection"
               sx={{ mt: 1 }}
@@ -476,7 +419,7 @@ function AutoCompoundSettings() {
               marks
               valueLabelDisplay="auto"
             />
-          </Box>
+            </Box>
 
           <Box>
             <Typography variant="body2" fontWeight={600} mb={1}>
@@ -496,7 +439,7 @@ function AutoCompoundSettings() {
             control={
               <Switch
                 checked={autoCompoundSettings.gasOptimization}
-                size="small"
+            size="small"
               />
             }
             label="Gas Optimization"
@@ -512,16 +455,16 @@ function FarmingAnalytics() {
     <Card className="animate-fade-in-up stagger-3">
       <CardContent sx={{ p: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-          <Box display="flex" alignItems="center" gap={1}>
+                <Box display="flex" alignItems="center" gap={1}>
             <Analytics sx={{ color: 'primary.main' }} />
             <Typography variant="h6" fontWeight={600}>
               Farming Analytics
-            </Typography>
-          </Box>
+                  </Typography>
+                </Box>
           <IconButton size="small">
             <Download />
           </IconButton>
-        </Box>
+                </Box>
 
         <Box display="grid" gridTemplateColumns="1fr 1fr" gap={3} mb={3}>
           <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
@@ -529,7 +472,7 @@ function FarmingAnalytics() {
               Total Staked
             </Typography>
             <Typography variant="h5" fontWeight={600} color="text.primary">
-              ${farmingAnalytics.totalStaked.toLocaleString()}
+              ${farmingAnalytics?.totalStaked?.toLocaleString?.() ?? 0}
             </Typography>
           </Box>
           <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
@@ -537,7 +480,7 @@ function FarmingAnalytics() {
               Total Earned
             </Typography>
             <Typography variant="h5" fontWeight={600} color="text.primary">
-              ${farmingAnalytics.totalEarned}
+              ${farmingAnalytics?.totalEarned ?? 0}
             </Typography>
           </Box>
           <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
@@ -545,7 +488,7 @@ function FarmingAnalytics() {
               Average APY
             </Typography>
             <Typography variant="h5" fontWeight={600} color="text.primary">
-              {farmingAnalytics.averageAPY}%
+              {farmingAnalytics?.averageAPY ?? 0}%
             </Typography>
           </Box>
           <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
@@ -553,7 +496,7 @@ function FarmingAnalytics() {
               Projected Earnings
             </Typography>
             <Typography variant="h5" fontWeight={600} color="text.primary">
-              ${farmingAnalytics.projectedEarnings}
+              ${farmingAnalytics?.projectedEarnings ?? 0}
             </Typography>
           </Box>
         </Box>
@@ -567,7 +510,7 @@ function FarmingAnalytics() {
               Impermanent Loss
             </Typography>
             <Typography variant="body2" fontWeight={600} color="text.secondary">
-              {farmingAnalytics.impermanentLoss}%
+              {farmingAnalytics?.impermanentLoss ?? 0}%
             </Typography>
           </Box>
           <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -575,7 +518,7 @@ function FarmingAnalytics() {
               Gas Spent (30d)
             </Typography>
             <Typography variant="body2" fontWeight={600} color="text.secondary">
-              ${farmingAnalytics.gasSpent}
+              ${farmingAnalytics?.gasSpent ?? 0}
             </Typography>
           </Box>
         </Box>
@@ -627,16 +570,16 @@ function StakingHistory() {
                   </Typography>
                   <Typography variant="caption" color="text.secondary" display="block">
                     Gas: {item.gasUsed} ETH
-                  </Typography>
+        </Typography>
                 </Box>
               </Box>
             </Box>
           ))}
-        </Box>
+      </Box>
       </CardContent>
     </Card>
-  );
-}
+    );
+  }
 
 export default function FarmPage() {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -650,7 +593,7 @@ export default function FarmPage() {
           </Typography>
           <Typography variant="body1" color="text.secondary">
             Maximize your yields with advanced farming strategies
-          </Typography>
+      </Typography>
         </Box>
         <Box display="flex" gap={2}>
           <Button
@@ -663,17 +606,17 @@ export default function FarmPage() {
             variant="contained"
             startIcon={<Add />}
           >
-            Add Liquidity
-          </Button>
+                  Add Liquidity
+                </Button>
         </Box>
-      </Box>
+        </Box>
 
       <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '2fr 1fr' }} gap={3}>
         <Box>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
             <Typography variant="h5" fontWeight={600}>
-              Available Pools
-            </Typography>
+            Available Pools
+          </Typography>
             <Box display="flex" gap={1}>
               <Button variant="outlined" size="small" startIcon={<FilterList />}>
                 Filter
@@ -682,12 +625,16 @@ export default function FarmPage() {
                 Sort
               </Button>
             </Box>
-          </Box>
+              </Box>
 
           <Box display="flex" flexDirection="column" gap={3}>
-            {farmingPools.map((pool) => (
-              <AdvancedPoolCard key={pool.id} pool={pool} />
-            ))}
+            {farmingPools.length === 0 ? (
+              <Typography variant="body2" color="text.secondary">No pools available yet.</Typography>
+            ) : (
+              farmingPools.map((pool) => (
+                <AdvancedPoolCard key={pool.id} pool={pool} />
+              ))
+            )}
           </Box>
         </Box>
 
@@ -703,10 +650,10 @@ export default function FarmPage() {
             <Tab label="History" />
           </Tabs>
 
-          {selectedTab === 0 && <YieldOptimization />}
-          {selectedTab === 1 && <AutoCompoundSettings />}
-          {selectedTab === 2 && <FarmingAnalytics />}
-          {selectedTab === 3 && <StakingHistory />}
+          {selectedTab === 0 && (yieldOptimizationData ? <YieldOptimization /> : <Typography variant="body2" color="text.secondary">No optimization data.</Typography>)}
+          {selectedTab === 1 && (autoCompoundSettings ? <AutoCompoundSettings /> : <Typography variant="body2" color="text.secondary">No auto-compound settings.</Typography>)}
+          {selectedTab === 2 && (farmingAnalytics ? <FarmingAnalytics /> : <Typography variant="body2" color="text.secondary">No analytics available.</Typography>)}
+          {selectedTab === 3 && (stakingHistory.length ? <StakingHistory /> : <Typography variant="body2" color="text.secondary">No history yet.</Typography>)}
         </Box>
       </Box>
     </Box>

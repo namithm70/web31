@@ -68,8 +68,8 @@ import {
   ExpandMoreOutlined,
 } from '@mui/icons-material';
 
-// Enhanced mock data for advanced lending features
-const lendingPools = [
+// Enhanced mock data removed – will wire to Aave/Compound subgraphs
+const lendingPools: any[] = [
   {
     id: '1',
     name: 'USDC Lending Pool',
@@ -180,7 +180,7 @@ const lendingAnalytics = {
   utilizationRate: 65,
 };
 
-const borrowingHistory = [
+const borrowingHistory: any[] = [
   {
     id: '1',
     action: 'supply',
@@ -652,9 +652,13 @@ export default function LendPage() {
           </Box>
 
           <Box display="flex" flexDirection="column" gap={3}>
-            {lendingPools.map((pool) => (
-              <AdvancedLendingPoolCard key={pool.id} pool={pool} />
-            ))}
+            {lendingPools.length === 0 ? (
+              <Typography variant="body2" color="text.secondary">No pools available yet.</Typography>
+            ) : (
+              lendingPools.map((pool: any) => (
+                <AdvancedLendingPoolCard key={pool.id} pool={pool} />
+              ))
+            )}
           </Box>
         </Box>
 
@@ -670,10 +674,10 @@ export default function LendPage() {
             <Tab label="History" />
           </Tabs>
 
-          {selectedTab === 0 && <FlashLoanInterface />}
-          {selectedTab === 1 && <RiskManagementSystem />}
-          {selectedTab === 2 && <LendingAnalytics />}
-          {selectedTab === 3 && <BorrowingHistory />}
+          {selectedTab === 0 && (flashLoanData ? <FlashLoanInterface /> : <Typography variant="body2" color="text.secondary">No flash loan data.</Typography>)}
+          {selectedTab === 1 && (riskManagementData ? <RiskManagementSystem /> : <Typography variant="body2" color="text.secondary">No risk data.</Typography>)}
+          {selectedTab === 2 && (lendingAnalytics ? <LendingAnalytics /> : <Typography variant="body2" color="text.secondary">No analytics available.</Typography>)}
+          {selectedTab === 3 && (borrowingHistory.length ? <BorrowingHistory /> : <Typography variant="body2" color="text.secondary">No history yet.</Typography>)}
         </Box>
       </Box>
     </Box>
