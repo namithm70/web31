@@ -186,9 +186,9 @@ export function WalletConnectionGuide() {
             </ListItemIcon>
             <ListItemText
               primary={
-                <Typography variant="body1" sx={{ color: 'text.primary' }}>
-                  Click the "Connect Wallet" button in the top navigation
-                </Typography>
+                                 <Typography variant="body1" sx={{ color: 'text.primary' }}>
+                   Click the &quot;Connect Wallet&quot; button in the top navigation
+                 </Typography>
               }
             />
           </ListItem>

@@ -1,6 +1,6 @@
 'use client';
 
-import { IconButton, Tooltip, Box } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import { LightMode, DarkMode } from '@mui/icons-material';
 import { useTheme } from '@/contexts/ThemeContext';
 
