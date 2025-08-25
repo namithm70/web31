@@ -139,47 +139,9 @@ const dexAggregators = [
   { name: '0x Protocol', price: 0.9978, gasEstimate: 118000, route: ['Curve', 'Uniswap V3'] },
 ];
 
-const limitOrders = [
-  {
-    id: '1',
-    from: 'ETH',
-    to: 'USDC',
-    amount: 2.5,
-    price: 3200,
-    type: 'buy',
-    status: 'active',
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2),
-  },
-  {
-    id: '2',
-    from: 'UNI',
-    to: 'ETH',
-    amount: 100,
-    price: 0.0028,
-    type: 'sell',
-    status: 'filled',
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 6),
-  },
-];
+// Removed mock limit orders – show empty state
 
-const priceAlerts = [
-  {
-    id: '1',
-    token: 'ETH',
-    targetPrice: 3500,
-    condition: 'above',
-    status: 'active',
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 12),
-  },
-  {
-    id: '2',
-    token: 'UNI',
-    targetPrice: 7.50,
-    condition: 'below',
-    status: 'triggered',
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24),
-  },
-];
+// Removed mock price alerts – show empty state
 
 const swapHistory = [
   {
@@ -368,31 +330,9 @@ function LimitOrders() {
         </Box>
 
         <Box display="flex" flexDirection="column" gap={2}>
-          {limitOrders.map((order) => (
-            <Box key={order.id} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
-              <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Box>
-                  <Typography variant="body2" fontWeight={600}>
-                    {order.from} → {order.to}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {order.amount} {order.from} @ ${order.price}
-                  </Typography>
-                </Box>
-                <Box textAlign="right">
-                  <Chip
-                    label={order.status}
-                    size="small"
-                    color="primary"
-                    variant="outlined"
-                  />
-                  <Typography variant="caption" color="text.secondary" display="block">
-                    {order.timestamp.toLocaleString()}
-                  </Typography>
-                </Box>
-              </Box>
-            </Box>
-          ))}
+          <Typography variant="body2" color="text.secondary">
+            No orders yet.
+          </Typography>
         </Box>
 
         {/* Dialog removed as per edit hint */}
@@ -420,26 +360,9 @@ function PriceAlerts() {
         </Box>
 
         <Box display="flex" flexDirection="column" gap={2}>
-          {priceAlerts.map((alert) => (
-            <Box key={alert.id} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
-              <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Box>
-                  <Typography variant="body2" fontWeight={600}>
-                    {alert.token} {alert.condition} ${alert.targetPrice}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {alert.timestamp.toLocaleString()}
-                  </Typography>
-                </Box>
-                <Chip
-                  label={alert.status}
-                  size="small"
-                  color="primary"
-                  variant="outlined"
-                />
-              </Box>
-            </Box>
-          ))}
+          <Typography variant="body2" color="text.secondary">
+            No alerts yet.
+          </Typography>
         </Box>
 
         {/* Dialog removed as per edit hint */}
