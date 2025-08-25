@@ -64,9 +64,65 @@ const userData = {
 };
 
 function ProfileSettings() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [editing, setEditing] = useState(false);
   const [joinDate, setJoinDate] = useState<string>('');
+
+  // Show loading state while session is loading
+  if (status === 'loading') {
+    return (
+      <Card className="animate-fade-in-up">
+        <CardContent>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+            <Typography variant="h6" fontWeight={600}>
+              Profile Settings
+            </Typography>
+          </Box>
+          <Box display="flex" alignItems="center" gap={3} mb={3}>
+            <Avatar sx={{ width: 80, height: 80 }}>
+              <Typography variant="h6">...</Typography>
+            </Avatar>
+            <Box>
+              <Typography variant="h6" fontWeight={600}>
+                Loading...
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Loading profile data...
+              </Typography>
+            </Box>
+          </Box>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Show error state if not authenticated
+  if (status === 'unauthenticated') {
+    return (
+      <Card className="animate-fade-in-up">
+        <CardContent>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+            <Typography variant="h6" fontWeight={600}>
+              Profile Settings
+            </Typography>
+          </Box>
+          <Box display="flex" alignItems="center" gap={3} mb={3}>
+            <Avatar sx={{ width: 80, height: 80 }}>
+              <Typography variant="h6">!</Typography>
+            </Avatar>
+            <Box>
+              <Typography variant="h6" fontWeight={600}>
+                Not Authenticated
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Please sign in to view your profile settings
+              </Typography>
+            </Box>
+          </Box>
+        </CardContent>
+      </Card>
+    );
+  }
 
   const fullName = session?.user?.name || '';
   const [firstName, ...rest] = fullName.split(' ').filter(Boolean);
@@ -77,21 +133,14 @@ function ProfileSettings() {
     email: session?.user?.email || '',
   });
 
-  // Debug: log session data
-  console.log('ProfileSettings render:', { 
-    session: session?.user, 
-    fullName, 
-    firstName, 
-    lastName,
-    joinDate 
-  });
+
 
   useEffect(() => {
     // Keep form in sync with active session when not editing
-    if (!editing) {
-      setFormData({ name: fullName, email: session?.user?.email || '' });
+    if (!editing && session?.user) {
+      setFormData({ name: fullName, email: session.user.email || '' });
     }
-  }, [fullName, session?.user?.email, editing]);
+  }, [fullName, session?.user?.email, editing, session?.user]);
 
   useEffect(() => {
     // Store a simple client-side join date per user (keyed by email) the first time they visit settings
@@ -109,8 +158,7 @@ function ProfileSettings() {
     }
     setJoinDate(stored || new Date().toISOString());
     
-    // Debug: log the current session and join date
-    console.log('Session changed:', { email, joinDate: stored });
+
   }, [session?.user?.email]);
 
   const handleSave = () => {
@@ -125,13 +173,22 @@ function ProfileSettings() {
           <Typography variant="h6" fontWeight={600}>
             Profile Settings
           </Typography>
-          <Button
-            variant="outlined"
-            startIcon={editing ? <Save /> : <Settings />}
-            onClick={editing ? handleSave : () => setEditing(true)}
-          >
-            {editing ? 'Save' : 'Edit'}
-          </Button>
+          <Box display="flex" gap={1}>
+            <Button
+              variant="outlined"
+              startIcon={editing ? <Save /> : <Settings />}
+              onClick={editing ? handleSave : () => setEditing(true)}
+            >
+              {editing ? 'Save' : 'Edit'}
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => signOut()}
+            >
+              Sign Out
+            </Button>
+          </Box>
         </Box>
 
         <Box display="flex" alignItems="center" gap={3} mb={3}>
@@ -143,7 +200,7 @@ function ProfileSettings() {
               {firstName}{lastName ? ` ${lastName}` : ''}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {joinDate ? `Member since ${new Date(joinDate).toLocaleDateString()}` : 'Loading...'}
+              {joinDate ? `Member since ${new Date(joinDate).toLocaleDateString()}` : 'Member since today'}
             </Typography>
             {session?.user?.email && (
               <Typography variant="body2" color="text.secondary">{session.user.email}</Typography>
@@ -151,20 +208,7 @@ function ProfileSettings() {
           </Box>
         </Box>
         
-        {/* Debug: Show current session info */}
-        <Box mb={2} p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
-          <Typography variant="body2" color="text.secondary">
-            Debug: Session email: {session?.user?.email || 'None'} | Name: {session?.user?.name || 'None'}
-          </Typography>
-          <Button 
-            size="small" 
-            variant="outlined" 
-            onClick={() => signOut()} 
-            sx={{ mt: 1 }}
-          >
-            Sign Out (Debug)
-          </Button>
-        </Box>
+
 
         <Box display="grid" gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }} gap={3}>
           <TextField
