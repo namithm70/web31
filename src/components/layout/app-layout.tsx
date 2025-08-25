@@ -20,7 +20,7 @@ import {
   AccountBalanceWallet,
 } from '@mui/icons-material';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 const navigationItems = [
   { name: 'Dashboard', href: '/dashboard' },
@@ -34,6 +34,7 @@ const navigationItems = [
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { address, isConnected } = useAccount();
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
@@ -60,6 +61,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       connect({ connector: connectors[0] });
     }
   };
+
+  const isAuthRoute = pathname.startsWith('/auth');
+  const isLanding = pathname === '/';
+  const showNav = !isAuthRoute && !isLanding;
+  const showWalletChip = showNav; // only after login (protected pages)
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -97,7 +103,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
             {/* Desktop Navigation */}
             <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
-              {isConnected && navigationItems.map((item, index) => (
+              {showNav && navigationItems.map((item, index) => (
                 <Slide
                   key={item.name}
                   direction="down"
@@ -149,25 +155,27 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               }}
             >
               {/* Wallet Connection */}
-              <Fade in timeout={1000}>
-                <Chip
-                  icon={<AccountBalanceWallet />}
-                  label={isConnected ? `${address?.slice(0, 6)}...${address?.slice(-4)}` : 'Connect Wallet'}
-                  onClick={handleWalletConnect}
-                  sx={{
-                    background: isConnected ? 'rgba(76, 175, 80, 0.1)' : 'rgba(102, 126, 234, 0.1)',
-                    color: isConnected ? 'success.main' : 'primary.main',
-                    border: `1px solid ${isConnected ? 'rgba(76, 175, 80, 0.3)' : 'rgba(102, 126, 234, 0.3)'}`,
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    '&:hover': {
-                      transform: 'translateY(-1px)',
-                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                    },
-                  }}
-                />
-              </Fade>
+              {showWalletChip && (
+                <Fade in timeout={1000}>
+                  <Chip
+                    icon={<AccountBalanceWallet />}
+                    label={isConnected ? `${address?.slice(0, 6)}...${address?.slice(-4)}` : 'Connect Wallet'}
+                    onClick={handleWalletConnect}
+                    sx={{
+                      background: isConnected ? 'rgba(76, 175, 80, 0.1)' : 'rgba(102, 126, 234, 0.1)',
+                      color: isConnected ? 'success.main' : 'primary.main',
+                      border: `1px solid ${isConnected ? 'rgba(76, 175, 80, 0.3)' : 'rgba(102, 126, 234, 0.3)'}`,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      '&:hover': {
+                        transform: 'translateY(-1px)',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                      },
+                    }}
+                  />
+                </Fade>
+              )}
 
               {/* Mobile Menu Button */}
               <IconButton
