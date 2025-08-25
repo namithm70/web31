@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography, Stack, Chip } from '@mui/material';
 import Link from 'next/link';
 
 export default function HomePage() {
@@ -12,27 +12,47 @@ export default function HomePage() {
       alignItems="center"
       minHeight="100vh"
       sx={{
-        background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
+        background: 'linear-gradient(120deg, #ffffff 0%, #f8fafc 40%, #eef2f7 100%)',
         color: '#000000',
         textAlign: 'center',
         px: 2,
+        position: 'relative',
       }}
     >
-      <Box className="animate-scale-in" sx={{ maxWidth: 900 }}>
-        <Typography variant="h2" fontWeight={800} letterSpacing="-0.02em" sx={{ mb: 2 }}>
-          The monochrome DeFi superapp
+      {/* subtle gradient orbs */}
+      <Box sx={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+        <Box sx={{ position: 'absolute', top: -120, left: -80, width: 320, height: 320, borderRadius: '50%', filter: 'blur(60px)', background: 'radial-gradient(circle, rgba(0,0,0,0.12), rgba(0,0,0,0))' }} />
+        <Box sx={{ position: 'absolute', bottom: -140, right: -100, width: 360, height: 360, borderRadius: '50%', filter: 'blur(70px)', background: 'radial-gradient(circle, rgba(0,0,0,0.10), rgba(0,0,0,0))' }} />
+      </Box>
+
+      <Box className="animate-fade-in-up" sx={{ maxWidth: 980, px: { xs: 2, md: 0 } }}>
+        <Chip label="Monochrome • Fast • Secure" variant="outlined" sx={{ mb: 2, borderRadius: 2 }} />
+        <Typography
+          variant="h2"
+          fontWeight={900}
+          letterSpacing="-0.03em"
+          sx={{ mb: 2, lineHeight: 1.1, WebkitTextStroke: '0.4px rgba(0,0,0,0.3)' }}
+        >
+          DeFi, distilled to black and white
         </Typography>
         <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
-          Swap, lend, farm and track – fast, clean, and secure. Connect your wallet to get started.
+          Swap, lend, farm, and track your portfolio with a minimal, glass-like interface and buttery-smooth animations.
         </Typography>
-        <Box display="flex" gap={2} justifyContent="center">
-          <Button component={Link} href="/auth/signup" variant="contained" size="large">
+
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center" sx={{ mb: 3 }}>
+          <Button component={Link} href="/auth/signup" variant="contained" size="large" sx={{ px: 4 }}>
             Create account
           </Button>
-          <Button component={Link} href="/auth/signin" variant="outlined" size="large">
+          <Button component={Link} href="/auth/signin" variant="outlined" size="large" sx={{ px: 4 }}>
             Sign in
           </Button>
-        </Box>
+        </Stack>
+
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center" sx={{ opacity: 0.9 }}>
+          <Chip label="No clutter" size="small" variant="outlined" />
+          <Chip label="Wallet-first" size="small" variant="outlined" />
+          <Chip label="Realtime insights" size="small" variant="outlined" />
+        </Stack>
       </Box>
     </Box>
   );
