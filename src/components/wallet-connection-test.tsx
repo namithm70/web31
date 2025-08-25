@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Card,
@@ -8,132 +8,131 @@ import {
   Typography,
   Button,
   Chip,
-  Alert,
-  Divider,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import {
   CheckCircle,
   Error,
-  AccountBalanceWallet,
-  SwapHoriz,
-  Agriculture,
-  AccountBalance,
+  ContentCopy,
+  Refresh,
 } from '@mui/icons-material';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 
 export function WalletConnectionTest() {
-  const { address, isConnected, status } = useAccount();
-  const { connect, connectors, error } = useConnect();
+  const { address, isConnected } = useAccount();
+  const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const handleConnect = (connector: any) => {
+    connect({ connector });
+  };
 
-  if (!mounted) return null;
+  const handleDisconnect = () => {
+    disconnect();
+  };
+
+  const copyAddress = () => {
+    if (address) {
+      navigator.clipboard.writeText(address);
+    }
+  };
+
+  const getShortAddress = (address: string) => {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
 
   return (
-    <Card sx={{ mb: 3 }}>
-      <CardContent>
-        <Typography variant="h6" fontWeight={600} mb={2}>
-          Wallet Connection Status
-        </Typography>
+    <Card className="animate-fade-in-up" sx={{ mb: 3 }}>
+      <CardContent sx={{ p: 3 }}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Typography variant="h6" fontWeight={600}>
+            Wallet Connection
+          </Typography>
+          <IconButton size="small">
+            <Refresh />
+          </IconButton>
+        </Box>
 
-        <Box display="flex" flexDirection="column" gap={2}>
-          {/* Connection Status */}
-          <Box display="flex" alignItems="center" gap={2}>
-            <Typography variant="body2" fontWeight={600}>
-              Status:
-            </Typography>
-            <Chip
-              label={isConnected ? 'Connected' : 'Disconnected'}
-              color="primary"
-              variant="outlined"
-              icon={isConnected ? <CheckCircle /> : <Error />}
-            />
-          </Box>
+        {isConnected ? (
+          <Box>
+            <Box display="flex" alignItems="center" gap={2} mb={2}>
+              <CheckCircle sx={{ color: 'text.primary' }} />
+              <Typography variant="body1" fontWeight={600}>
+                Connected
+              </Typography>
+              <Chip
+                label="Active"
+                color="primary"
+                size="small"
+                variant="outlined"
+              />
+            </Box>
 
-          {/* Wallet Address */}
-          {isConnected && address && (
-            <Box display="flex" alignItems="center" gap={2}>
-              <Typography variant="body2" fontWeight={600}>
+            <Box display="flex" alignItems="center" gap={1} mb={2}>
+              <Typography variant="body2" color="text.secondary">
                 Address:
               </Typography>
-              <Typography variant="body2" fontFamily="monospace" color="text.secondary">
-                {address.slice(0, 6)}...{address.slice(-4)}
+              <Typography variant="body2" fontWeight={600} fontFamily="monospace">
+                {address ? getShortAddress(address) : 'Unknown'}
               </Typography>
+              <Tooltip title="Copy Address">
+                <IconButton size="small" onClick={copyAddress}>
+                  <ContentCopy />
+                </IconButton>
+              </Tooltip>
             </Box>
-          )}
 
-          {/* Connection Actions */}
-          <Box display="flex" gap={1}>
-            {!isConnected ? (
-              connectors.map((connector) => (
-                <Button
-                  key={connector.id}
-                  variant="contained"
-                  size="small"
-                  onClick={() => connect({ connector })}
-                  disabled={!connector.ready}
-                  startIcon={<AccountBalanceWallet />}
-                >
-                  Connect {connector.name}
-                </Button>
-              ))
-            ) : (
+            <Box display="flex" gap={1}>
               <Button
                 variant="outlined"
                 size="small"
-                onClick={() => disconnect()}
-                startIcon={<Error />}
+                onClick={handleDisconnect}
               >
                 Disconnect
               </Button>
-            )}
-          </Box>
-
-          {/* Error Display */}
-          {error && (
-            <Alert severity="error" sx={{ mt: 2 }}>
-              {error.message}
-            </Alert>
-          )}
-
-          <Divider sx={{ my: 2 }} />
-
-          {/* Quick Actions */}
-          {isConnected && (
-            <Box>
-              <Typography variant="body2" fontWeight={600} mb={1}>
-                Quick Actions:
-              </Typography>
-              <Box display="flex" gap={1} flexWrap="wrap">
-                <Button
-                  variant="outlined"
-                  size="small"
-                  startIcon={<SwapHoriz />}
-                >
-                  Swap
-                </Button>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  startIcon={<Agriculture />}
-                >
-                  Farm
-                </Button>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  startIcon={<AccountBalance />}
-                >
-                  Lend
-                </Button>
-              </Box>
+              <Button
+                variant="contained"
+                size="small"
+              >
+                View Portfolio
+              </Button>
             </Box>
-          )}
-        </Box>
+          </Box>
+        ) : (
+          <Box>
+            <Box display="flex" alignItems="center" gap={2} mb={2}>
+              <Error sx={{ color: 'text.secondary' }} />
+              <Typography variant="body1" fontWeight={600}>
+                Not Connected
+              </Typography>
+              <Chip
+                label="Inactive"
+                color="primary"
+                size="small"
+                variant="outlined"
+              />
+            </Box>
+
+            <Typography variant="body2" color="text.secondary" mb={2}>
+              Connect your wallet to start using DeFi features
+            </Typography>
+
+            <Box display="flex" gap={1} flexWrap="wrap">
+              {connectors.map((connector) => (
+                <Button
+                  key={connector.id}
+                  variant="outlined"
+                  size="small"
+                  onClick={() => handleConnect(connector)}
+                  disabled={!connector.ready}
+                >
+                  {connector.name}
+                </Button>
+              ))}
+            </Box>
+          </Box>
+        )}
       </CardContent>
     </Card>
   );

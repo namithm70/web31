@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Card,
@@ -18,23 +18,18 @@ import {
   ListItemAvatar,
   Tabs,
   Tab,
-  Alert,
-  Switch,
-  FormControlLabel,
   Tooltip,
-  Badge,
-  Menu,
-  MenuItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Select,
-  FormControl,
-  InputLabel,
+  Alert,
 } from '@mui/material';
 import {
+  Refresh,
+  Add,
+  Remove,
+  Download,
+  Share,
+  Visibility,
+  Expand,
+  Compress,
   TrendingUp,
   TrendingDown,
   AccountBalance,
@@ -42,26 +37,24 @@ import {
   Agriculture,
   CurrencyExchange,
   Notifications,
-  Refresh,
-  Visibility,
   Star,
-  StarBorder,
-  MoreVert,
-  Add,
-  Timeline,
-  AttachMoney,
   Speed,
   Security,
   Analytics,
   AutoGraph,
-  Psychology,
+  PsychologyAlt,
   Lightbulb,
-  Warning,
-  CheckCircle,
   Info,
   Settings,
-  Download,
-  Share,
+  Timeline,
+  AttachMoney,
+  Bolt,
+  RocketLaunch,
+  Diamond,
+  EmojiEvents,
+  LocalFireDepartment,
+  WaterDrop,
+  ElectricBolt,
   FilterList,
   Sort,
   ViewList,
@@ -70,15 +63,54 @@ import {
   BarChart,
   ShowChart,
   TrendingFlat,
-  Bolt,
-  RocketLaunch,
-  Diamond,
-  EmojiEvents,
-  LocalFireDepartment,
-  WaterDrop,
-  ElectricBolt,
-  Compress,
-  Expand,
+  ExpandMore,
+  ContentCopy,
+  Upload,
+  VisibilityOff,
+  AutoAwesome,
+  Calculate,
+  TrendingUpOutlined,
+  TrendingDownOutlined,
+  SpeedOutlined,
+  SecurityOutlined,
+  AnalyticsOutlined,
+  AutoGraphOutlined,
+  ShowChartOutlined,
+  TimelineOutlined,
+  BoltOutlined,
+  LocalFireDepartmentOutlined,
+  WaterDropOutlined,
+  ElectricBoltOutlined,
+  CompressOutlined,
+  ExpandOutlined,
+  FilterListOutlined,
+  SortOutlined,
+  ViewListOutlined,
+  ViewModuleOutlined,
+  PieChartOutlined,
+  BarChartOutlined,
+  AttachMoneyOutlined,
+  AccountBalanceWalletOutlined,
+  CurrencyExchangeOutlined,
+  PsychologyOutlined,
+  LightbulbOutlined,
+  DiamondOutlined,
+  EmojiEventsOutlined,
+  RocketLaunchOutlined,
+  TrendingFlatOutlined,
+  ExpandMoreOutlined,
+  AddOutlined,
+  RemoveOutlined,
+  ContentCopyOutlined,
+  ShareOutlined,
+  DownloadOutlined,
+  UploadOutlined,
+  VisibilityOutlined,
+  VisibilityOffOutlined,
+  AutoAwesomeOutlined,
+  PsychologyAltOutlined,
+  CalculateOutlined,
+  TimelineIconOutlined,
 } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
 import { ProtocolData, PortfolioAsset, Transaction } from '@/types';
@@ -263,11 +295,10 @@ interface StatCardProps {
   icon: React.ReactNode;
   color?: 'primary' | 'secondary';
   subtitle?: string;
-  trend?: 'up' | 'down' | 'stable';
 }
 
 // Enhanced Dashboard Components
-function StatCard({ title, value, change, icon, color = 'primary', subtitle, trend }: StatCardProps) {
+function StatCard({ title, value, change, icon, color = 'primary', subtitle }: StatCardProps) {
   return (
     <Card className="animate-fade-in-up hover-lift">
       <CardContent sx={{ p: 3 }}>
@@ -462,7 +493,7 @@ function AdvancedMarketInsights() {
                       {token.change24h >= 0 ? '+' : ''}{token.change24h}%
                     </Typography>
                     <IconButton size="small">
-                      <StarBorder />
+                      <Star />
                     </IconButton>
                   </Box>
                 </Box>
@@ -733,100 +764,72 @@ function PortfolioOverview() {
 }
 
 function ProtocolAnalytics() {
-  const [selectedTab, setSelectedTab] = useState(0);
-
   return (
     <Card className="animate-fade-in-up stagger-2">
       <CardContent sx={{ p: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-          <Typography variant="h5" fontWeight={600}>
+          <Typography variant="h6" fontWeight={600}>
             Protocol Analytics
           </Typography>
-          <Button
-            variant="outlined"
-            size="small"
-            startIcon={<Timeline />}
-          >
-            View All
-          </Button>
+          <IconButton size="small">
+            <Refresh />
+          </IconButton>
         </Box>
 
-        <Tabs
-          value={selectedTab}
-          onChange={(e, newValue) => setSelectedTab(newValue)}
-          sx={{ mb: 3 }}
-        >
-          <Tab label="Top Protocols" />
-          <Tab label="Trending" />
-          <Tab label="New Launches" />
-        </Tabs>
-
-        <Box display="grid" gridTemplateColumns={{ xs: '1fr', md: 'repeat(2, 1fr)' }} gap={2}>
+        <Box display="flex" flexDirection="column" gap={2}>
           {mockProtocols.map((protocol) => (
-            <Card
-              key={protocol.id}
-              variant="outlined"
-              sx={{
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  transform: 'translateY(-2px)',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                },
-              }}
-            >
-              <CardContent sx={{ p: 2 }}>
-                <Box display="flex" justifyContent="space-between" alignItems="flex-start">
-                  <Box flex={1}>
-                    <Box display="flex" alignItems="center" gap={1} mb={1}>
-                      <Typography variant="h6" fontWeight={600}>
-                        {protocol.name}
-                      </Typography>
-                      <Chip
-                        label={protocol.category}
-                        size="small"
-                        color="primary"
-                        variant="outlined"
-                      />
-                      <Chip
-                        label={protocol.risk}
-                        size="small"
-                        color="primary"
-                        variant="outlined"
-                      />
-                    </Box>
-                    <Typography variant="body2" color="text.secondary" mb={1}>
-                      TVL: ${(protocol.tvl / 1000000).toFixed(0)}M
-                    </Typography>
-                    <Box display="flex" gap={2}>
-                      <Box>
-                        <Typography variant="body2" color="text.secondary">
-                          APY
-                        </Typography>
-                        <Typography variant="body1" fontWeight={600} color="text.primary">
-                          {protocol.apy.toFixed(1)}%
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="body2" color="text.secondary">
-                          24h Change
-                        </Typography>
-                        <Typography
-                          variant="body1"
-                          fontWeight={600}
-                          color={protocol.tvlChange24h >= 0 ? 'text.primary' : 'text.secondary'}
-                        >
-                          {protocol.tvlChange24h >= 0 ? '+' : ''}{protocol.tvlChange24h.toFixed(1)}%
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Box>
-                  <IconButton size="small">
-                    <MoreVert />
-                  </IconButton>
+            <Box key={protocol.id} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                <Typography variant="body1" fontWeight={600}>
+                  {protocol.name}
+                </Typography>
+                <Chip
+                  label={protocol.risk}
+                  color="primary"
+                  size="small"
+                  variant="outlined"
+                />
+              </Box>
+              
+              <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2}>
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    TVL
+                  </Typography>
+                  <Typography variant="body2" fontWeight={600}>
+                    ${(protocol.tvl / 1000000000).toFixed(1)}B
+                  </Typography>
                 </Box>
-              </CardContent>
-            </Card>
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    APY
+                  </Typography>
+                  <Typography variant="body2" fontWeight={600} color="text.primary">
+                    {protocol.apy}%
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    24h Change
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    fontWeight={600}
+                    color={protocol.tvlChange24h >= 0 ? 'text.primary' : 'text.secondary'}
+                  >
+                    {protocol.tvlChange24h >= 0 ? '+' : ''}{protocol.tvlChange24h}%
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    Volume (24h)
+                  </Typography>
+                  <Typography variant="body2" fontWeight={600}>
+                    ${(protocol.volume24h / 1000000).toFixed(1)}M
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
           ))}
         </Box>
       </CardContent>
@@ -839,64 +842,45 @@ function RecentTransactions() {
     <Card className="animate-fade-in-up stagger-3">
       <CardContent sx={{ p: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-          <Typography variant="h5" fontWeight={600}>
+          <Typography variant="h6" fontWeight={600}>
             Recent Transactions
           </Typography>
-          <Button
-            variant="outlined"
-            size="small"
-            startIcon={<Timeline />}
-          >
+          <Button variant="outlined" size="small">
             View All
           </Button>
         </Box>
 
-        <List>
+        <Box display="flex" flexDirection="column" gap={2}>
           {mockTransactions.map((tx) => (
-            <ListItem key={tx.id} sx={{ px: 0 }}>
-              <ListItemAvatar>
-                <Avatar
-                  sx={{
-                    bgcolor: 'primary.main',
-                  }}
-                >
-                  {tx.type === 'swap' ? <SwapHoriz /> :
-                   tx.type === 'stake' ? <Agriculture /> : <AccountBalance />}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="body1" fontWeight={600}>
-                      {tx.type.charAt(0).toUpperCase() + tx.type.slice(1)} {tx.from} → {tx.to}
-                    </Typography>
-                    <Typography variant="body1" fontWeight={600}>
-                      ${tx.value.toLocaleString()}
-                    </Typography>
-                  </Box>
-                }
-                secondary={
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="body2" color="text.secondary">
-                      {tx.amount} {tx.from}
-                    </Typography>
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <Chip
-                        label={tx.status}
-                        size="small"
-                        color="primary"
-                        variant="outlined"
-                      />
-                      <Typography variant="body2" color="text.secondary">
-                        {tx.timestamp.toLocaleTimeString()}
-                      </Typography>
-                    </Box>
-                  </Box>
-                }
-              />
-            </ListItem>
+            <Box key={tx.id} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                <Box display="flex" alignItems="center" gap={1}>
+                  <Avatar sx={{ bgcolor: 'primary.main', width: 32, height: 32 }}>
+                    {tx.type === 'swap' ? <SwapHoriz /> : tx.type === 'stake' ? <Agriculture /> : <CurrencyExchange />}
+                  </Avatar>
+                  <Typography variant="body2" fontWeight={600}>
+                    {tx.from} → {tx.to}
+                  </Typography>
+                </Box>
+                <Chip
+                  label={tx.status}
+                  color="primary"
+                  size="small"
+                  variant="outlined"
+                />
+              </Box>
+              
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Typography variant="body2" color="text.secondary">
+                  {tx.amount} {tx.from} (${tx.value})
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {tx.timestamp.toLocaleString()}
+                </Typography>
+              </Box>
+            </Box>
           ))}
-        </List>
+        </Box>
       </CardContent>
     </Card>
   );
@@ -906,133 +890,44 @@ function QuickActions() {
   return (
     <Card className="animate-fade-in-up stagger-4">
       <CardContent sx={{ p: 3 }}>
-        <Typography variant="h5" fontWeight={600} mb={3}>
+        <Typography variant="h6" fontWeight={600} mb={3}>
           Quick Actions
         </Typography>
-        <Box display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }} gap={2}>
+
+        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2}>
           <Button
             variant="outlined"
-            fullWidth
             startIcon={<SwapHoriz />}
-            sx={{ py: 2, flexDirection: 'column', gap: 1 }}
+            fullWidth
+            sx={{ py: 2 }}
           >
-            <Typography variant="body2" fontWeight={600}>
-              Swap Tokens
-            </Typography>
+            Swap Tokens
           </Button>
           <Button
             variant="outlined"
-            fullWidth
-            startIcon={<AccountBalance />}
-            sx={{ py: 2, flexDirection: 'column', gap: 1 }}
-          >
-            <Typography variant="body2" fontWeight={600}>
-              Lend/Borrow
-            </Typography>
-          </Button>
-          <Button
-            variant="outlined"
-            fullWidth
             startIcon={<Agriculture />}
-            sx={{ py: 2, flexDirection: 'column', gap: 1 }}
+            fullWidth
+            sx={{ py: 2 }}
           >
-            <Typography variant="body2" fontWeight={600}>
-              Farm Yield
-            </Typography>
+            Farm Yield
           </Button>
           <Button
             variant="outlined"
-            fullWidth
             startIcon={<CurrencyExchange />}
-            sx={{ py: 2, flexDirection: 'column', gap: 1 }}
+            fullWidth
+            sx={{ py: 2 }}
           >
-            <Typography variant="body2" fontWeight={600}>
-              Stablecoins
-            </Typography>
+            Lend Assets
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<AccountBalance />}
+            fullWidth
+            sx={{ py: 2 }}
+          >
+            View Portfolio
           </Button>
         </Box>
-      </CardContent>
-    </Card>
-  );
-}
-
-function MarketInsights() {
-  return (
-    <Card className="animate-fade-in-up stagger-5">
-      <CardContent sx={{ p: 3 }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-          <Typography variant="h5" fontWeight={600}>
-            Market Insights
-          </Typography>
-          <FormControlLabel
-            control={<Switch size="small" />}
-            label="Auto-refresh"
-          />
-        </Box>
-
-        <Box display="grid" gridTemplateColumns={{ xs: '1fr', md: 'repeat(2, 1fr)' }} gap={3}>
-          <Box textAlign="center" p={2}>
-            <Typography variant="h4" fontWeight={700} color="primary.main" mb={1}>
-              $2.1T
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Total DeFi TVL
-            </Typography>
-            <Box display="flex" alignItems="center" justifyContent="center" gap={1} mt={1}>
-              <TrendingUp sx={{ color: 'text.primary', fontSize: 16 }} />
-              <Typography variant="body2" color="text.primary" fontWeight={600}>
-                +2.3%
-              </Typography>
-            </Box>
-          </Box>
-          <Box textAlign="center" p={2}>
-            <Typography variant="h4" fontWeight={700} color="primary.main" mb={1}>
-              $45.2B
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              24h Volume
-            </Typography>
-            <Box display="flex" alignItems="center" justifyContent="center" gap={1} mt={1}>
-              <TrendingUp sx={{ color: 'text.primary', fontSize: 16 }} />
-              <Typography variant="body2" color="text.primary" fontWeight={600}>
-                +5.7%
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
-
-        <Divider sx={{ my: 3 }} />
-
-        <Typography variant="h6" fontWeight={600} mb={2}>
-          Trending Assets
-        </Typography>
-        <List>
-          {['Ethereum', 'Bitcoin', 'Uniswap', 'Aave'].map((asset) => (
-            <ListItem key={asset} sx={{ px: 0 }}>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: 'primary.main' }}>
-                  {asset.charAt(0)}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={asset}
-                secondary={`$${(Math.random() * 1000 + 100).toFixed(2)}`}
-              />
-              <Box display="flex" alignItems="center" gap={1}>
-                <Typography
-                  variant="body2"
-                  color={Math.random() > 0.5 ? 'text.primary' : 'text.secondary'}
-                  fontWeight={600}
-                >
-                  {Math.random() > 0.5 ? '+' : ''}{(Math.random() * 10).toFixed(2)}%
-                </Typography>
-                <IconButton size="small">
-                  <StarBorder />
-                </IconButton>
-              </Box>
-            </ListItem>
-          ))}
-        </List>
       </CardContent>
     </Card>
   );
@@ -1040,7 +935,6 @@ function MarketInsights() {
 
 export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const { error: protocolsError } = useQuery({
     queryKey: ['protocols'],
