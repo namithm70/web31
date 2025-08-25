@@ -8,41 +8,17 @@ import {
   Typography,
   Button,
   TextField,
-  IconButton,
   Avatar,
-  Divider,
-  Alert,
   Chip,
   Select,
   MenuItem,
   FormControl,
   InputLabel,
-  Slider,
 } from '@mui/material';
 import {
-  AccountBalance,
-  TrendingUp,
-  TrendingDown,
-  ArrowDownward,
-  ArrowUpward,
-  Info,
-  Warning,
-  CheckCircle,
   Timeline,
-  WaterDrop,
-  Speed,
-  Lock,
-  LockOpen,
-  Star,
-  LocalFireDepartment,
-  EmojiEvents,
-  MonetizationOn,
-  Security,
-  Refresh,
   Settings,
   History,
-  Visibility,
-  VisibilityOff,
 } from '@mui/icons-material';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
@@ -150,7 +126,7 @@ function LendingPoolCard({ pool }: { pool: LendingPool }) {
           </Box>
           <Chip
             label={`${pool.utilization}%`}
-            color={getUtilizationColor(pool.utilization) as any}
+            color={getUtilizationColor(pool.utilization) as 'success' | 'warning' | 'error'}
             size="small"
           />
         </Box>

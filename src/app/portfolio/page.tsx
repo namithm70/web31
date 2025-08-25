@@ -6,44 +6,13 @@ import {
   CardContent,
   Typography,
   Button,
-  TextField,
-  IconButton,
   Avatar,
-  Divider,
-  Alert,
   Chip,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Slider,
 } from '@mui/material';
 import {
-  AccountBalance,
-  TrendingUp,
-  TrendingDown,
-  ArrowDownward,
-  ArrowUpward,
-  Info,
-  Warning,
-  CheckCircle,
-  Timeline,
-  Speed,
-  Lock,
-  LockOpen,
-  Star,
-  LocalFireDepartment,
-  EmojiEvents,
-  MonetizationOn,
-  Calculate,
-  Security,
   BarChart,
-  AttachMoney,
-  Refresh,
   Settings,
   History,
-  Visibility,
-  VisibilityOff,
 } from '@mui/icons-material';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
@@ -281,7 +250,7 @@ function TransactionHistory() {
                 </Typography>
                 <Chip
                   label={tx.type}
-                  color={getTypeColor(tx.type) as any}
+                  color={getTypeColor(tx.type) as 'primary' | 'success' | 'warning' | 'info' | 'default'}
                   size="small"
                 />
               </Box>

@@ -8,36 +8,15 @@ import {
   Typography,
   Button,
   TextField,
-  IconButton,
-  Avatar,
-  Divider,
-  Alert,
   Chip,
   Select,
   MenuItem,
   FormControl,
   InputLabel,
-  Slider,
 } from '@mui/material';
 import {
-  Agriculture,
-  TrendingUp,
-  TrendingDown,
-  ArrowDownward,
-  ArrowUpward,
-  Info,
-  Warning,
-  CheckCircle,
-  Timeline,
-  ShowChart,
-  WaterDrop,
-  Speed,
-  AccountBalance,
-  Refresh,
   Settings,
   History,
-  Visibility,
-  VisibilityOff,
 } from '@mui/icons-material';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
@@ -146,7 +125,7 @@ function FarmingPoolCard({ pool }: { pool: Pool }) {
           </Box>
           <Chip
             label={pool.risk.toUpperCase()}
-            color={getRiskColor(pool.risk) as any}
+            color={getRiskColor(pool.risk) as 'success' | 'warning' | 'error' | 'default'}
             size="small"
           />
         </Box>

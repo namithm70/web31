@@ -8,49 +8,17 @@ import {
   Typography,
   Button,
   TextField,
-  IconButton,
   Avatar,
-  Divider,
   Alert,
   Chip,
   Select,
   MenuItem,
   FormControl,
   InputLabel,
-  Slider,
 } from '@mui/material';
 import {
-  AccountBalance,
-  TrendingUp,
-  TrendingDown,
-  ArrowDownward,
-  ArrowUpward,
-  Info,
-  Warning,
-  CheckCircle,
-  Timeline,
-  ShowChart,
-  Speed,
-  Lock,
-  LockOpen,
-  Star,
-  LocalFireDepartment,
-  EmojiEvents,
-  MonetizationOn,
-  CreditCard,
-  Calculate,
-  Security,
-  PieChart,
-  BarChart,
-  AttachMoney,
-  AccountBalanceWallet,
-  SwapHoriz,
-  Agriculture,
-  Refresh,
   Settings,
   History,
-  Visibility,
-  VisibilityOff,
 } from '@mui/icons-material';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
@@ -169,7 +137,7 @@ function StablecoinCard({ stablecoin }: { stablecoin: Stablecoin }) {
           </Box>
           <Chip
             label={stablecoin.risk.toUpperCase()}
-            color={getRiskColor(stablecoin.risk) as any}
+            color={getRiskColor(stablecoin.risk) as 'success' | 'warning' | 'error' | 'default'}
             size="small"
           />
         </Box>
@@ -195,7 +163,7 @@ function StablecoinCard({ stablecoin }: { stablecoin: Stablecoin }) {
             <Typography variant="body2" color="text.secondary">
               Peg Deviation
             </Typography>
-            <Typography variant="body2" fontWeight={600} color={pegStatus.color as any}>
+            <Typography variant="body2" fontWeight={600} color={pegStatus.color as 'success' | 'warning' | 'error'}>
               {stablecoin.pegDeviation}%
             </Typography>
           </Box>
@@ -309,7 +277,7 @@ function PegMonitoring() {
             </Typography>
             <Box display="flex" flexDirection="column" gap={1}>
               {pegMonitoring.alerts.map((alert, index) => (
-                <Alert key={index} severity={alert.severity as any} sx={{ py: 0 }}>
+                <Alert key={index} severity={alert.severity as 'warning' | 'info'} sx={{ py: 0 }}>
                   {alert.stablecoin}: {alert.deviation}% deviation
                 </Alert>
               ))}
