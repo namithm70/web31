@@ -1,84 +1,233 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Box,
   Card,
   CardContent,
   Typography,
   Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+  IconButton,
   Chip,
+  Avatar,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Alert,
+  Switch,
+  FormControlLabel,
+  Tabs,
+  Tab,
+  Paper,
+  LinearProgress,
+  Badge,
 } from '@mui/material';
 import {
   AccountBalance,
+  TrendingUp,
+  TrendingDown,
+  Refresh,
+  Settings,
+  ArrowDownward,
+  ArrowUpward,
+  Info,
+  Warning,
+  CheckCircle,
+  Timeline,
+  ShowChart,
+  WaterDrop,
+  Speed,
+  Lock,
+  LockOpen,
+  Star,
+  LocalFireDepartment,
+  EmojiEvents,
+  MonetizationOn,
+  CreditCard,
+  Savings,
+  Calculate,
+  Security,
+  PieChart,
+  BarChart,
+  Timeline as TimelineIcon,
+  AttachMoney,
+  AccountBalanceWallet,
+  SwapHoriz,
+  Agriculture,
+  CurrencyExchange,
+  Verified,
+  GppGood,
+  GppBad,
 } from '@mui/icons-material';
-import { TokenData } from '@/types';
+import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
 // Mock stablecoin data
-const mockStablecoins: (TokenData & {
-  marketCap: number;
-  volume24h: number;
-  apy: number;
-  risk: 'low' | 'medium' | 'high';
-  backing: string;
-})[] = [
+const stablecoins = [
   {
-    address: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as `0x${string}`,
+    id: 1,
     symbol: 'USDC',
     name: 'USD Coin',
-    decimals: 6,
     price: 1.00,
-    marketCap: 25000000000,
-    volume24h: 5000000000,
-    apy: 4.2,
+    change24h: 0.01,
+    marketCap: 45000000000,
+    volume24h: 8500000000,
+    supply: 45000000000,
+    apy: 2.1,
+    pegStatus: 'stable',
     risk: 'low',
-    backing: 'Cash & Cash Equivalents',
+    issuer: 'Circle',
+    collateral: 'USD Reserves',
+    icon: '🔵',
+    yourBalance: 5000,
+    yourValue: 5000,
   },
   {
-    address: '0x6B175474E89094C44Da98b954EedeAC495271d0F' as `0x${string}`,
-    symbol: 'DAI',
-    name: 'Dai Stablecoin',
-    decimals: 18,
-    price: 1.00,
-    marketCap: 5000000000,
-    volume24h: 800000000,
-    apy: 3.8,
-    risk: 'medium',
-    backing: 'Collateralized Debt',
-  },
-  {
-    address: '0xdAC17F958D2ee523a2206206994597C13D831ec7' as `0x${string}`,
+    id: 2,
     symbol: 'USDT',
     name: 'Tether USD',
-    decimals: 6,
-    price: 1.00,
+    price: 0.999,
+    change24h: -0.001,
     marketCap: 85000000000,
     volume24h: 12000000000,
-    apy: 2.1,
+    supply: 85000000000,
+    apy: 1.8,
+    pegStatus: 'stable',
     risk: 'medium',
-    backing: 'Commercial Paper',
+    issuer: 'Tether',
+    collateral: 'Mixed Assets',
+    icon: '🔵',
+    yourBalance: 0,
+    yourValue: 0,
   },
   {
-    address: '0x853d955aCEf822Db058eb8505911ED77F175b99e' as `0x${string}`,
+    id: 3,
+    symbol: 'DAI',
+    name: 'Dai Stablecoin',
+    price: 1.001,
+    change24h: 0.001,
+    marketCap: 8500000000,
+    volume24h: 1500000000,
+    supply: 8500000000,
+    apy: 3.2,
+    pegStatus: 'stable',
+    risk: 'low',
+    issuer: 'MakerDAO',
+    collateral: 'Crypto Assets',
+    icon: '🔵',
+    yourBalance: 2000,
+    yourValue: 2002,
+  },
+  {
+    id: 4,
     symbol: 'FRAX',
     name: 'Frax',
-    decimals: 18,
-    price: 1.00,
-    marketCap: 2000000000,
-    volume24h: 300000000,
-    apy: 5.5,
+    price: 0.998,
+    change24h: -0.002,
+    marketCap: 3200000000,
+    volume24h: 800000000,
+    supply: 3200000000,
+    apy: 4.5,
+    pegStatus: 'stable',
     risk: 'medium',
-    backing: 'Algorithmic + Collateral',
+    issuer: 'Frax Finance',
+    collateral: 'Partial Reserve',
+    icon: '🟣',
+    yourBalance: 0,
+    yourValue: 0,
+  },
+  {
+    id: 5,
+    symbol: 'BUSD',
+    name: 'Binance USD',
+    price: 1.00,
+    change24h: 0.00,
+    marketCap: 20000000000,
+    volume24h: 5000000000,
+    supply: 20000000000,
+    apy: 1.5,
+    pegStatus: 'stable',
+    risk: 'low',
+    issuer: 'Binance',
+    collateral: 'USD Reserves',
+    icon: '🔵',
+    yourBalance: 0,
+    yourValue: 0,
   },
 ];
 
-function StablecoinCard({ stablecoin }: { stablecoin: typeof mockStablecoins[0] }) {
+// Mock yield farming opportunities
+const yieldOpportunities = [
+  {
+    id: 1,
+    protocol: 'Aave V3',
+    stablecoin: 'USDC',
+    apy: 2.1,
+    tvl: 8500000000,
+    risk: 'low',
+    type: 'Lending',
+    minDeposit: 100,
+    maxDeposit: 1000000,
+  },
+  {
+    id: 2,
+    protocol: 'Compound',
+    stablecoin: 'USDC',
+    apy: 1.8,
+    tvl: 3200000000,
+    risk: 'low',
+    type: 'Lending',
+    minDeposit: 50,
+    maxDeposit: 500000,
+  },
+  {
+    id: 3,
+    protocol: 'Curve Finance',
+    stablecoin: 'USDC/USDT/DAI',
+    apy: 3.2,
+    tvl: 12500000000,
+    risk: 'medium',
+    type: 'LP Farming',
+    minDeposit: 1000,
+    maxDeposit: 2000000,
+  },
+  {
+    id: 4,
+    protocol: 'Yearn Finance',
+    stablecoin: 'USDC',
+    apy: 4.8,
+    tvl: 850000000,
+    risk: 'high',
+    type: 'Yield Aggregator',
+    minDeposit: 500,
+    maxDeposit: 100000,
+  },
+];
+
+// Mock peg monitoring data
+const pegMonitoring = {
+  totalMarketCap: 160000000000,
+  averageDeviation: 0.001,
+  riskScore: 2.5,
+  alerts: [
+    { id: 1, stablecoin: 'USDT', message: 'Minor deviation detected', severity: 'warning', timestamp: new Date() },
+    { id: 2, stablecoin: 'FRAX', message: 'Price below $0.999', severity: 'warning', timestamp: new Date(Date.now() - 1000 * 60 * 30) },
+  ],
+};
+
+function StablecoinCard({ stablecoin, onDeposit, onWithdraw }: any) {
+  const [showDetails, setShowDetails] = useState(false);
+
+  const getPegStatusColor = (status: string) => {
+    switch (status) {
+      case 'stable': return 'success';
+      case 'warning': return 'warning';
+      case 'danger': return 'error';
+      default: return 'default';
+    }
+  };
+
   const getRiskColor = (risk: string) => {
     switch (risk) {
       case 'low': return 'success';
@@ -88,270 +237,450 @@ function StablecoinCard({ stablecoin }: { stablecoin: typeof mockStablecoins[0] 
     }
   };
 
-  const handleSwap = () => {
-    // This function is not fully implemented in the new mock data,
-    // so it will just show an alert.
-    alert(`Swap functionality not fully implemented for ${stablecoin.symbol}`);
-  };
-
   return (
-    <Card>
+    <Card className="animate-fade-in-up" sx={{ mb: 2 }}>
       <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
           <Box>
-            <Typography variant="h6">{stablecoin.symbol}</Typography>
+            <Box display="flex" alignItems="center" gap={1} mb={1}>
+              <Typography variant="h6" fontWeight={600}>
+                {stablecoin.name} ({stablecoin.symbol})
+              </Typography>
+              <Chip
+                label={stablecoin.pegStatus}
+                size="small"
+                color={getPegStatusColor(stablecoin.pegStatus)}
+                sx={{ fontSize: '0.7rem' }}
+              />
+              <Chip
+                label={stablecoin.risk}
+                size="small"
+                color={getRiskColor(stablecoin.risk)}
+                sx={{ fontSize: '0.7rem' }}
+              />
+            </Box>
+            <Box display="flex" alignItems="center" gap={2}>
+              <Typography variant="body2" color="text.secondary">
+                ${stablecoin.price}
+              </Typography>
+              <Typography 
+                variant="body2" 
+                color={stablecoin.change24h >= 0 ? 'success.main' : 'error.main'}
+              >
+                {stablecoin.change24h >= 0 ? '+' : ''}{stablecoin.change24h}%
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                ${(stablecoin.marketCap / 1000000000).toFixed(1)}B
+              </Typography>
+            </Box>
+          </Box>
+          <Box textAlign="right">
+            <Typography variant="h5" fontWeight={700} color="success.main">
+              {stablecoin.apy}%
+            </Typography>
             <Typography variant="body2" color="text.secondary">
-              {stablecoin.name}
+              Best APY
             </Typography>
           </Box>
-          <Chip 
-            label={stablecoin.risk.toUpperCase()} 
-            color={getRiskColor(stablecoin.risk) as 'success' | 'warning' | 'error' | 'default'}
+        </Box>
+
+        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} mb={2}>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              Your Balance
+            </Typography>
+            <Typography variant="body1" fontWeight={600}>
+              {stablecoin.yourBalance.toLocaleString()} {stablecoin.symbol}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              Your Value
+            </Typography>
+            <Typography variant="body1" fontWeight={600}>
+              ${stablecoin.yourValue.toLocaleString()}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              Issuer
+            </Typography>
+            <Typography variant="body1" fontWeight={600}>
+              {stablecoin.issuer}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              Collateral
+            </Typography>
+            <Typography variant="body1" fontWeight={600}>
+              {stablecoin.collateral}
+            </Typography>
+          </Box>
+        </Box>
+
+        <Box display="flex" gap={1}>
+          <Button
+            variant="contained"
             size="small"
+            onClick={() => setShowDetails(!showDetails)}
+            fullWidth
+            color="success"
+          >
+            {showDetails ? 'Hide Details' : 'Deposit'}
+          </Button>
+          {stablecoin.yourBalance > 0 && (
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => onWithdraw(stablecoin.id)}
+              fullWidth
+              color="warning"
+            >
+              Withdraw
+            </Button>
+          )}
+        </Box>
+
+        {showDetails && (
+          <Box mt={2} p={2} bgcolor="grey.50" borderRadius={2}>
+            <Typography variant="body2" fontWeight={600} mb={2}>
+              Deposit {stablecoin.symbol}
+            </Typography>
+            <Box display="flex" gap={1}>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => onDeposit(stablecoin.id, '100')}
+                fullWidth
+              >
+                $100
+              </Button>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => onDeposit(stablecoin.id, '1000')}
+                fullWidth
+              >
+                $1,000
+              </Button>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => onDeposit(stablecoin.id, '10000')}
+                fullWidth
+              >
+                $10,000
+              </Button>
+            </Box>
+          </Box>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function YieldOpportunities() {
+  return (
+    <Card className="animate-fade-in-up stagger-1">
+      <CardContent>
+        <Typography variant="h6" fontWeight={600} mb={3}>
+          Yield Opportunities
+        </Typography>
+        
+        <List>
+          {yieldOpportunities.map((opportunity) => (
+            <ListItem key={opportunity.id} sx={{ px: 0, py: 1 }}>
+              <ListItemAvatar>
+                <Avatar
+                  sx={{
+                    bgcolor: opportunity.risk === 'low' ? 'success.main' : 
+                             opportunity.risk === 'medium' ? 'warning.main' : 'error.main',
+                  }}
+                >
+                  {opportunity.type === 'Lending' ? <Savings /> : 
+                   opportunity.type === 'LP Farming' ? <WaterDrop /> : <LocalFireDepartment />}
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <Box display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography variant="body1" fontWeight={600}>
+                      {opportunity.protocol} - {opportunity.stablecoin}
+                    </Typography>
+                    <Typography variant="body1" fontWeight={600} color="success.main">
+                      {opportunity.apy}% APY
+                    </Typography>
+                  </Box>
+                }
+                secondary={
+                  <Box display="flex" justifyContent="space-between" alignItems="center" mt={1}>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        {opportunity.type} • ${(opportunity.tvl / 1000000000).toFixed(1)}B TVL
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Min: ${opportunity.minDeposit.toLocaleString()} • Max: ${opportunity.maxDeposit.toLocaleString()}
+                      </Typography>
+                    </Box>
+                    <Box textAlign="right">
+                      <Chip
+                        label={opportunity.risk}
+                        size="small"
+                        color={opportunity.risk === 'low' ? 'success' : opportunity.risk === 'medium' ? 'warning' : 'error'}
+                      />
+                    </Box>
+                  </Box>
+                }
+              />
+            </ListItem>
+          ))}
+        </List>
+      </CardContent>
+    </Card>
+  );
+}
+
+function PegMonitoring() {
+  return (
+    <Card className="animate-fade-in-up stagger-2">
+      <CardContent>
+        <Typography variant="h6" fontWeight={600} mb={3}>
+          Peg Monitoring
+        </Typography>
+        
+        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={3} mb={3}>
+          <Box textAlign="center" p={2} bgcolor="info.light" borderRadius={2}>
+            <CurrencyExchange sx={{ fontSize: 40, color: 'info.main', mb: 1 }} />
+            <Typography variant="h4" fontWeight={700} color="info.main">
+              ${(pegMonitoring.totalMarketCap / 1000000000).toFixed(0)}B
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Total Market Cap
+            </Typography>
+          </Box>
+          
+          <Box textAlign="center" p={2} bgcolor="success.light" borderRadius={2}>
+            <Verified sx={{ fontSize: 40, color: 'success.main', mb: 1 }} />
+            <Typography variant="h4" fontWeight={700} color="success.main">
+              {pegMonitoring.averageDeviation.toFixed(3)}%
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Avg Deviation
+            </Typography>
+          </Box>
+        </Box>
+
+        <Box p={2} bgcolor="grey.50" borderRadius={2} mb={3}>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+            <Typography variant="body2" color="text.secondary">
+              Risk Score
+            </Typography>
+            <Typography variant="body2" fontWeight={600}>
+              {pegMonitoring.riskScore}/10
+            </Typography>
+          </Box>
+          <LinearProgress 
+            variant="determinate" 
+            value={pegMonitoring.riskScore * 10} 
+            color={pegMonitoring.riskScore < 3 ? 'success' : pegMonitoring.riskScore < 7 ? 'warning' : 'error'}
+            sx={{ height: 8, borderRadius: 4 }}
           />
         </Box>
 
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography variant="body2" color="text.secondary">
-            Best Yield
-          </Typography>
-          <Typography variant="h6" color="success.main">
-            {stablecoin.apy.toFixed(1)}%
-          </Typography>
-        </Box>
+        <Typography variant="body2" fontWeight={600} mb={2}>
+          Recent Alerts
+        </Typography>
+        <List>
+          {pegMonitoring.alerts.map((alert) => (
+            <ListItem key={alert.id} sx={{ px: 0, py: 1 }}>
+              <ListItemAvatar>
+                <Avatar
+                  sx={{
+                    bgcolor: alert.severity === 'warning' ? 'warning.main' : 'error.main',
+                  }}
+                >
+                  {alert.severity === 'warning' ? <Warning /> : <GppBad />}
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <Typography variant="body1" fontWeight={600}>
+                    {alert.stablecoin}: {alert.message}
+                  </Typography>
+                }
+                secondary={
+                  <Typography variant="body2" color="text.secondary">
+                    {alert.timestamp.toLocaleTimeString()}
+                  </Typography>
+                }
+              />
+            </ListItem>
+          ))}
+        </List>
+      </CardContent>
+    </Card>
+  );
+}
 
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography variant="body2" color="text.secondary">
-            Depeg Risk
-          </Typography>
-          <Box display="flex" alignItems="center" gap={1}>
-            {/* Depeg risk is not directly available in the new mock data,
-                so this will be a placeholder or removed if not needed.
-                For now, it's removed as per the new mock data. */}
-            <Typography variant="body2">N/A</Typography>
+function RiskAnalysis() {
+  return (
+    <Card className="animate-fade-in-up stagger-3">
+      <CardContent>
+        <Typography variant="h6" fontWeight={600} mb={3}>
+          Risk Analysis
+        </Typography>
+        
+        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} mb={3}>
+          <Box p={2} bgcolor="success.light" borderRadius={2}>
+            <GppGood sx={{ fontSize: 32, color: 'success.main', mb: 1 }} />
+            <Typography variant="h6" fontWeight={700} color="success.main">
+              Low Risk
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              USDC, DAI, BUSD
+            </Typography>
+          </Box>
+          <Box p={2} bgcolor="warning.light" borderRadius={2}>
+            <Warning sx={{ fontSize: 32, color: 'warning.main', mb: 1 }} />
+            <Typography variant="h6" fontWeight={700} color="warning.main">
+              Medium Risk
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              USDT, FRAX
+            </Typography>
           </Box>
         </Box>
 
-        <Box mb={2}>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
-            Issuer: {stablecoin.backing}
+        <Alert severity="info" sx={{ mb: 2 }}>
+          <Typography variant="body2">
+            <strong>Risk Factors:</strong> Collateral quality, issuer transparency, 
+            regulatory compliance, and market liquidity.
+          </Typography>
+        </Alert>
+
+        <Box p={2} bgcolor="grey.50" borderRadius={2}>
+          <Typography variant="body2" fontWeight={600} mb={1}>
+            Diversification Recommendation
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Model: {stablecoin.backing}
+            Consider spreading your stablecoin holdings across multiple issuers 
+            to reduce concentration risk.
           </Typography>
         </Box>
-
-        {/* Blacklist risk is not directly available in the new mock data,
-            so this will be a placeholder or removed if not needed.
-            For now, it's removed as per the new mock data. */}
-
-        <Button
-          variant="contained"
-          fullWidth
-          startIcon={<AccountBalance />}
-          onClick={handleSwap}
-        >
-          Swap to {stablecoin.symbol}
-        </Button>
-      </CardContent>
-    </Card>
-  );
-}
-
-function YieldComparisonTable() {
-  return (
-    <TableContainer component={Paper} sx={{ backgroundColor: 'background.paper' }}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Stablecoin</TableCell>
-            <TableCell align="right">Aave APY</TableCell>
-            <TableCell align="right">Compound APY</TableCell>
-            <TableCell align="right">Curve APY</TableCell>
-            <TableCell align="right">Best Yield</TableCell>
-            <TableCell align="right">Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {mockStablecoins.map((stablecoin) => (
-            <TableRow key={stablecoin.symbol}>
-              <TableCell>
-                <Box display="flex" alignItems="center" gap={1}>
-                  <Typography variant="body1">{stablecoin.symbol}</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {stablecoin.name}
-                  </Typography>
-                </Box>
-              </TableCell>
-              <TableCell align="right">
-                <Typography variant="body1" color="success.main">
-                  4.2%
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Typography variant="body1" color="success.main">
-                  3.8%
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Typography variant="body1" color="success.main">
-                  5.1%
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Typography variant="body1" color="success.main" fontWeight="bold">
-                  {stablecoin.apy.toFixed(1)}%
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Button size="small" variant="outlined">
-                  View Details
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-}
-
-function RiskNotes() {
-  return (
-    <Card>
-      <CardContent>
-        <Typography variant="h6" gutterBottom>
-          Risk Notes & Disclaimers
-        </Typography>
-        
-        {/* Collateralization Models is not directly available in the new mock data,
-            so this will be a placeholder or removed if not needed.
-            For now, it's removed as per the new mock data. */}
-
-        {/* Depeg Risks is not directly available in the new mock data,
-            so this will be a placeholder or removed if not needed.
-            For now, it's removed as per the new mock data. */}
-
-        {/* Centralization Risks is not directly available in the new mock data,
-            so this will be a placeholder or removed if not needed.
-            For now, it's removed as per the new mock data. */}
-      </CardContent>
-    </Card>
-  );
-}
-
-function BestYieldCard() {
-  const bestYield = mockStablecoins.reduce((max, coin) => 
-    coin.apy > max.apy ? coin : max
-  );
-
-  return (
-    <Card sx={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
-      <CardContent>
-        <Typography variant="h6" color="white" gutterBottom>
-          Best Available Yield
-        </Typography>
-        <Typography variant="h3" color="white" gutterBottom>
-          {bestYield.apy.toFixed(1)}%
-        </Typography>
-        <Typography variant="body1" color="white" mb={2}>
-          {bestYield.symbol} on {bestYield.backing}
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          sx={{ backgroundColor: 'white', color: 'primary.main' }}
-        >
-          Get Started
-        </Button>
       </CardContent>
     </Card>
   );
 }
 
 export default function StablecoinsPage() {
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [filterRisk, setFilterRisk] = useState('all');
+
+  const handleDeposit = (stablecoinId: number, amount: string) => {
+    console.log('Depositing', amount, 'to stablecoin', stablecoinId);
+  };
+
+  const handleWithdraw = (stablecoinId: number) => {
+    console.log('Withdrawing from stablecoin', stablecoinId);
+  };
+
+  const filteredStablecoins = stablecoins.filter(coin => 
+    filterRisk === 'all' || coin.risk === filterRisk
+  );
+
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
-        Stablecoins Hub
-      </Typography>
-
-      {/* Best Yield Card */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 2, mb: 3 }}>
-        <BestYieldCard />
-      </Box>
-
-      {/* Quick Stats */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: 2, mb: 3 }}>
-        <Card sx={{ flex: 1, minWidth: 200 }}>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>
-              Market Overview
-            </Typography>
-            <Box display="flex" flexWrap="wrap" gap={2}>
-              <Box flex={1} minWidth="120px">
-                <Typography variant="body2" color="text.secondary">
-                  Total Market Cap
-                </Typography>
-                <Typography variant="h6">
-                  $150.2B
-                </Typography>
-              </Box>
-              <Box flex={1} minWidth="120px">
-                <Typography variant="body2" color="text.secondary">
-                  Average Yield
-                </Typography>
-                <Typography variant="h6" color="success.main">
-                  4.2%
-                </Typography>
-              </Box>
-              <Box flex={1} minWidth="120px">
-                <Typography variant="body2" color="text.secondary">
-                  24h Volume
-                </Typography>
-                <Typography variant="h6">
-                  $45.8B
-                </Typography>
-              </Box>
-              <Box flex={1} minWidth="120px">
-                <Typography variant="body2" color="text.secondary">
-                  Active Protocols
-                </Typography>
-                <Typography variant="h6">
-                  12
-                </Typography>
-              </Box>
-            </Box>
-          </CardContent>
-        </Card>
-      </Box>
-
-      {/* Stablecoin Cards */}
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
-        <Typography variant="h5" gutterBottom sx={{ width: '100%' }}>
-          Available Stablecoins
-        </Typography>
-        <Box display="flex" flexWrap="wrap" gap={2}>
-          {mockStablecoins.map((stablecoin) => (
-            <Box key={stablecoin.symbol} sx={{ flex: '1 1 300px', minWidth: '300px' }}>
-              <StablecoinCard stablecoin={stablecoin} />
-            </Box>
-          ))}
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
+        <Box>
+          <Typography variant="h3" fontWeight={700} mb={1}>
+            Stablecoins
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            Manage your stablecoin holdings and earn yield safely
+          </Typography>
+        </Box>
+        <Box display="flex" gap={2}>
+          <Button variant="outlined" startIcon={<Refresh />}>
+            Refresh
+          </Button>
+          <Button variant="outlined" startIcon={<Settings />}>
+            Settings
+          </Button>
         </Box>
       </Box>
 
-      {/* Yield Comparison */}
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
-        <Typography variant="h5" gutterBottom sx={{ width: '100%' }}>
-          Yield Comparison
-        </Typography>
-        <YieldComparisonTable />
-      </Box>
+      <WalletConnectionTest />
 
-      {/* Risk Notes */}
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
-        <RiskNotes />
+      <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '2fr 1fr' }} gap={4}>
+        {/* Main Content */}
+        <Box>
+          {/* Filters */}
+          <Card className="animate-fade-in-up" sx={{ mb: 3 }}>
+            <CardContent>
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                <Typography variant="h6" fontWeight={600}>
+                  Stablecoins
+                </Typography>
+                <Box display="flex" gap={1}>
+                  <Button
+                    size="small"
+                    variant={filterRisk === 'all' ? 'contained' : 'outlined'}
+                    onClick={() => setFilterRisk('all')}
+                  >
+                    All
+                  </Button>
+                  <Button
+                    size="small"
+                    variant={filterRisk === 'low' ? 'contained' : 'outlined'}
+                    onClick={() => setFilterRisk('low')}
+                    color="success"
+                  >
+                    Low Risk
+                  </Button>
+                  <Button
+                    size="small"
+                    variant={filterRisk === 'medium' ? 'contained' : 'outlined'}
+                    onClick={() => setFilterRisk('medium')}
+                    color="warning"
+                  >
+                    Medium Risk
+                  </Button>
+                </Box>
+              </Box>
+              
+              <Alert severity="info" sx={{ mb: 2 }}>
+                <Typography variant="body2">
+                  <strong>Stablecoins:</strong> Digital assets designed to maintain a stable value 
+                  relative to a reference asset, typically the US dollar.
+                </Typography>
+              </Alert>
+            </CardContent>
+          </Card>
+
+          {/* Stablecoins */}
+          {filteredStablecoins.map((stablecoin) => (
+            <StablecoinCard
+              key={stablecoin.id}
+              stablecoin={stablecoin}
+              onDeposit={handleDeposit}
+              onWithdraw={handleWithdraw}
+            />
+          ))}
+        </Box>
+
+        {/* Sidebar */}
+        <Box>
+          <YieldOpportunities />
+          
+          <Box mt={3}>
+            <PegMonitoring />
+          </Box>
+
+          <Box mt={3}>
+            <RiskAnalysis />
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

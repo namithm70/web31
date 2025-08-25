@@ -7,431 +7,521 @@ import {
   CardContent,
   Typography,
   Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+  TextField,
+  IconButton,
   Chip,
+  Avatar,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
   Alert,
+  Switch,
+  FormControlLabel,
+  Tabs,
+  Tab,
+  Paper,
+  LinearProgress,
+  Badge,
 } from '@mui/material';
 import {
-  Add,
+  Agriculture,
   TrendingUp,
+  TrendingDown,
+  Refresh,
+  Settings,
+  ArrowDownward,
+  ArrowUpward,
   Info,
-  ExpandMore,
+  Warning,
+  CheckCircle,
+  Timeline,
+  ShowChart,
+  WaterDrop,
+  Speed,
+  AccountBalance,
+  Lock,
+  LockOpen,
+  Star,
+  LocalFireDepartment,
+  EmojiEvents,
+  MonetizationOn,
 } from '@mui/icons-material';
-import { useAccount } from 'wagmi';
-import { PoolData } from '@/types';
+import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
-// Mock data
-const mockPools: PoolData[] = [
+// Mock farming pools data
+const farmingPools = [
   {
-    id: 'uni-eth-usdc',
-    protocol: 'Uniswap V3',
-    token0: {
-      address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' as `0x${string}`,
-      symbol: 'WETH',
-      name: 'Wrapped Ether',
-      decimals: 18,
-      price: 3500,
-    },
-    token1: {
-      address: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as `0x${string}`,
-      symbol: 'USDC',
-      name: 'USD Coin',
-      decimals: 6,
-      price: 1,
-    },
-    apr: 45.2,
-    tvl: 2500000,
-    stakingContract: '0x1234567890123456789012345678901234567890' as `0x${string}`,
-    rewardTokens: [
-      {
-        address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984' as `0x${string}`,
-        symbol: 'UNI',
-        name: 'Uniswap',
-        decimals: 18,
-        price: 12.5,
-      }
-    ],
+    id: 1,
+    name: 'ETH-USDC LP',
+    tokens: ['ETH', 'USDC'],
+    apy: 45.2,
+    tvl: 12500000,
+    staked: 0.5,
+    rewards: ['UNI', 'ETH'],
+    multiplier: 2.5,
+    lockPeriod: 0,
+    risk: 'low',
+    status: 'active',
   },
   {
-    id: 'curve-3pool',
-    protocol: 'Curve Finance',
-    token0: {
-      address: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as `0x${string}`,
-      symbol: 'USDC',
-      name: 'USD Coin',
-      decimals: 6,
-      price: 1,
-    },
-    token1: {
-      address: '0x6B175474E89094C44Da98b954EedeAC495271d0F' as `0x${string}`,
-      symbol: 'DAI',
-      name: 'Dai Stablecoin',
-      decimals: 18,
-      price: 1,
-    },
-    apr: 12.8,
-    tvl: 1800000,
-    stakingContract: '0x1234567890123456789012345678901234567890' as `0x${string}`,
-    rewardTokens: [
-      {
-        address: '0xD533a949740bb3306d119CC777fa900bA034cd52' as `0x${string}`,
-        symbol: 'CRV',
-        name: 'Curve DAO Token',
-        decimals: 18,
-        price: 0.85,
-      }
-    ],
+    id: 2,
+    name: 'UNI-ETH LP',
+    tokens: ['UNI', 'ETH'],
+    apy: 38.7,
+    tvl: 8500000,
+    staked: 0,
+    rewards: ['UNI', 'ETH'],
+    multiplier: 2.0,
+    lockPeriod: 30,
+    risk: 'medium',
+    status: 'active',
   },
   {
-    id: 'aave-usdc',
-    protocol: 'Aave V3',
-    token0: {
-      address: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as `0x${string}`,
-      symbol: 'USDC',
-      name: 'USD Coin',
-      decimals: 6,
-      price: 1,
-    },
-    token1: {
-      address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599' as `0x${string}`,
-      symbol: 'WBTC',
-      name: 'Wrapped Bitcoin',
-      decimals: 8,
-      price: 45000,
-    },
-    apr: 8.5,
-    tvl: 950000,
-    stakingContract: '0x1234567890123456789012345678901234567890' as `0x${string}`,
-    rewardTokens: [
-      {
-        address: '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9' as `0x${string}`,
-        symbol: 'AAVE',
-        name: 'Aave Token',
-        decimals: 18,
-        price: 85.5,
-      }
-    ],
+    id: 3,
+    name: 'AAVE-USDC LP',
+    tokens: ['AAVE', 'USDC'],
+    apy: 52.1,
+    tvl: 3200000,
+    staked: 0,
+    rewards: ['AAVE', 'ETH'],
+    multiplier: 3.0,
+    lockPeriod: 90,
+    risk: 'high',
+    status: 'active',
+  },
+  {
+    id: 4,
+    name: 'LINK-ETH LP',
+    tokens: ['LINK', 'ETH'],
+    apy: 28.9,
+    tvl: 2100000,
+    staked: 0,
+    rewards: ['LINK', 'ETH'],
+    multiplier: 1.5,
+    lockPeriod: 0,
+    risk: 'low',
+    status: 'inactive',
   },
 ];
 
-function PoolCard({ pool }: { pool: PoolData }) {
-  const [stakeAmount] = useState('');
-  const [isStaked, setIsStaked] = useState(false);
+// Mock staking history
+const stakingHistory = [
+  { id: 1, pool: 'ETH-USDC LP', action: 'stake', amount: 0.5, timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24), status: 'completed' },
+  { id: 2, pool: 'UNI-ETH LP', action: 'unstake', amount: 0.3, timestamp: new Date(Date.now() - 1000 * 60 * 60 * 48), status: 'completed' },
+  { id: 3, pool: 'ETH-USDC LP', action: 'claim', amount: 0.025, timestamp: new Date(Date.now() - 1000 * 60 * 60 * 72), status: 'completed' },
+];
 
-  const handleStake = () => {
-    // TODO: Implement staking logic
-    console.log('Staking in pool:', pool.id);
-  };
+// Mock rewards data
+const rewardsData = {
+  totalEarned: 1250.50,
+  pendingRewards: 45.20,
+  nextReward: 12.80,
+  lastClaim: new Date(Date.now() - 1000 * 60 * 60 * 24),
+};
 
-  const handleUnstake = () => {
-    // TODO: Implement unstaking logic
-    console.log('Unstaking from pool:', pool.id);
-  };
+function FarmingPoolCard({ pool, onStake, onUnstake, onClaim }: any) {
+  const [showDetails, setShowDetails] = useState(false);
+  const [stakeAmount, setStakeAmount] = useState('');
+  const [unstakeAmount, setUnstakeAmount] = useState('');
 
-  const handleClaim = () => {
-    // TODO: Implement claim logic
-    console.log('Claiming rewards');
+  const getRiskColor = (risk: string) => {
+    switch (risk) {
+      case 'low': return 'success';
+      case 'medium': return 'warning';
+      case 'high': return 'error';
+      default: return 'default';
+    }
   };
 
   return (
-    <Card>
+    <Card className="animate-fade-in-up" sx={{ mb: 2 }}>
       <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
           <Box>
-            <Typography variant="h6">
-              {pool.token0.symbol}/{pool.token1.symbol}
+            <Box display="flex" alignItems="center" gap={1} mb={1}>
+              <Typography variant="h6" fontWeight={600}>
+                {pool.name}
+              </Typography>
+              {pool.multiplier > 2 && (
+                <Chip
+                  icon={<Star />}
+                  label={`${pool.multiplier}x`}
+                  size="small"
+                  color="warning"
+                  sx={{ fontSize: '0.7rem' }}
+                />
+              )}
+              <Chip
+                label={pool.risk}
+                size="small"
+                color={getRiskColor(pool.risk)}
+                sx={{ fontSize: '0.7rem' }}
+              />
+            </Box>
+            <Box display="flex" alignItems="center" gap={2}>
+              <Typography variant="body2" color="text.secondary">
+                TVL: ${(pool.tvl / 1000000).toFixed(1)}M
+              </Typography>
+              {pool.lockPeriod > 0 && (
+                <Box display="flex" alignItems="center" gap={0.5}>
+                  <Lock sx={{ fontSize: 14 }} />
+                  <Typography variant="body2" color="text.secondary">
+                    {pool.lockPeriod}d lock
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          </Box>
+          <Box textAlign="right">
+            <Typography variant="h5" fontWeight={700} color="success.main">
+              {pool.apy}%
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {pool.protocol}
+              APY
             </Typography>
           </Box>
-          <Chip 
-            label={`${pool.apr.toFixed(1)}% APR`} 
-            color="success" 
-            variant="outlined"
-          />
         </Box>
 
-        <Box display="flex" gap={2} mb={2}>
-          <Box flex={1}>
-            <Typography variant="body2" color="text.secondary">
-              TVL
-            </Typography>
-            <Typography variant="h6">
-              ${(pool.tvl / 1e6).toFixed(1)}M
-            </Typography>
-          </Box>
-          <Box flex={1}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Box>
             <Typography variant="body2" color="text.secondary">
               Your Stake
             </Typography>
-            <Typography variant="h6">
-              $0.00
+            <Typography variant="body1" fontWeight={600}>
+              {pool.staked} LP
             </Typography>
           </Box>
-        </Box>
-
-        {pool.rewardTokens && (
-          <Box mb={2}>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
+          <Box textAlign="right">
+            <Typography variant="body2" color="text.secondary">
               Rewards
             </Typography>
-            <Box display="flex" gap={1}>
-              {pool.rewardTokens.map((token) => (
-                <Chip
-                  key={token.address}
-                  label={token.symbol}
-                  size="small"
-                  variant="outlined"
-                />
+            <Box display="flex" gap={0.5}>
+              {pool.rewards.map((reward: string, index: number) => (
+                <Chip key={index} label={reward} size="small" variant="outlined" />
               ))}
             </Box>
           </Box>
-        )}
+        </Box>
 
-        {!isStaked ? (
+        <Box display="flex" gap={1}>
           <Button
             variant="contained"
+            size="small"
+            onClick={() => setShowDetails(!showDetails)}
             fullWidth
-            onClick={() => setIsStaked(true)}
           >
-            Stake LP Tokens
+            {showDetails ? 'Hide Details' : 'Stake'}
           </Button>
-        ) : (
-          <Box>
+          {pool.staked > 0 && (
+            <>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => onUnstake(pool.id)}
+                fullWidth
+              >
+                Unstake
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => onClaim(pool.id)}
+                fullWidth
+                color="success"
+              >
+                Claim
+              </Button>
+            </>
+          )}
+        </Box>
+
+        {showDetails && (
+          <Box mt={2} p={2} bgcolor="grey.50" borderRadius={2}>
+            <Typography variant="body2" fontWeight={600} mb={2}>
+              Stake Amount
+            </Typography>
             <Box display="flex" gap={1} mb={2}>
+              <TextField
+                size="small"
+                placeholder="0.0"
+                value={stakeAmount}
+                onChange={(e) => setStakeAmount(e.target.value)}
+                fullWidth
+              />
               <Button
                 variant="contained"
-                fullWidth
-                onClick={handleStake}
+                size="small"
+                onClick={() => onStake(pool.id, stakeAmount)}
                 disabled={!stakeAmount}
               >
                 Stake
               </Button>
-              <Button
-                variant="outlined"
-                onClick={() => setIsStaked(false)}
-              >
-                Cancel
-              </Button>
             </Box>
+            {pool.staked > 0 && (
+              <>
+                <Typography variant="body2" fontWeight={600} mb={2}>
+                  Unstake Amount
+                </Typography>
+                <Box display="flex" gap={1}>
+                  <TextField
+                    size="small"
+                    placeholder="0.0"
+                    value={unstakeAmount}
+                    onChange={(e) => setUnstakeAmount(e.target.value)}
+                    fullWidth
+                  />
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => onUnstake(pool.id, unstakeAmount)}
+                    disabled={!unstakeAmount}
+                  >
+                    Unstake
+                  </Button>
+                </Box>
+              </>
+            )}
           </Box>
         )}
-
-        {/* Action buttons for staked positions */}
-        <Box display="flex" gap={1} mt={2}>
-          <Button
-            variant="outlined"
-            size="small"
-            startIcon={<ExpandMore />}
-            onClick={handleUnstake}
-          >
-            Unstake
-          </Button>
-          <Button
-            variant="outlined"
-            size="small"
-            startIcon={<TrendingUp />}
-            onClick={handleClaim}
-          >
-            Claim
-          </Button>
-        </Box>
       </CardContent>
     </Card>
   );
 }
 
-function PoolsTable() {
+function RewardsOverview() {
   return (
-    <TableContainer component={Paper} sx={{ backgroundColor: 'background.paper' }}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Pool</TableCell>
-            <TableCell align="right">Protocol</TableCell>
-            <TableCell align="right">APR</TableCell>
-            <TableCell align="right">TVL</TableCell>
-            <TableCell align="right">Your Stake</TableCell>
-            <TableCell align="right">Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {mockPools.map((pool) => (
-            <TableRow key={pool.id}>
-              <TableCell>
-                <Box display="flex" alignItems="center" gap={1}>
-                  <Typography variant="body1">
-                    {pool.token0.symbol}/{pool.token1.symbol}
-                  </Typography>
-                  {pool.stakingContract && (
-                    <Chip
-                      label="Staking"
-                      size="small"
-                      color="primary"
-                      variant="outlined"
-                    />
-                  )}
-                </Box>
-              </TableCell>
-              <TableCell align="right">
-                <Typography variant="body1">{pool.protocol}</Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Typography variant="body1" color="success.main">
-                  {pool.apr.toFixed(1)}%
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Typography variant="body1">
-                  ${(pool.tvl / 1e6).toFixed(1)}M
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Typography variant="body1">
-                  $0.00
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Box display="flex" gap={1}>
-                  <Button size="small" variant="outlined">
-                    Stake
-                  </Button>
-                  <Button size="small" variant="outlined">
-                    View
-                  </Button>
-                </Box>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-}
-
-function StatsCard() {
-  return (
-    <Card>
+    <Card className="animate-fade-in-up">
       <CardContent>
-        <Typography variant="h6" gutterBottom>
-          Your Farming Stats
+        <Typography variant="h6" fontWeight={600} mb={3}>
+          Rewards Overview
         </Typography>
-        <Box display="flex" gap={2} flexWrap="wrap">
-          <Box flex={1}>
-            <Typography variant="body2" color="text.secondary">
-              Total Staked
+        
+        <Box display="grid" gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }} gap={3}>
+          <Box textAlign="center" p={2} bgcolor="success.light" borderRadius={2}>
+            <MonetizationOn sx={{ fontSize: 40, color: 'success.main', mb: 1 }} />
+            <Typography variant="h4" fontWeight={700} color="success.main">
+              ${rewardsData.totalEarned.toLocaleString()}
             </Typography>
-            <Typography variant="h6">
-              $0.00
+            <Typography variant="body2" color="text.secondary">
+              Total Earned
             </Typography>
           </Box>
-          <Box flex={1}>
+          
+          <Box textAlign="center" p={2} bgcolor="warning.light" borderRadius={2}>
+            <LocalFireDepartment sx={{ fontSize: 40, color: 'warning.main', mb: 1 }} />
+            <Typography variant="h4" fontWeight={700} color="warning.main">
+              ${rewardsData.pendingRewards.toFixed(2)}
+            </Typography>
             <Typography variant="body2" color="text.secondary">
-              Total Rewards
-            </Typography>
-            <Typography variant="h6" color="success.main">
-              $0.00
-            </Typography>
-          </Box>
-          <Box flex={1}>
-            <Typography variant="body2" color="text.secondary">
-              Average APR
-            </Typography>
-            <Typography variant="h6">
-              0.0%
-            </Typography>
-          </Box>
-          <Box flex={1}>
-            <Typography variant="body2" color="text.secondary">
-              Active Pools
-            </Typography>
-            <Typography variant="h6">
-              0
+              Pending Rewards
             </Typography>
           </Box>
         </Box>
+
+        <Box mt={3} p={2} bgcolor="grey.50" borderRadius={2}>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+            <Typography variant="body2" color="text.secondary">
+              Next Reward
+            </Typography>
+            <Typography variant="body2" fontWeight={600}>
+              ${rewardsData.nextReward}
+            </Typography>
+          </Box>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="body2" color="text.secondary">
+              Last Claim
+            </Typography>
+            <Typography variant="body2" fontWeight={600}>
+              {rewardsData.lastClaim.toLocaleDateString()}
+            </Typography>
+          </Box>
+        </Box>
+
+        <Button
+          variant="contained"
+          fullWidth
+          size="large"
+          startIcon={<EmojiEvents />}
+          sx={{ mt: 2 }}
+        >
+          Claim All Rewards
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
+
+function StakingHistory() {
+  return (
+    <Card className="animate-fade-in-up stagger-1">
+      <CardContent>
+        <Typography variant="h6" fontWeight={600} mb={3}>
+          Staking History
+        </Typography>
+        <List>
+          {stakingHistory.map((item) => (
+            <ListItem key={item.id} sx={{ px: 0, py: 1 }}>
+              <ListItemAvatar>
+                <Avatar
+                  sx={{
+                    bgcolor: item.action === 'stake' ? 'success.main' : 
+                             item.action === 'unstake' ? 'warning.main' : 'info.main',
+                  }}
+                >
+                  {item.action === 'stake' ? <Lock /> : 
+                   item.action === 'unstake' ? <LockOpen /> : <MonetizationOn />}
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <Box display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography variant="body1" fontWeight={600}>
+                      {item.action.charAt(0).toUpperCase() + item.action.slice(1)} {item.pool}
+                    </Typography>
+                    <Typography variant="body1" fontWeight={600}>
+                      {item.amount} LP
+                    </Typography>
+                  </Box>
+                }
+                secondary={
+                  <Box display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography variant="body2" color="text.secondary">
+                      {item.timestamp.toLocaleDateString()}
+                    </Typography>
+                    <Chip
+                      label={item.status}
+                      size="small"
+                      color={item.status === 'completed' ? 'success' : 'warning'}
+                    />
+                  </Box>
+                }
+              />
+            </ListItem>
+          ))}
+        </List>
       </CardContent>
     </Card>
   );
 }
 
 export default function FarmPage() {
-  const { address } = useAccount();
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [filterRisk, setFilterRisk] = useState('all');
 
-  if (!address) {
-    return (
-      <Box>
-        <Typography variant="h4" gutterBottom>
-          Yield Farming & Staking
-        </Typography>
-        <Alert severity="info">
-          Please connect your wallet to access farming pools
-        </Alert>
-      </Box>
-    );
-  }
+  const handleStake = (poolId: number, amount: string) => {
+    console.log('Staking', amount, 'in pool', poolId);
+  };
+
+  const handleUnstake = (poolId: number, amount?: string) => {
+    console.log('Unstaking', amount || 'all', 'from pool', poolId);
+  };
+
+  const handleClaim = (poolId: number) => {
+    console.log('Claiming rewards from pool', poolId);
+  };
+
+  const filteredPools = farmingPools.filter(pool => 
+    filterRisk === 'all' || pool.risk === filterRisk
+  );
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
-        Yield Farming & Staking
-      </Typography>
-
-      <Box display="flex" gap={3}>
-        {/* Stats */}
-        <Box flex={1}>
-          <StatsCard />
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
+        <Box>
+          <Typography variant="h3" fontWeight={700} mb={1}>
+            Yield Farming
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            Earn rewards by providing liquidity to DeFi protocols
+          </Typography>
         </Box>
+        <Box display="flex" gap={2}>
+          <Button variant="outlined" startIcon={<Refresh />}>
+            Refresh
+          </Button>
+          <Button variant="outlined" startIcon={<Settings />}>
+            Settings
+          </Button>
+        </Box>
+      </Box>
 
-        {/* Quick Actions */}
-        <Box flex={1}>
-          <Card>
+      <WalletConnectionTest />
+
+      <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '2fr 1fr' }} gap={4}>
+        {/* Main Content */}
+        <Box>
+          {/* Filters */}
+          <Card className="animate-fade-in-up" sx={{ mb: 3 }}>
             <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Quick Actions
-              </Typography>
-              <Box display="flex" gap={2} flexWrap="wrap">
-                <Button variant="contained" startIcon={<Add />}>
-                  Add Liquidity
-                </Button>
-                <Button variant="outlined" startIcon={<TrendingUp />}>
-                  Claim All Rewards
-                </Button>
-                <Button variant="outlined" startIcon={<Info />}>
-                  View Analytics
-                </Button>
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                <Typography variant="h6" fontWeight={600}>
+                  Farming Pools
+                </Typography>
+                <Box display="flex" gap={1}>
+                  <Button
+                    size="small"
+                    variant={filterRisk === 'all' ? 'contained' : 'outlined'}
+                    onClick={() => setFilterRisk('all')}
+                  >
+                    All
+                  </Button>
+                  <Button
+                    size="small"
+                    variant={filterRisk === 'low' ? 'contained' : 'outlined'}
+                    onClick={() => setFilterRisk('low')}
+                    color="success"
+                  >
+                    Low Risk
+                  </Button>
+                  <Button
+                    size="small"
+                    variant={filterRisk === 'medium' ? 'contained' : 'outlined'}
+                    onClick={() => setFilterRisk('medium')}
+                    color="warning"
+                  >
+                    Medium Risk
+                  </Button>
+                  <Button
+                    size="small"
+                    variant={filterRisk === 'high' ? 'contained' : 'outlined'}
+                    onClick={() => setFilterRisk('high')}
+                    color="error"
+                  >
+                    High Risk
+                  </Button>
+                </Box>
               </Box>
+              
+              <Alert severity="info" sx={{ mb: 2 }}>
+                <Typography variant="body2">
+                  <strong>Tip:</strong> Higher APY pools often come with higher risks. 
+                  Consider diversifying across multiple pools to manage risk.
+                </Typography>
+              </Alert>
             </CardContent>
           </Card>
+
+          {/* Farming Pools */}
+          {filteredPools.map((pool) => (
+            <FarmingPoolCard
+              key={pool.id}
+              pool={pool}
+              onStake={handleStake}
+              onUnstake={handleUnstake}
+              onClaim={handleClaim}
+            />
+          ))}
         </Box>
 
-        {/* Pools Overview */}
-        <Box flex={2}>
-          <Typography variant="h5" gutterBottom>
-            Available Pools
-          </Typography>
-          <Box display="flex" flexWrap="wrap" gap={2}>
-            {mockPools.map((pool) => (
-              <Box key={pool.id} flex={1} minWidth="300px">
-                <PoolCard pool={pool} />
-              </Box>
-            ))}
+        {/* Sidebar */}
+        <Box>
+          <RewardsOverview />
+          
+          <Box mt={3}>
+            <StakingHistory />
           </Box>
-        </Box>
-
-        {/* Detailed Table */}
-        <Box flex={1}>
-          <Typography variant="h5" gutterBottom>
-            All Pools
-          </Typography>
-          <PoolsTable />
         </Box>
       </Box>
     </Box>

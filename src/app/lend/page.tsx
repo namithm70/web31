@@ -1,355 +1,611 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Box,
   Card,
   CardContent,
   Typography,
   Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+  TextField,
+  IconButton,
+  Chip,
+  Avatar,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
   Alert,
+  Switch,
+  FormControlLabel,
+  Tabs,
+  Tab,
+  Paper,
+  LinearProgress,
+  Badge,
 } from '@mui/material';
 import {
+  AccountBalance,
+  TrendingUp,
+  TrendingDown,
+  Refresh,
+  Settings,
+  ArrowDownward,
+  ArrowUpward,
+  Info,
   Warning,
   CheckCircle,
+  Timeline,
+  ShowChart,
+  WaterDrop,
+  Speed,
+  Lock,
+  LockOpen,
+  Star,
+  LocalFireDepartment,
+  EmojiEvents,
+  MonetizationOn,
+  CreditCard,
+  Savings,
+  Calculate,
+  Security,
 } from '@mui/icons-material';
-import { useAccount } from 'wagmi';
-import { TokenData, MarketRate } from '@/types';
+import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
-// Mock data
-const mockMarkets: (MarketRate & { token: TokenData })[] = [
+// Mock lending pools data
+const lendingPools = [
   {
-    asset: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as `0x${string}`,
-    supplyAPY: 4.2,
-    borrowAPR: 6.8,
-    utilization: 75.5,
-    token: {
-      address: '0xA0b86a33E6441b8c4C8C8C8C8C8C8C8C8C8C8C8C8C' as `0x${string}`,
-      symbol: 'USDC',
-      name: 'USD Coin',
-      decimals: 6,
-      price: 1,
-    },
+    id: 1,
+    asset: 'ETH',
+    name: 'Ethereum',
+    supplyRate: 3.2,
+    borrowRate: 4.8,
+    totalSupply: 12500000,
+    totalBorrow: 8500000,
+    utilization: 68,
+    collateralFactor: 0.8,
+    yourSupply: 2.5,
+    yourBorrow: 0,
+    price: 3200,
+    change24h: 2.5,
+    icon: '🔵',
   },
   {
-    asset: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' as `0x${string}`,
-    supplyAPY: 3.8,
-    borrowAPR: 5.9,
-    utilization: 68.2,
-    token: {
-      address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' as `0x${string}`,
-      symbol: 'WETH',
-      name: 'Wrapped Ether',
-      decimals: 18,
-      price: 3500,
-    },
+    id: 2,
+    asset: 'USDC',
+    name: 'USD Coin',
+    supplyRate: 2.1,
+    borrowRate: 3.5,
+    totalSupply: 8500000,
+    totalBorrow: 4200000,
+    utilization: 49,
+    collateralFactor: 0.9,
+    yourSupply: 0,
+    yourBorrow: 5000,
+    price: 1.00,
+    change24h: 0.1,
+    icon: '🔵',
   },
   {
-    asset: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599' as `0x${string}`,
-    supplyAPY: 2.1,
-    borrowAPR: 4.5,
-    utilization: 45.8,
-    token: {
-      address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599' as `0x${string}`,
-      symbol: 'WBTC',
-      name: 'Wrapped Bitcoin',
-      decimals: 8,
-      price: 45000,
-    },
+    id: 3,
+    asset: 'AAVE',
+    name: 'Aave',
+    supplyRate: 4.8,
+    borrowRate: 6.2,
+    totalSupply: 3200000,
+    totalBorrow: 1800000,
+    utilization: 56,
+    collateralFactor: 0.7,
+    yourSupply: 0,
+    yourBorrow: 0,
+    price: 95.20,
+    change24h: 3.8,
+    icon: '🔵',
+  },
+  {
+    id: 4,
+    asset: 'UNI',
+    name: 'Uniswap',
+    supplyRate: 3.9,
+    borrowRate: 5.1,
+    totalSupply: 2100000,
+    totalBorrow: 950000,
+    utilization: 45,
+    collateralFactor: 0.75,
+    yourSupply: 0,
+    yourBorrow: 0,
+    price: 8.50,
+    change24h: -1.2,
+    icon: '🟣',
   },
 ];
 
-function HealthFactorCard() {
-  const healthFactor = 1.85; // Mock data
-  const isHealthy = healthFactor > 1.5;
-  const isWarning = healthFactor <= 1.5 && healthFactor > 1.1;
+// Mock borrowing history
+const borrowingHistory = [
+  { id: 1, asset: 'USDC', action: 'borrow', amount: 5000, timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24), status: 'completed' },
+  { id: 2, asset: 'ETH', action: 'supply', amount: 2.5, timestamp: new Date(Date.now() - 1000 * 60 * 60 * 48), status: 'completed' },
+  { id: 3, asset: 'USDC', action: 'repay', amount: 1000, timestamp: new Date(Date.now() - 1000 * 60 * 60 * 72), status: 'completed' },
+];
+
+// Mock portfolio data
+const portfolioData = {
+  totalSupplied: 8000,
+  totalBorrowed: 5000,
+  netAPY: 2.8,
+  healthFactor: 1.85,
+  availableToBorrow: 3200,
+  totalCollateral: 12500,
+};
+
+function LendingPoolCard({ pool, onSupply, onBorrow, onRepay, onWithdraw }: any) {
+  const [showDetails, setShowDetails] = useState(false);
+  const [action, setAction] = useState<'supply' | 'borrow' | 'repay' | 'withdraw'>('supply');
+  const [amount, setAmount] = useState('');
+
+  const getUtilizationColor = (utilization: number) => {
+    if (utilization < 50) return 'success';
+    if (utilization < 80) return 'warning';
+    return 'error';
+  };
 
   return (
-    <Card>
+    <Card className="animate-fade-in-up" sx={{ mb: 2 }}>
       <CardContent>
-        <Typography variant="h6" gutterBottom>
-          Health Factor
-        </Typography>
-        <Box display="flex" alignItems="center" gap={2} mb={2}>
-          <Typography variant="h4" color={isHealthy ? 'success.main' : isWarning ? 'warning.main' : 'error.main'}>
-            {healthFactor.toFixed(2)}
-          </Typography>
-          {isHealthy ? (
-            <CheckCircle color="success" />
-          ) : isWarning ? (
-            <Warning color="warning" />
-          ) : (
-            <Warning color="error" />
+        <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
+          <Box>
+            <Box display="flex" alignItems="center" gap={1} mb={1}>
+              <Typography variant="h6" fontWeight={600}>
+                {pool.name} ({pool.asset})
+              </Typography>
+              <Chip
+                label={`${pool.utilization}%`}
+                size="small"
+                color={getUtilizationColor(pool.utilization)}
+                sx={{ fontSize: '0.7rem' }}
+              />
+            </Box>
+            <Box display="flex" alignItems="center" gap={2}>
+              <Typography variant="body2" color="text.secondary">
+                Price: ${pool.price.toLocaleString()}
+              </Typography>
+              <Typography 
+                variant="body2" 
+                color={pool.change24h >= 0 ? 'success.main' : 'error.main'}
+              >
+                {pool.change24h >= 0 ? '+' : ''}{pool.change24h}%
+              </Typography>
+            </Box>
+          </Box>
+          <Box textAlign="right">
+            <Typography variant="h5" fontWeight={700} color="success.main">
+              {pool.supplyRate}%
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Supply APY
+            </Typography>
+          </Box>
+        </Box>
+
+        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} mb={2}>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              Supply Rate
+            </Typography>
+            <Typography variant="body1" fontWeight={600} color="success.main">
+              {pool.supplyRate}%
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              Borrow Rate
+            </Typography>
+            <Typography variant="body1" fontWeight={600} color="error.main">
+              {pool.borrowRate}%
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              Your Supply
+            </Typography>
+            <Typography variant="body1" fontWeight={600}>
+              {pool.yourSupply} {pool.asset}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2" color="text.secondary">
+              Your Borrow
+            </Typography>
+            <Typography variant="body1" fontWeight={600}>
+              {pool.yourBorrow} {pool.asset}
+            </Typography>
+          </Box>
+        </Box>
+
+        <Box display="flex" gap={1}>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => {
+              setAction('supply');
+              setShowDetails(!showDetails);
+            }}
+            fullWidth
+            color="success"
+          >
+            Supply
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => {
+              setAction('borrow');
+              setShowDetails(!showDetails);
+            }}
+            fullWidth
+            color="warning"
+          >
+            Borrow
+          </Button>
+          {pool.yourSupply > 0 && (
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setAction('withdraw');
+                setShowDetails(!showDetails);
+              }}
+              fullWidth
+            >
+              Withdraw
+            </Button>
+          )}
+          {pool.yourBorrow > 0 && (
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setAction('repay');
+                setShowDetails(!showDetails);
+              }}
+              fullWidth
+              color="error"
+            >
+              Repay
+            </Button>
           )}
         </Box>
-        <Typography variant="body2" color="text.secondary">
-          {isHealthy 
-            ? 'Your position is healthy' 
-            : isWarning 
-            ? 'Consider adding collateral or repaying debt'
-            : 'Risk of liquidation - take action immediately'
-          }
-        </Typography>
+
+        {showDetails && (
+          <Box mt={2} p={2} bgcolor="grey.50" borderRadius={2}>
+            <Typography variant="body2" fontWeight={600} mb={2}>
+              {action.charAt(0).toUpperCase() + action.slice(1)} {pool.asset}
+            </Typography>
+            <Box display="flex" gap={1} mb={2}>
+              <TextField
+                size="small"
+                placeholder="0.0"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                fullWidth
+              />
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => {
+                  if (action === 'supply') onSupply(pool.id, amount);
+                  if (action === 'borrow') onBorrow(pool.id, amount);
+                  if (action === 'repay') onRepay(pool.id, amount);
+                  if (action === 'withdraw') onWithdraw(pool.id, amount);
+                }}
+                disabled={!amount}
+                color={action === 'supply' ? 'success' : action === 'borrow' ? 'warning' : 'error'}
+              >
+                {action.charAt(0).toUpperCase() + action.slice(1)}
+              </Button>
+            </Box>
+            <Box display="flex" justifyContent="space-between" alignItems="center">
+              <Typography variant="body2" color="text.secondary">
+                {action === 'supply' ? 'Supply APY' : action === 'borrow' ? 'Borrow APY' : 'Current Balance'}
+              </Typography>
+              <Typography variant="body2" fontWeight={600}>
+                {action === 'supply' ? `${pool.supplyRate}%` : 
+                 action === 'borrow' ? `${pool.borrowRate}%` : 
+                 action === 'withdraw' ? `${pool.yourSupply} ${pool.asset}` :
+                 `${pool.yourBorrow} ${pool.asset}`}
+              </Typography>
+            </Box>
+          </Box>
+        )}
       </CardContent>
     </Card>
   );
 }
 
-function MarketTable() {
+function PortfolioOverview() {
   return (
-    <TableContainer component={Paper} sx={{ backgroundColor: 'background.paper' }}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Asset</TableCell>
-            <TableCell align="right">Supply APY</TableCell>
-            <TableCell align="right">Borrow APR</TableCell>
-            <TableCell align="right">Utilization</TableCell>
-            <TableCell align="right">Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {mockMarkets.map((market) => (
-            <TableRow key={market.asset}>
-              <TableCell>
-                <Box display="flex" alignItems="center" gap={1}>
-                  <Typography variant="body1">{market.token.symbol}</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {market.token.name}
-                  </Typography>
-                </Box>
-              </TableCell>
-              <TableCell align="right">
-                <Typography variant="body1" color="success.main">
-                  {market.supplyAPY.toFixed(2)}%
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Typography variant="body1" color="error.main">
-                  {market.borrowAPR.toFixed(2)}%
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Typography variant="body1">
-                  {market.utilization.toFixed(1)}%
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Box display="flex" gap={1}>
-                  <Button size="small" variant="outlined">
-                    Supply
-                  </Button>
-                  <Button size="small" variant="outlined">
-                    Borrow
-                  </Button>
-                </Box>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Card className="animate-fade-in-up">
+      <CardContent>
+        <Typography variant="h6" fontWeight={600} mb={3}>
+          Portfolio Overview
+        </Typography>
+        
+        <Box display="grid" gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }} gap={3} mb={3}>
+          <Box textAlign="center" p={2} bgcolor="success.light" borderRadius={2}>
+            <Savings sx={{ fontSize: 40, color: 'success.main', mb: 1 }} />
+            <Typography variant="h4" fontWeight={700} color="success.main">
+              ${portfolioData.totalSupplied.toLocaleString()}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Total Supplied
+            </Typography>
+          </Box>
+          
+          <Box textAlign="center" p={2} bgcolor="warning.light" borderRadius={2}>
+            <CreditCard sx={{ fontSize: 40, color: 'warning.main', mb: 1 }} />
+            <Typography variant="h4" fontWeight={700} color="warning.main">
+              ${portfolioData.totalBorrowed.toLocaleString()}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Total Borrowed
+            </Typography>
+          </Box>
+        </Box>
+
+        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} mb={3}>
+          <Box p={2} bgcolor="info.light" borderRadius={2}>
+            <Typography variant="h6" fontWeight={700} color="info.main">
+              {portfolioData.netAPY}%
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Net APY
+            </Typography>
+          </Box>
+          <Box p={2} bgcolor="success.light" borderRadius={2}>
+            <Typography variant="h6" fontWeight={700} color="success.main">
+              {portfolioData.healthFactor}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Health Factor
+            </Typography>
+          </Box>
+        </Box>
+
+        <Box p={2} bgcolor="grey.50" borderRadius={2} mb={3}>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+            <Typography variant="body2" color="text.secondary">
+              Available to Borrow
+            </Typography>
+            <Typography variant="body2" fontWeight={600}>
+              ${portfolioData.availableToBorrow.toLocaleString()}
+            </Typography>
+          </Box>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="body2" color="text.secondary">
+              Total Collateral
+            </Typography>
+            <Typography variant="body2" fontWeight={600}>
+              ${portfolioData.totalCollateral.toLocaleString()}
+            </Typography>
+          </Box>
+        </Box>
+
+        <Alert severity="info" sx={{ mb: 2 }}>
+          <Typography variant="body2">
+            <strong>Health Factor:</strong> Keep your health factor above 1.0 to avoid liquidation.
+          </Typography>
+        </Alert>
+      </CardContent>
+    </Card>
   );
 }
 
-function SupplyBorrowForm({ action }: { action: 'supply' | 'borrow' }) {
-  const handleSubmit = () => {
-    // TODO: Implement supply/borrow logic
-    console.log(`${action} action triggered`);
-  };
-
+function BorrowingHistory() {
   return (
-    <Card>
+    <Card className="animate-fade-in-up stagger-1">
       <CardContent>
-        <Typography variant="h6" gutterBottom>
-          {action === 'supply' ? 'Supply Assets' : 'Borrow Assets'}
+        <Typography variant="h6" fontWeight={600} mb={3}>
+          Transaction History
         </Typography>
-        
-        <Box mb={3}>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
-            Asset
-          </Typography>
-          <Button variant="outlined" fullWidth>
-            Select Token
-          </Button>
-        </Box>
+        <List>
+          {borrowingHistory.map((item) => (
+            <ListItem key={item.id} sx={{ px: 0, py: 1 }}>
+              <ListItemAvatar>
+                <Avatar
+                  sx={{
+                    bgcolor: item.action === 'supply' ? 'success.main' : 
+                             item.action === 'borrow' ? 'warning.main' : 'info.main',
+                  }}
+                >
+                  {item.action === 'supply' ? <Savings /> : 
+                   item.action === 'borrow' ? <CreditCard /> : <Calculate />}
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <Box display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography variant="body1" fontWeight={600}>
+                      {item.action.charAt(0).toUpperCase() + item.action.slice(1)} {item.asset}
+                    </Typography>
+                    <Typography variant="body1" fontWeight={600}>
+                      {item.amount} {item.asset}
+                    </Typography>
+                  </Box>
+                }
+                secondary={
+                  <Box display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography variant="body2" color="text.secondary">
+                      {item.timestamp.toLocaleDateString()}
+                    </Typography>
+                    <Chip
+                      label={item.status}
+                      size="small"
+                      color={item.status === 'completed' ? 'success' : 'warning'}
+                    />
+                  </Box>
+                }
+              />
+            </ListItem>
+          ))}
+        </List>
+      </CardContent>
+    </Card>
+  );
+}
 
-        <Box mb={3}>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
-            Amount
-          </Typography>
-          <Typography variant="h6">
-            0.0
-          </Typography>
-        </Box>
-
-        <Button 
-          variant="contained" 
-          fullWidth 
-          onClick={handleSubmit}
+function InterestRateChart() {
+  return (
+    <Card className="animate-fade-in-up stagger-2">
+      <CardContent>
+        <Typography variant="h6" fontWeight={600} mb={2}>
+          Interest Rate Analytics
+        </Typography>
+        <Box
+          sx={{
+            height: 200,
+            background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
+            borderRadius: 2,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: '1px solid rgba(102, 126, 234, 0.2)',
+          }}
         >
-          {action === 'supply' ? 'Supply' : 'Borrow'}
-        </Button>
+          <Box textAlign="center">
+            <ShowChart sx={{ fontSize: 48, color: 'primary.main', mb: 1 }} />
+            <Typography variant="body2" color="text.secondary">
+              Interest Rate Charts Coming Soon
+            </Typography>
+          </Box>
+        </Box>
       </CardContent>
     </Card>
   );
 }
 
 export default function LendPage() {
-  const { address } = useAccount();
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [filterAsset, setFilterAsset] = useState('all');
 
-  if (!address) {
-    return (
-      <Box>
-        <Typography variant="h4" gutterBottom>
-          Lending & Borrowing
-        </Typography>
-        <Alert severity="info">
-          Please connect your wallet to access lending markets
-        </Alert>
-      </Box>
-    );
-  }
+  const handleSupply = (poolId: number, amount: string) => {
+    console.log('Supplying', amount, 'to pool', poolId);
+  };
+
+  const handleBorrow = (poolId: number, amount: string) => {
+    console.log('Borrowing', amount, 'from pool', poolId);
+  };
+
+  const handleRepay = (poolId: number, amount: string) => {
+    console.log('Repaying', amount, 'to pool', poolId);
+  };
+
+  const handleWithdraw = (poolId: number, amount: string) => {
+    console.log('Withdrawing', amount, 'from pool', poolId);
+  };
+
+  const filteredPools = lendingPools.filter(pool => 
+    filterAsset === 'all' || pool.asset === filterAsset
+  );
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
-        Lending & Borrowing
-      </Typography>
-
-      <Box display="flex" gap={3}>
-        {/* Health Factor */}
-        <Box flex={1}>
-          <HealthFactorCard />
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
+        <Box>
+          <Typography variant="h3" fontWeight={700} mb={1}>
+            Lend & Borrow
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            Supply assets to earn interest or borrow against your collateral
+          </Typography>
         </Box>
-
-        {/* Quick Stats */}
-        <Box flex={1}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Your Positions
-              </Typography>
-              <Box display="flex" gap={2}>
-                <Box flex={1}>
-                  <Typography variant="body2" color="text.secondary">
-                    Total Supplied
-                  </Typography>
-                  <Typography variant="h6">
-                    $12,450.00
-                  </Typography>
-                </Box>
-                <Box flex={1}>
-                  <Typography variant="body2" color="text.secondary">
-                    Total Borrowed
-                  </Typography>
-                  <Typography variant="h6" color="error.main">
-                    $3,200.00
-                  </Typography>
-                </Box>
-                <Box flex={1}>
-                  <Typography variant="body2" color="text.secondary">
-                    Net APY
-                  </Typography>
-                  <Typography variant="h6" color="success.main">
-                    +2.8%
-                  </Typography>
-                </Box>
-                <Box flex={1}>
-                  <Typography variant="body2" color="text.secondary">
-                    Available to Borrow
-                  </Typography>
-                  <Typography variant="h6">
-                    $8,250.00
-                  </Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
+        <Box display="flex" gap={2}>
+          <Button variant="outlined" startIcon={<Refresh />}>
+            Refresh
+          </Button>
+          <Button variant="outlined" startIcon={<Settings />}>
+            Settings
+          </Button>
         </Box>
       </Box>
 
-      {/* Main Content */}
-      <Box mt={3}>
-        <Card>
-          {/* Tabs removed as per new_code */}
-          {/* TabPanel value={tabValue} index={0} */}
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            {/* Tabs removed as per new_code */}
-            {/* Tab label="Markets" */}
-            {/* Tab label="Supply" */}
-            {/* Tab label="Borrow" */}
+      <WalletConnectionTest />
+
+      <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '2fr 1fr' }} gap={4}>
+        {/* Main Content */}
+        <Box>
+          {/* Filters */}
+          <Card className="animate-fade-in-up" sx={{ mb: 3 }}>
+            <CardContent>
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                <Typography variant="h6" fontWeight={600}>
+                  Lending Pools
+                </Typography>
+                <Box display="flex" gap={1}>
+                  <Button
+                    size="small"
+                    variant={filterAsset === 'all' ? 'contained' : 'outlined'}
+                    onClick={() => setFilterAsset('all')}
+                  >
+                    All Assets
+                  </Button>
+                  <Button
+                    size="small"
+                    variant={filterAsset === 'ETH' ? 'contained' : 'outlined'}
+                    onClick={() => setFilterAsset('ETH')}
+                  >
+                    ETH
+                  </Button>
+                  <Button
+                    size="small"
+                    variant={filterAsset === 'USDC' ? 'contained' : 'outlined'}
+                    onClick={() => setFilterAsset('USDC')}
+                  >
+                    USDC
+                  </Button>
+                  <Button
+                    size="small"
+                    variant={filterAsset === 'AAVE' ? 'contained' : 'outlined'}
+                    onClick={() => setFilterAsset('AAVE')}
+                  >
+                    AAVE
+                  </Button>
+                </Box>
+              </Box>
+              
+              <Alert severity="info" sx={{ mb: 2 }}>
+                <Typography variant="body2">
+                  <strong>Tip:</strong> Monitor your health factor and maintain sufficient collateral 
+                  to avoid liquidation. Higher utilization rates may lead to higher interest rates.
+                </Typography>
+              </Alert>
+            </CardContent>
+          </Card>
+
+          {/* Lending Pools */}
+          {filteredPools.map((pool) => (
+            <LendingPoolCard
+              key={pool.id}
+              pool={pool}
+              onSupply={handleSupply}
+              onBorrow={handleBorrow}
+              onRepay={handleRepay}
+              onWithdraw={handleWithdraw}
+            />
+          ))}
+        </Box>
+
+        {/* Sidebar */}
+        <Box>
+          <PortfolioOverview />
+          
+          <Box mt={3}>
+            <BorrowingHistory />
           </Box>
 
-          {/* TabPanel value={tabValue} index={0} */}
-          <Box sx={{ p: 3 }}>
-            <MarketTable />
+          <Box mt={3}>
+            <InterestRateChart />
           </Box>
-
-          {/* TabPanel value={tabValue} index={1} */}
-          <Box sx={{ p: 3 }}>
-            <Box display="flex" gap={3}>
-              <Box flex={1}>
-                <SupplyBorrowForm action="supply" />
-              </Box>
-              <Box flex={1}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>
-                      Supply Benefits
-                    </Typography>
-                    <Box component="ul" sx={{ pl: 2 }}>
-                      <Typography component="li" variant="body2">
-                        Earn interest on your assets
-                      </Typography>
-                      <Typography component="li" variant="body2">
-                        Use as collateral for borrowing
-                      </Typography>
-                      <Typography component="li" variant="body2">
-                        Withdraw anytime (subject to utilization)
-                      </Typography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Box>
-            </Box>
-          </Box>
-
-          {/* TabPanel value={tabValue} index={2} */}
-          <Box sx={{ p: 3 }}>
-            <Box display="flex" gap={3}>
-              <Box flex={1}>
-                <SupplyBorrowForm action="borrow" />
-              </Box>
-              <Box flex={1}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>
-                      Borrowing Requirements
-                    </Typography>
-                    <Box component="ul" sx={{ pl: 2 }}>
-                      <Typography component="li" variant="body2">
-                        Maintain health factor &gt; 1.0
-                      </Typography>
-                      <Typography component="li" variant="body2">
-                        Provide sufficient collateral
-                      </Typography>
-                      <Typography component="li" variant="body2">
-                        Pay interest on borrowed amount
-                      </Typography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Box>
-            </Box>
-          </Box>
-        </Card>
+        </Box>
       </Box>
     </Box>
   );
