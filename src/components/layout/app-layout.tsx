@@ -82,9 +82,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         position="static"
         elevation={0}
         sx={{
-          background: 'rgba(255, 255, 255, 0.8)',
+          background: 'rgba(0, 0, 0, 0.95)',
           backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
@@ -97,7 +97,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 component="div"
                 sx={{
                   fontWeight: 700,
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  background: 'linear-gradient(135deg, #FFFFFF 0%, #CCCCCC 100%)',
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
@@ -134,7 +134,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                           left: '50%',
                           width: 0,
                           height: 2,
-                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                          background: 'linear-gradient(135deg, #FFFFFF 0%, #CCCCCC 100%)',
                           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                           transform: 'translateX(-50%)',
                         },
@@ -142,7 +142,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                           width: '100%',
                         },
                         '&:hover': {
-                          background: 'rgba(102, 126, 234, 0.08)',
+                          background: 'rgba(255, 255, 255, 0.05)',
                           transform: 'translateY(-1px)',
                         },
                       }}
@@ -171,9 +171,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     label={isConnected ? `${address?.slice(0, 6)}...${address?.slice(-4)}` : 'Connect Wallet'}
                     onClick={handleWalletConnect}
                     sx={{
-                      background: isConnected ? 'rgba(76, 175, 80, 0.1)' : 'rgba(102, 126, 234, 0.1)',
+                      background: isConnected ? 'rgba(76, 175, 80, 0.1)' : 'rgba(255, 255, 255, 0.1)',
                       color: isConnected ? 'success.main' : 'primary.main',
-                      border: `1px solid ${isConnected ? 'rgba(76, 175, 80, 0.3)' : 'rgba(102, 126, 234, 0.3)'}`,
+                      border: `1px solid ${isConnected ? 'rgba(76, 175, 80, 0.3)' : 'rgba(255, 255, 255, 0.2)'}`,
                       fontWeight: 600,
                       cursor: 'pointer',
                       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -215,11 +215,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         onClose={handleMobileMenuClose}
         sx={{
           '& .MuiPaper-root': {
-            background: 'rgba(255, 255, 255, 0.95)',
+            background: '#111111',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(0, 0, 0, 0.1)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
             borderRadius: 3,
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
             minWidth: 200,
           },
         }}
@@ -232,7 +232,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 fontWeight: 500,
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 '&:hover': {
-                  background: 'rgba(102, 126, 234, 0.08)',
+                  background: 'rgba(255, 255, 255, 0.05)',
                 },
               }}
             >
@@ -247,7 +247,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         component="main"
         sx={{
           flexGrow: 1,
-          background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
+          background: 'linear-gradient(135deg, #000000 0%, #111111 50%, #000000 100%)',
           minHeight: 'calc(100vh - 64px)',
         }}
       >
