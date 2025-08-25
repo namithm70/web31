@@ -13,6 +13,7 @@ export default function ThemeToggle() {
         onClick={toggleTheme}
         sx={{
           color: 'text.primary',
+
           background: themeMode === 'dark' 
             ? 'rgba(255, 255, 255, 0.05)' 
             : 'rgba(0, 0, 0, 0.05)',

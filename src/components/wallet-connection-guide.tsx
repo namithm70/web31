@@ -21,25 +21,31 @@ import {
   Link,
 } from '@mui/icons-material';
 import { useAccount } from 'wagmi';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export function WalletConnectionGuide() {
   const { isConnected } = useAccount();
+  const { themeMode } = useTheme();
 
   if (isConnected) {
     return (
       <Card sx={{ 
-        background: 'rgba(139, 92, 246, 0.1)',
-        border: '1px solid rgba(139, 92, 246, 0.3)',
+        background: themeMode === 'dark' 
+          ? 'rgba(255, 255, 255, 0.1)' 
+          : 'rgba(139, 92, 246, 0.1)',
+        border: themeMode === 'dark'
+          ? '1px solid rgba(255, 255, 255, 0.2)'
+          : '1px solid rgba(139, 92, 246, 0.3)',
         borderRadius: 2,
       }}>
         <CardContent>
           <Box display="flex" alignItems="center" gap={1} mb={2}>
             <CheckCircle color="success" />
-            <Typography variant="h6" sx={{ color: '#FFFFFF' }}>
+            <Typography variant="h6" sx={{ color: 'text.primary' }}>
               Wallet Connected!
             </Typography>
           </Box>
-          <Typography variant="body2" sx={{ color: '#E2E8F0' }}>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             Your wallet is successfully connected. You can now use all features of the DeFi Superapp.
           </Typography>
         </CardContent>
@@ -49,42 +55,51 @@ export function WalletConnectionGuide() {
 
   return (
     <Card sx={{ 
-      background: 'rgba(139, 92, 246, 0.1)',
-      border: '1px solid rgba(139, 92, 246, 0.3)',
+      background: themeMode === 'dark' 
+        ? 'rgba(255, 255, 255, 0.1)' 
+        : 'rgba(139, 92, 246, 0.1)',
+      border: themeMode === 'dark'
+        ? '1px solid rgba(255, 255, 255, 0.2)'
+        : '1px solid rgba(139, 92, 246, 0.3)',
       borderRadius: 2,
     }}>
       <CardContent>
         <Box display="flex" alignItems="center" gap={1} mb={2}>
-          <AccountBalanceWallet sx={{ color: '#8B5CF6' }} />
-          <Typography variant="h6" sx={{ color: '#FFFFFF' }}>
+          <AccountBalanceWallet sx={{ color: 'primary.main' }} />
+          <Typography variant="h6" sx={{ color: 'text.primary' }}>
             Connect Your Wallet
           </Typography>
         </Box>
 
-        <Alert severity="info" sx={{ mb: 3, background: 'rgba(139, 92, 246, 0.1)' }}>
-          <Typography variant="body2" sx={{ color: '#E2E8F0' }}>
+        <Alert severity="info" sx={{ 
+          mb: 3, 
+          background: themeMode === 'dark' 
+            ? 'rgba(255, 255, 255, 0.1)' 
+            : 'rgba(139, 92, 246, 0.1)' 
+        }}>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             To use the DeFi Superapp, you need to connect a cryptocurrency wallet. 
             The app supports BSC (Binance Smart Chain), Ethereum, Polygon, and Arbitrum networks.
           </Typography>
         </Alert>
 
-        <Typography variant="subtitle1" sx={{ color: '#FFFFFF', mb: 2, fontWeight: 600 }}>
+        <Typography variant="subtitle1" sx={{ color: 'text.primary', mb: 2, fontWeight: 600 }}>
           Step 1: Install a Wallet
         </Typography>
 
         <List sx={{ mb: 3 }}>
           <ListItem sx={{ px: 0 }}>
             <ListItemIcon>
-              <Download sx={{ color: '#8B5CF6' }} />
+              <Download sx={{ color: 'primary.main' }} />
             </ListItemIcon>
             <ListItemText
               primary={
-                <Typography variant="body1" sx={{ color: '#FFFFFF', fontWeight: 600 }}>
+                <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}>
                   MetaMask (Recommended)
                 </Typography>
               }
               secondary={
-                <Typography variant="body2" sx={{ color: '#E2E8F0' }}>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                   Most popular browser wallet extension
                 </Typography>
               }
@@ -97,12 +112,18 @@ export function WalletConnectionGuide() {
               rel="noopener noreferrer"
               startIcon={<Link />}
               sx={{
-                borderColor: 'rgba(139, 92, 246, 0.5)',
-                color: '#8B5CF6',
+                color: 'primary.main',
+                borderColor: themeMode === 'dark'
+                  ? 'rgba(255, 255, 255, 0.3)'
+                  : 'rgba(139, 92, 246, 0.5)',
                 '&:hover': {
-                  borderColor: '#8B5CF6',
-                  background: 'rgba(139, 92, 246, 0.1)',
-                }
+                  borderColor: themeMode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.5)'
+                    : 'rgba(139, 92, 246, 0.7)',
+                  background: themeMode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.05)'
+                    : 'rgba(139, 92, 246, 0.05)',
+                },
               }}
             >
               Download
@@ -111,56 +132,62 @@ export function WalletConnectionGuide() {
 
           <ListItem sx={{ px: 0 }}>
             <ListItemIcon>
-              <Download sx={{ color: '#8B5CF6' }} />
+              <Download sx={{ color: 'primary.main' }} />
             </ListItemIcon>
             <ListItemText
               primary={
-                <Typography variant="body1" sx={{ color: '#FFFFFF', fontWeight: 600 }}>
-                  Coinbase Wallet
+                <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}>
+                  WalletConnect
                 </Typography>
               }
               secondary={
-                <Typography variant="body2" sx={{ color: '#E2E8F0' }}>
-                  User-friendly wallet from Coinbase
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  Connect with mobile wallets
                 </Typography>
               }
             />
             <Button
               variant="outlined"
               size="small"
-              href="https://www.coinbase.com/wallet"
+              href="https://walletconnect.com/"
               target="_blank"
               rel="noopener noreferrer"
               startIcon={<Link />}
               sx={{
-                borderColor: 'rgba(139, 92, 246, 0.5)',
-                color: '#8B5CF6',
+                color: 'primary.main',
+                borderColor: themeMode === 'dark'
+                  ? 'rgba(255, 255, 255, 0.3)'
+                  : 'rgba(139, 92, 246, 0.5)',
                 '&:hover': {
-                  borderColor: '#8B5CF6',
-                  background: 'rgba(139, 92, 246, 0.1)',
-                }
+                  borderColor: themeMode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.5)'
+                    : 'rgba(139, 92, 246, 0.7)',
+                  background: themeMode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.05)'
+                    : 'rgba(139, 92, 246, 0.05)',
+                },
               }}
             >
-              Download
+              Learn More
             </Button>
           </ListItem>
         </List>
 
-        <Divider sx={{ borderColor: 'rgba(139, 92, 246, 0.3)', my: 2 }} />
+        <Divider sx={{ my: 2 }} />
 
-        <Typography variant="subtitle1" sx={{ color: '#FFFFFF', mb: 2, fontWeight: 600 }}>
-          Step 2: Connect to DeFi Superapp
+        <Typography variant="subtitle1" sx={{ color: 'text.primary', mb: 2, fontWeight: 600 }}>
+          Step 2: Connect Your Wallet
         </Typography>
 
         <List>
           <ListItem sx={{ px: 0 }}>
             <ListItemIcon>
-              <Info sx={{ color: '#8B5CF6' }} />
+              <Info sx={{ color: 'primary.main' }} />
             </ListItemIcon>
             <ListItemText
               primary={
-                <Typography variant="body1" sx={{ color: '#FFFFFF' }}>
-                  Click &quot;Connect Wallet&quot; in the top-right corner
+                <Typography variant="body1" sx={{ color: 'text.primary' }}>
+                  Click the "Connect Wallet" button in the top navigation
                 </Typography>
               }
             />
@@ -168,12 +195,12 @@ export function WalletConnectionGuide() {
 
           <ListItem sx={{ px: 0 }}>
             <ListItemIcon>
-              <Info sx={{ color: '#8B5CF6' }} />
+              <Info sx={{ color: 'primary.main' }} />
             </ListItemIcon>
             <ListItemText
               primary={
-                <Typography variant="body1" sx={{ color: '#FFFFFF' }}>
-                  Select your wallet from the dropdown
+                <Typography variant="body1" sx={{ color: 'text.primary' }}>
+                  Choose your preferred wallet from the list
                 </Typography>
               }
             />
@@ -181,11 +208,11 @@ export function WalletConnectionGuide() {
 
           <ListItem sx={{ px: 0 }}>
             <ListItemIcon>
-              <Info sx={{ color: '#8B5CF6' }} />
+              <Info sx={{ color: 'primary.main' }} />
             </ListItemIcon>
             <ListItemText
               primary={
-                <Typography variant="body1" sx={{ color: '#FFFFFF' }}>
+                <Typography variant="body1" sx={{ color: 'text.primary' }}>
                   Approve the connection in your wallet
                 </Typography>
               }
@@ -193,12 +220,9 @@ export function WalletConnectionGuide() {
           </ListItem>
         </List>
 
-        <Alert severity="warning" sx={{ mt: 3, background: 'rgba(255, 193, 7, 0.1)' }}>
-          <Typography variant="body2" sx={{ color: '#E2E8F0' }}>
-            <strong>Security Tip:</strong> Never share your private keys or seed phrase with anyone. 
-            Only connect to trusted applications.
-          </Typography>
-        </Alert>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 3, fontStyle: 'italic' }}>
+          Need help? Check out our detailed wallet connection guide or contact support.
+        </Typography>
       </CardContent>
     </Card>
   );
