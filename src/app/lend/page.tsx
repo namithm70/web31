@@ -8,190 +8,159 @@ import {
   Typography,
   Button,
   TextField,
-  Chip,
+  IconButton,
   Avatar,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
+  Divider,
   Alert,
+  Chip,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Slider,
 } from '@mui/material';
 import {
-  Refresh,
-  Settings,
+  AccountBalance,
+  TrendingUp,
+  TrendingDown,
+  ArrowDownward,
+  ArrowUpward,
+  Info,
   Warning,
   CheckCircle,
-  ShowChart,
+  Timeline,
   WaterDrop,
-  CreditCard,
-  Savings,
-  Calculate,
+  Speed,
+  Lock,
+  LockOpen,
+  Star,
+  LocalFireDepartment,
+  EmojiEvents,
+  MonetizationOn,
+  Security,
+  Refresh,
+  Settings,
+  History,
+  Visibility,
+  VisibilityOff,
 } from '@mui/icons-material';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
-// Mock lending pools data
+// Mock data
 const lendingPools = [
   {
     id: 1,
-    asset: 'ETH',
-    name: 'Ethereum',
-    supplyRate: 3.2,
-    borrowRate: 4.8,
-    totalSupply: 12500000,
-    totalBorrow: 8500000,
-    utilization: 68,
-    collateralFactor: 0.8,
-    yourSupply: 2.5,
-    yourBorrow: 0,
-    price: 3200,
-    change24h: 2.5,
+    asset: 'USDC',
+    supplyRate: 4.2,
+    borrowRate: 6.8,
+    utilization: 78.5,
+    totalSupply: 15000000,
+    totalBorrow: 11775000,
+    collateralFactor: 0.85,
     icon: '🔵',
   },
   {
     id: 2,
-    asset: 'USDC',
-    name: 'USD Coin',
+    asset: 'ETH',
     supplyRate: 2.1,
-    borrowRate: 3.5,
+    borrowRate: 4.5,
+    utilization: 65.2,
     totalSupply: 8500000,
-    totalBorrow: 4200000,
-    utilization: 49,
-    collateralFactor: 0.9,
-    yourSupply: 0,
-    yourBorrow: 5000,
-    price: 1.00,
-    change24h: 0.1,
-    icon: '🔵',
+    totalBorrow: 5542000,
+    collateralFactor: 0.75,
+    icon: '🟠',
   },
   {
     id: 3,
-    asset: 'AAVE',
-    name: 'Aave',
-    supplyRate: 4.8,
-    borrowRate: 6.2,
-    totalSupply: 3200000,
-    totalBorrow: 1800000,
-    utilization: 56,
-    collateralFactor: 0.7,
-    yourSupply: 0,
-    yourBorrow: 0,
-    price: 95.20,
-    change24h: 3.8,
-    icon: '🔵',
+    asset: 'DAI',
+    supplyRate: 3.8,
+    borrowRate: 5.9,
+    utilization: 82.1,
+    totalSupply: 12000000,
+    totalBorrow: 9852000,
+    collateralFactor: 0.80,
+    icon: '🟡',
   },
   {
     id: 4,
-    asset: 'UNI',
-    name: 'Uniswap',
-    supplyRate: 3.9,
-    borrowRate: 5.1,
-    totalSupply: 2100000,
-    totalBorrow: 950000,
-    utilization: 45,
-    collateralFactor: 0.75,
-    yourSupply: 0,
-    yourBorrow: 0,
-    price: 8.50,
-    change24h: -1.2,
-    icon: '🟣',
+    asset: 'WBTC',
+    supplyRate: 1.5,
+    borrowRate: 3.2,
+    utilization: 45.8,
+    totalSupply: 3200000,
+    totalBorrow: 1465600,
+    collateralFactor: 0.70,
+    icon: '🟠',
   },
 ];
 
-// Mock borrowing history
 const borrowingHistory = [
-  { id: 1, asset: 'USDC', action: 'borrow', amount: 5000, timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24), status: 'completed' },
-  { id: 2, asset: 'ETH', action: 'supply', amount: 2.5, timestamp: new Date(Date.now() - 1000 * 60 * 60 * 48), status: 'completed' },
-  { id: 3, asset: 'USDC', action: 'repay', amount: 1000, timestamp: new Date(Date.now() - 1000 * 60 * 60 * 72), status: 'completed' },
+  { id: 1, asset: 'USDC', amount: 5000, action: 'borrow', timestamp: '2024-01-15T10:30:00Z', status: 'completed' },
+  { id: 2, asset: 'ETH', amount: 2.5, action: 'repay', timestamp: '2024-01-15T09:15:00Z', status: 'completed' },
+  { id: 3, asset: 'DAI', amount: 3000, action: 'borrow', timestamp: '2024-01-15T08:45:00Z', status: 'pending' },
 ];
 
-// Mock portfolio data
 const portfolioData = {
-  totalSupplied: 8000,
-  totalBorrowed: 5000,
-  netAPY: 2.8,
+  totalSupplied: 25000,
+  totalBorrowed: 12000,
   healthFactor: 1.85,
-  availableToBorrow: 3200,
-  totalCollateral: 12500,
+  availableToBorrow: 8500,
+  netAPY: 2.8,
+  utilizationRate: 48.0,
 };
 
 interface LendingPool {
   id: number;
   asset: string;
-  name: string;
   supplyRate: number;
   borrowRate: number;
+  utilization: number;
   totalSupply: number;
   totalBorrow: number;
-  utilization: number;
   collateralFactor: number;
-  yourSupply: number;
-  yourBorrow: number;
-  price: number;
-  change24h: number;
   icon: string;
 }
 
-function LendingPoolCard({ pool, onSupply, onBorrow, onRepay, onWithdraw }: {
-  pool: LendingPool;
-  onSupply: (poolId: number, amount: string) => void;
-  onBorrow: (poolId: number, amount: string) => void;
-  onRepay: (poolId: number, amount: string) => void;
-  onWithdraw: (poolId: number, amount: string) => void;
-}) {
-  const [showDetails, setShowDetails] = useState(false);
-  const [action, setAction] = useState<'supply' | 'borrow' | 'repay' | 'withdraw'>('supply');
+function LendingPoolCard({ pool }: { pool: LendingPool }) {
   const [amount, setAmount] = useState('');
+  const [action, setAction] = useState<'supply' | 'borrow' | 'repay' | 'withdraw'>('supply');
 
   const getUtilizationColor = (utilization: number) => {
-    if (utilization < 50) return 'success';
-    if (utilization < 80) return 'warning';
-    return 'error';
+    if (utilization > 80) return 'error';
+    if (utilization > 60) return 'warning';
+    return 'success';
   };
 
   return (
-    <Card className="animate-fade-in-up" sx={{ mb: 2 }}>
+    <Card>
       <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
-          <Box>
-            <Box display="flex" alignItems="center" gap={1} mb={1}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Box display="flex" alignItems="center" gap={2}>
+            <Avatar sx={{ bgcolor: 'primary.main' }}>
+              {pool.icon}
+            </Avatar>
+            <Box>
               <Typography variant="h6" fontWeight={600}>
-                {pool.name} ({pool.asset})
+                {pool.asset}
               </Typography>
-              <Chip
-                label={`${pool.utilization}%`}
-                size="small"
-                color={getUtilizationColor(pool.utilization)}
-                sx={{ fontSize: '0.7rem' }}
-              />
-            </Box>
-            <Box display="flex" alignItems="center" gap={2}>
               <Typography variant="body2" color="text.secondary">
-                Price: ${pool.price.toLocaleString()}
-              </Typography>
-              <Typography 
-                variant="body2" 
-                color={pool.change24h >= 0 ? 'success.main' : 'error.main'}
-              >
-                {pool.change24h >= 0 ? '+' : ''}{pool.change24h}%
+                Collateral Factor: {pool.collateralFactor * 100}%
               </Typography>
             </Box>
           </Box>
-          <Box textAlign="right">
-            <Typography variant="h5" fontWeight={700} color="success.main">
-              {pool.supplyRate}%
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Supply APY
-            </Typography>
-          </Box>
+          <Chip
+            label={`${pool.utilization}%`}
+            color={getUtilizationColor(pool.utilization) as any}
+            size="small"
+          />
         </Box>
 
-        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} mb={2}>
+        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} mb={3}>
           <Box>
             <Typography variant="body2" color="text.secondary">
               Supply Rate
             </Typography>
-            <Typography variant="body1" fontWeight={600} color="success.main">
+            <Typography variant="h6" fontWeight={600} color="success.main">
               {pool.supplyRate}%
             </Typography>
           </Box>
@@ -199,123 +168,76 @@ function LendingPoolCard({ pool, onSupply, onBorrow, onRepay, onWithdraw }: {
             <Typography variant="body2" color="text.secondary">
               Borrow Rate
             </Typography>
-            <Typography variant="body1" fontWeight={600} color="error.main">
+            <Typography variant="h6" fontWeight={600} color="error.main">
               {pool.borrowRate}%
             </Typography>
           </Box>
           <Box>
             <Typography variant="body2" color="text.secondary">
-              Your Supply
+              Total Supply
             </Typography>
-            <Typography variant="body1" fontWeight={600}>
-              {pool.yourSupply} {pool.asset}
+            <Typography variant="body2" fontWeight={600}>
+              ${(pool.totalSupply / 1000000).toFixed(1)}M
             </Typography>
           </Box>
           <Box>
             <Typography variant="body2" color="text.secondary">
-              Your Borrow
+              Total Borrow
             </Typography>
-            <Typography variant="body1" fontWeight={600}>
-              {pool.yourBorrow} {pool.asset}
+            <Typography variant="body2" fontWeight={600}>
+              ${(pool.totalBorrow / 1000000).toFixed(1)}M
             </Typography>
           </Box>
         </Box>
 
-        <Box display="flex" gap={1}>
+        <Box display="flex" gap={1} mb={2}>
           <Button
-            variant="contained"
+            variant={action === 'supply' ? 'contained' : 'outlined'}
             size="small"
-            onClick={() => {
-              setAction('supply');
-              setShowDetails(!showDetails);
-            }}
+            onClick={() => setAction('supply')}
             fullWidth
-            color="success"
           >
             Supply
           </Button>
           <Button
-            variant="contained"
+            variant={action === 'borrow' ? 'contained' : 'outlined'}
             size="small"
-            onClick={() => {
-              setAction('borrow');
-              setShowDetails(!showDetails);
-            }}
+            onClick={() => setAction('borrow')}
             fullWidth
-            color="warning"
           >
             Borrow
           </Button>
-          {pool.yourSupply > 0 && (
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={() => {
-                setAction('withdraw');
-                setShowDetails(!showDetails);
-              }}
-              fullWidth
-            >
-              Withdraw
-            </Button>
-          )}
-          {pool.yourBorrow > 0 && (
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={() => {
-                setAction('repay');
-                setShowDetails(!showDetails);
-              }}
-              fullWidth
-              color="error"
-            >
-              Repay
-            </Button>
-          )}
+          <Button
+            variant={action === 'repay' ? 'contained' : 'outlined'}
+            size="small"
+            onClick={() => setAction('repay')}
+            fullWidth
+          >
+            Repay
+          </Button>
+          <Button
+            variant={action === 'withdraw' ? 'contained' : 'outlined'}
+            size="small"
+            onClick={() => setAction('withdraw')}
+            fullWidth
+          >
+            Withdraw
+          </Button>
         </Box>
 
-        {showDetails && (
-          <Box mt={2} p={2} bgcolor="grey.50" borderRadius={2}>
-            <Typography variant="body2" fontWeight={600} mb={2}>
-              {action.charAt(0).toUpperCase() + action.slice(1)} {pool.asset}
-            </Typography>
-            <Box display="flex" gap={1} mb={2}>
-              <TextField
-                size="small"
-                placeholder="0.0"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                fullWidth
-              />
-              <Button
-                variant="contained"
-                size="small"
-                onClick={() => {
-                  if (action === 'supply') onSupply(pool.id, amount);
-                  if (action === 'borrow') onBorrow(pool.id, amount);
-                  if (action === 'repay') onRepay(pool.id, amount);
-                  if (action === 'withdraw') onWithdraw(pool.id, amount);
-                }}
-                disabled={!amount}
-                color={action === 'supply' ? 'success' : action === 'borrow' ? 'warning' : 'error'}
-              >
-                {action.charAt(0).toUpperCase() + action.slice(1)}
-              </Button>
-            </Box>
-            <Box display="flex" justifyContent="space-between" alignItems="center">
-              <Typography variant="body2" color="text.secondary">
-                {action === 'supply' ? 'Supply APY' : action === 'borrow' ? 'Borrow APY' : 'Current Balance'}
-              </Typography>
-              <Typography variant="body2" fontWeight={600}>
-                {action === 'supply' ? `${pool.supplyRate}%` : 
-                 action === 'borrow' ? `${pool.borrowRate}%` : 
-                 action === 'withdraw' ? `${pool.yourSupply} ${pool.asset}` :
-                 `${pool.yourBorrow} ${pool.asset}`}
-              </Typography>
-            </Box>
-          </Box>
-        )}
+        <TextField
+          label={`Amount to ${action}`}
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          fullWidth
+          size="small"
+          sx={{ mb: 2 }}
+        />
+
+        <Button variant="contained" fullWidth>
+          {action.charAt(0).toUpperCase() + action.slice(1)} {pool.asset}
+        </Button>
       </CardContent>
     </Card>
   );
@@ -323,77 +245,58 @@ function LendingPoolCard({ pool, onSupply, onBorrow, onRepay, onWithdraw }: {
 
 function PortfolioOverview() {
   return (
-    <Card className="animate-fade-in-up">
+    <Card>
       <CardContent>
         <Typography variant="h6" fontWeight={600} mb={3}>
           Portfolio Overview
         </Typography>
-        
-        <Box display="grid" gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }} gap={3} mb={3}>
-          <Box textAlign="center" p={2} bgcolor="success.light" borderRadius={2}>
-            <Savings sx={{ fontSize: 40, color: 'success.main', mb: 1 }} />
-            <Typography variant="h4" fontWeight={700} color="success.main">
-              ${portfolioData.totalSupplied.toLocaleString()}
-            </Typography>
+
+        <Box display="flex" flexDirection="column" gap={3}>
+          <Box p={2} bgcolor="success.light" borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Total Supplied
             </Typography>
-          </Box>
-          
-          <Box textAlign="center" p={2} bgcolor="warning.light" borderRadius={2}>
-            <CreditCard sx={{ fontSize: 40, color: 'warning.main', mb: 1 }} />
-            <Typography variant="h4" fontWeight={700} color="warning.main">
-              ${portfolioData.totalBorrowed.toLocaleString()}
+            <Typography variant="h5" fontWeight={600} color="success.main">
+              ${portfolioData.totalSupplied.toLocaleString()}
             </Typography>
+          </Box>
+
+          <Box p={2} bgcolor="error.light" borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Total Borrowed
             </Typography>
+            <Typography variant="h5" fontWeight={600} color="error.main">
+              ${portfolioData.totalBorrowed.toLocaleString()}
+            </Typography>
           </Box>
-        </Box>
 
-        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} mb={3}>
           <Box p={2} bgcolor="info.light" borderRadius={2}>
-            <Typography variant="h6" fontWeight={700} color="info.main">
-              {portfolioData.netAPY}%
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Net APY
-            </Typography>
-          </Box>
-          <Box p={2} bgcolor="success.light" borderRadius={2}>
-            <Typography variant="h6" fontWeight={700} color="success.main">
-              {portfolioData.healthFactor}
-            </Typography>
             <Typography variant="body2" color="text.secondary">
               Health Factor
             </Typography>
+            <Typography variant="h5" fontWeight={600} color="info.main">
+              {portfolioData.healthFactor}
+            </Typography>
           </Box>
-        </Box>
 
-        <Box p={2} bgcolor="grey.50" borderRadius={2} mb={3}>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+          <Box p={2} bgcolor="warning.light" borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Available to Borrow
             </Typography>
-            <Typography variant="body2" fontWeight={600}>
+            <Typography variant="h5" fontWeight={600} color="warning.main">
               ${portfolioData.availableToBorrow.toLocaleString()}
             </Typography>
           </Box>
-          <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography variant="body2" color="text.secondary">
-              Total Collateral
+
+          <Box>
+            <Typography variant="body2" fontWeight={600} mb={1}>
+              Net APY: {portfolioData.netAPY}%
             </Typography>
-            <Typography variant="body2" fontWeight={600}>
-              ${portfolioData.totalCollateral.toLocaleString()}
+            <Typography variant="body2" color="text.secondary">
+              Utilization: {portfolioData.utilizationRate}%
             </Typography>
           </Box>
         </Box>
-
-        <Alert severity="info" sx={{ mb: 2 }}>
-          <Typography variant="body2">
-            <strong>Health Factor:</strong> Keep your health factor above 1.0 to avoid liquidation.
-          </Typography>
-        </Alert>
       </CardContent>
     </Card>
   );
@@ -401,52 +304,34 @@ function PortfolioOverview() {
 
 function BorrowingHistory() {
   return (
-    <Card className="animate-fade-in-up stagger-1">
+    <Card>
       <CardContent>
         <Typography variant="h6" fontWeight={600} mb={3}>
-          Transaction History
+          Borrowing History
         </Typography>
-        <List>
+
+        <Box display="flex" flexDirection="column" gap={2}>
           {borrowingHistory.map((item) => (
-            <ListItem key={item.id} sx={{ px: 0, py: 1 }}>
-              <ListItemAvatar>
-                <Avatar
-                  sx={{
-                    bgcolor: item.action === 'supply' ? 'success.main' : 
-                             item.action === 'borrow' ? 'warning.main' : 'info.main',
-                  }}
-                >
-                  {item.action === 'supply' ? <Savings /> : 
-                   item.action === 'borrow' ? <CreditCard /> : <Calculate />}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="body1" fontWeight={600}>
-                      {item.action.charAt(0).toUpperCase() + item.action.slice(1)} {item.asset}
-                    </Typography>
-                    <Typography variant="body1" fontWeight={600}>
-                      {item.amount} {item.asset}
-                    </Typography>
-                  </Box>
-                }
-                secondary={
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="body2" color="text.secondary">
-                      {item.timestamp.toLocaleDateString()}
-                    </Typography>
-                    <Chip
-                      label={item.status}
-                      size="small"
-                      color={item.status === 'completed' ? 'success' : 'warning'}
-                    />
-                  </Box>
-                }
-              />
-            </ListItem>
+            <Box key={item.id} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                <Typography variant="body1" fontWeight={600}>
+                  {item.asset}
+                </Typography>
+                <Chip
+                  label={item.action}
+                  color={item.action === 'borrow' ? 'error' : 'success'}
+                  size="small"
+                />
+              </Box>
+              <Typography variant="body2" color="text.secondary">
+                Amount: {item.amount} {item.asset}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                {new Date(item.timestamp).toLocaleString()}
+              </Typography>
+            </Box>
           ))}
-        </List>
+        </Box>
       </CardContent>
     </Card>
   );
@@ -454,28 +339,28 @@ function BorrowingHistory() {
 
 function InterestRateChart() {
   return (
-    <Card className="animate-fade-in-up stagger-2">
+    <Card>
       <CardContent>
-        <Typography variant="h6" fontWeight={600} mb={2}>
+        <Typography variant="h6" fontWeight={600} mb={3}>
           Interest Rate Analytics
         </Typography>
-        <Box
-          sx={{
-            height: 200,
-            background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
-            borderRadius: 2,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: '1px solid rgba(102, 126, 234, 0.2)',
-          }}
-        >
+
+        <Box height={200} display="flex" alignItems="center" justifyContent="center" bgcolor="grey.50" borderRadius={2}>
           <Box textAlign="center">
-            <ShowChart sx={{ fontSize: 48, color: 'primary.main', mb: 1 }} />
+            <Timeline sx={{ fontSize: 48, color: 'grey.400', mb: 2 }} />
             <Typography variant="body2" color="text.secondary">
-              Interest Rate Charts Coming Soon
+              Interest rate chart will be displayed here
             </Typography>
           </Box>
+        </Box>
+
+        <Box display="flex" justifyContent="space-between" mt={2}>
+          <Typography variant="body2" color="text.secondary">
+            Avg Supply Rate: 2.9%
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Avg Borrow Rate: 5.1%
+          </Typography>
         </Box>
       </CardContent>
     </Card>
@@ -483,42 +368,26 @@ function InterestRateChart() {
 }
 
 export default function LendPage() {
-  const [filterAsset, setFilterAsset] = useState('all');
+  const [selectedAsset, setSelectedAsset] = useState<string>('all');
 
-  const handleSupply = (poolId: number, amount: string) => {
-    console.log('Supplying', amount, 'to pool', poolId);
-  };
-
-  const handleBorrow = (poolId: number, amount: string) => {
-    console.log('Borrowing', amount, 'from pool', poolId);
-  };
-
-  const handleRepay = (poolId: number, amount: string) => {
-    console.log('Repaying', amount, 'to pool', poolId);
-  };
-
-  const handleWithdraw = (poolId: number, amount: string) => {
-    console.log('Withdrawing', amount, 'from pool', poolId);
-  };
-
-  const filteredPools = lendingPools.filter(pool => 
-    filterAsset === 'all' || pool.asset === filterAsset
-  );
+  const filteredPools = selectedAsset === 'all' 
+    ? lendingPools 
+    : lendingPools.filter(pool => pool.asset === selectedAsset);
 
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
         <Box>
           <Typography variant="h3" fontWeight={700} mb={1}>
-            Lend & Borrow
+            Lend
           </Typography>
           <Typography variant="body1" color="text.secondary">
             Supply assets to earn interest or borrow against your collateral
           </Typography>
         </Box>
         <Box display="flex" gap={2}>
-          <Button variant="outlined" startIcon={<Refresh />}>
-            Refresh
+          <Button variant="outlined" startIcon={<History />}>
+            History
           </Button>
           <Button variant="outlined" startIcon={<Settings />}>
             Settings
@@ -531,65 +400,31 @@ export default function LendPage() {
       <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '2fr 1fr' }} gap={4}>
         {/* Main Content */}
         <Box>
-          {/* Filters */}
-          <Card className="animate-fade-in-up" sx={{ mb: 3 }}>
-            <CardContent>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="h6" fontWeight={600}>
-                  Lending Pools
-                </Typography>
-                <Box display="flex" gap={1}>
-                  <Button
-                    size="small"
-                    variant={filterAsset === 'all' ? 'contained' : 'outlined'}
-                    onClick={() => setFilterAsset('all')}
-                  >
-                    All Assets
-                  </Button>
-                  <Button
-                    size="small"
-                    variant={filterAsset === 'ETH' ? 'contained' : 'outlined'}
-                    onClick={() => setFilterAsset('ETH')}
-                  >
-                    ETH
-                  </Button>
-                  <Button
-                    size="small"
-                    variant={filterAsset === 'USDC' ? 'contained' : 'outlined'}
-                    onClick={() => setFilterAsset('USDC')}
-                  >
-                    USDC
-                  </Button>
-                  <Button
-                    size="small"
-                    variant={filterAsset === 'AAVE' ? 'contained' : 'outlined'}
-                    onClick={() => setFilterAsset('AAVE')}
-                  >
-                    AAVE
-                  </Button>
-                </Box>
-              </Box>
-              
-              <Alert severity="info" sx={{ mb: 2 }}>
-                <Typography variant="body2">
-                  <strong>Tip:</strong> Monitor your health factor and maintain sufficient collateral 
-                  to avoid liquidation. Higher utilization rates may lead to higher interest rates.
-                </Typography>
-              </Alert>
-            </CardContent>
-          </Card>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+            <Typography variant="h5" fontWeight={600}>
+              Lending Pools
+            </Typography>
+            <FormControl size="small" sx={{ minWidth: 120 }}>
+              <InputLabel>Asset</InputLabel>
+              <Select
+                value={selectedAsset}
+                onChange={(e) => setSelectedAsset(e.target.value)}
+                label="Asset"
+              >
+                <MenuItem value="all">All Assets</MenuItem>
+                <MenuItem value="USDC">USDC</MenuItem>
+                <MenuItem value="ETH">ETH</MenuItem>
+                <MenuItem value="DAI">DAI</MenuItem>
+                <MenuItem value="WBTC">WBTC</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
 
-          {/* Lending Pools */}
-          {filteredPools.map((pool) => (
-            <LendingPoolCard
-              key={pool.id}
-              pool={pool}
-              onSupply={handleSupply}
-              onBorrow={handleBorrow}
-              onRepay={handleRepay}
-              onWithdraw={handleWithdraw}
-            />
-          ))}
+          <Box display="grid" gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }} gap={3}>
+            {filteredPools.map((pool) => (
+              <LendingPoolCard key={pool.id} pool={pool} />
+            ))}
+          </Box>
         </Box>
 
         {/* Sidebar */}

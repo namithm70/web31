@@ -11,7 +11,6 @@ import {
   IconButton,
   Avatar,
   Divider,
-  Alert,
   Switch,
   FormControlLabel,
   Select,
@@ -22,30 +21,14 @@ import {
 } from '@mui/material';
 import {
   Settings,
-  AccountCircle,
-  Security,
-  Notifications,
-  Refresh,
   Save,
-  Cancel,
-  Warning,
-  CheckCircle,
-  Info,
-  DarkMode,
-  LightMode,
   VolumeUp,
   VolumeOff,
   Email,
   Phone,
   Web,
-  Shield,
-  Lock,
-  Key,
-  Wallet,
   Backup,
   Restore,
-  Download,
-  Upload,
 } from '@mui/icons-material';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
@@ -458,31 +441,6 @@ function PreferencesSettings() {
         </Typography>
 
         <Box display="flex" flexDirection="column" gap={3}>
-          {/* Theme */}
-          <Box>
-            <Typography variant="body1" fontWeight={600} mb={2}>
-              Theme
-            </Typography>
-            <Box display="flex" gap={2}>
-              <Button
-                variant={preferences.theme === 'light' ? 'contained' : 'outlined'}
-                startIcon={<LightMode />}
-                onClick={() => setPreferences({ ...preferences, theme: 'light' })}
-              >
-                Light
-              </Button>
-              <Button
-                variant={preferences.theme === 'dark' ? 'contained' : 'outlined'}
-                startIcon={<DarkMode />}
-                onClick={() => setPreferences({ ...preferences, theme: 'dark' })}
-              >
-                Dark
-              </Button>
-            </Box>
-          </Box>
-
-          <Divider />
-
           {/* Language */}
           <FormControl fullWidth>
             <InputLabel>Language</InputLabel>

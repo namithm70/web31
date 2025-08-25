@@ -10,46 +10,18 @@ import {
   TextField,
   IconButton,
   Avatar,
-  Divider,
-  Alert,
   Chip,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Slider,
 } from '@mui/material';
 import {
   SwapHoriz,
-  TrendingUp,
-  TrendingDown,
   ArrowDownward,
-  ArrowUpward,
   Info,
   Warning,
   CheckCircle,
-  Timeline,
   ShowChart,
-  Speed,
-  Lock,
-  LockOpen,
-  Star,
-  LocalFireDepartment,
-  EmojiEvents,
-  MonetizationOn,
-  CreditCard,
-  Calculate,
-  Security,
-  PieChart,
-  BarChart,
-  AttachMoney,
-  AccountBalanceWallet,
-  Agriculture,
-  Refresh,
   Settings,
   History,
-  Visibility,
-  VisibilityOff,
 } from '@mui/icons-material';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
@@ -83,23 +55,6 @@ interface Token {
   price: number;
   change24h: number;
   icon: string;
-}
-
-interface LiquidityPool {
-  pair: string;
-  liquidity: number;
-  volume24h: number;
-  fee: number;
-  apy: number;
-}
-
-interface SwapHistoryItem {
-  from: string;
-  to: string;
-  amount: number;
-  value: number;
-  timestamp: string;
-  status: 'completed' | 'pending' | 'failed';
 }
 
 function TokenSelector({ 
@@ -309,7 +264,7 @@ function SwapHistory() {
                 <Chip
                   icon={getStatusIcon(swap.status)}
                   label={swap.status}
-                  color={getStatusColor(swap.status) as any}
+                  color={getStatusColor(swap.status) as 'success' | 'warning' | 'error' | 'default'}
                   size="small"
                 />
               </Box>
