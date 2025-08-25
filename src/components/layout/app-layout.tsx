@@ -91,6 +91,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 onClick={() => router.push('/')}
               >
                 DeFI App
+                
               </Typography>
             </Fade>
 
