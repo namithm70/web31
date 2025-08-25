@@ -615,7 +615,7 @@ export default function LendPage() {
             {lendingPools.length === 0 ? (
               <Typography variant="body2" color="text.secondary">No pools available yet.</Typography>
             ) : (
-              lendingPools.map((pool: any) => (
+              lendingPools.map((pool: LendingPool) => (
                 <AdvancedLendingPoolCard key={pool.id} pool={pool} />
               ))
             )}

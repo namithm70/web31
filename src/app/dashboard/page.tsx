@@ -46,7 +46,7 @@ import {
 } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
 import { useAccount, useBalance } from 'wagmi';
-import { ProtocolData, PortfolioAsset, Transaction } from '@/types';
+import { ProtocolData, PortfolioAsset } from '@/types';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
 
@@ -129,12 +129,12 @@ function StatCard({ title, value, change, icon, color = 'primary', subtitle }: S
       <CardContent sx={{ p: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="flex-start">
           <Box>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
+        <Typography variant="body2" color="text.secondary" gutterBottom>
               {title}
-            </Typography>
+        </Typography>
             <Typography variant="h4" fontWeight={700} sx={{ mb: 1 }}>
               ${value.toLocaleString()}
-            </Typography>
+          </Typography>
             <Box display="flex" alignItems="center" gap={1}>
               {change >= 0 ? (
                 <TrendingUp sx={{ color: 'text.primary', fontSize: 16 }} />
@@ -147,15 +147,15 @@ function StatCard({ title, value, change, icon, color = 'primary', subtitle }: S
                 fontWeight={600}
               >
                 {change >= 0 ? '+' : ''}{change.toFixed(2)}%
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
                 vs last 24h
-              </Typography>
-            </Box>
+          </Typography>
+        </Box>
             {subtitle && (
               <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
                 {subtitle}
-              </Typography>
+          </Typography>
             )}
           </Box>
           <Avatar
@@ -214,11 +214,11 @@ function YieldOptimization() {
           <Box>
             <Typography variant="body2" fontWeight={600} mb={2}>
               Optimization Recommendations
-            </Typography>
+        </Typography>
             <Box display="flex" flexDirection="column" gap={2}>
               {yieldOptimizationData.recommendations.map((rec, index) => (
                 <Box key={index} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Box display="flex" justifyContent="space-between" alignItems="center">
                     <Box>
                       <Typography variant="body2" fontWeight={600}>
                         {rec.action}
@@ -714,9 +714,9 @@ function ProtocolAnalytics({ protocols, isLoading }: { protocols: ProtocolData[]
                     ${(protocol.volume24h / 1000000).toFixed(1)}M
                   </Typography>
                 </Box>
-              </Box>
             </Box>
-          ))}
+          </Box>
+        ))}
         </Box>
       </CardContent>
     </Card>
@@ -813,7 +813,7 @@ export default function DashboardPage() {
           </Typography>
           <Typography variant="body1" color="text.secondary">
             Welcome back! Here&apos;s your DeFi overview
-          </Typography>
+      </Typography>
         </Box>
         <Box display="flex" gap={2}>
           <Button

@@ -285,7 +285,7 @@ function YieldOptimization() {
           Optimization Recommendations
         </Typography>
         <Box display="flex" flexDirection="column" gap={2}>
-          {(yieldOptimizationData?.recommendations ?? []).map((rec: any, index: number) => (
+          {(yieldOptimizationData?.recommendations ?? []).map((rec: { action: string; potentialGain: number; risk: string }, index: number) => (
             <Box key={index} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
               <Box display="flex" justifyContent="space-between" alignItems="center">
                 <Box>

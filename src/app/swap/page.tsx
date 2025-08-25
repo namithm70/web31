@@ -29,7 +29,15 @@ async function fetchMarketTokens(): Promise<Token[]> {
   );
   if (!res.ok) throw new Error('Failed to fetch tokens');
   const data = await res.json();
-  return (data || []).map((t: any) => ({
+  interface GeckoMarketItem {
+    symbol: string;
+    name: string;
+    current_price: number;
+    price_change_percentage_24h: number;
+    total_volume: number;
+    market_cap: number;
+  }
+  return ((data as GeckoMarketItem[]) || []).map((t) => ({
     symbol: String(t.symbol || '').toUpperCase(),
     name: t.name || '',
     price: Number(t.current_price ?? 0),
