@@ -51,28 +51,33 @@ import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
 
 // Fetch real protocol data from DeFiLlama
+interface LlamaProtocol {
+  slug?: string;
+  name?: string;
+  tvl?: number;
+  change_1d?: number;
+  category?: string;
+  chains?: string[];
+}
+
 async function fetchProtocols(): Promise<ProtocolData[]> {
-  const res = await fetch('https://api.llama.fi/protocols', { next: { revalidate: 60 } } as any);
+  const res = await fetch('https://api.llama.fi/protocols');
   if (!res.ok) throw new Error('Failed to fetch protocols');
   const data = await res.json();
-  return (data || []).slice(0, 10).map((p: any) => ({
+  return (data as LlamaProtocol[] || []).slice(0, 10).map((p: LlamaProtocol) => ({
     id: String(p.slug || p.name || ''),
     name: p.name || '',
     tvl: Number(p.tvl ?? 0),
     tvlChange24h: Number(p.change_1d ?? 0),
     apy: 0,
     category: String(p.category || ''),
-    chains: Array.isArray(p.chains) ? p.chains : [],
+    chains: [],
     risk: 'low',
     volume24h: 0,
   }));
 }
 
-// Removed mock portfolio assets – will wire balances from wagmi/viem
-const mockPortfolioAssets: PortfolioAsset[] = [];
-
-// Removed mock transactions – will wire recent onchain transfers later
-const mockTransactions: Transaction[] = [];
+// Removed mock portfolio assets / transactions – now rendered from live sources (or empty states)
 
 // New advanced features data
 const yieldOptimizationData = {
@@ -90,10 +95,23 @@ const yieldOptimizationData = {
 };
 
 // Removed mock market insights – placeholder empty state
-const marketInsightsData: any = null;
+interface MarketInsights {
+  trendingTokens: { symbol: string; change24h: number; volume: number }[];
+  marketSentiment: string;
+  topGainers: string[];
+  topLosers: string[];
+  upcomingEvents: { event: string; date: string; impact: string }[];
+}
+const marketInsightsData: MarketInsights | null = null;
 
 // Removed mock risk metrics – placeholder empty state
-const riskMetricsData: any = null;
+interface RiskScenario { name: string; impact: number }
+interface RiskMetrics {
+  portfolioRisk: string;
+  diversificationScore: number;
+  stressTestResults: Record<string, RiskScenario>;
+}
+const riskMetricsData: RiskMetrics | null = null;
 
 interface StatCardProps {
   title: string;
@@ -284,7 +302,7 @@ function AdvancedMarketInsights() {
               <Typography variant="body2" color="text.secondary">No trending data.</Typography>
             ) : (
               <Box display="flex" flexDirection="column" gap={2}>
-                {marketInsightsData.trendingTokens.map((token: any, index: number) => (
+                {marketInsightsData.trendingTokens.map((token: { symbol: string; volume: number; change24h: number }, index: number) => (
                   <Box key={index} display="flex" justifyContent="space-between" alignItems="center" p={2} border="1px solid" borderColor="divider" borderRadius={2}>
                     <Box>
                       <Typography variant="body1" fontWeight={600}>
@@ -322,7 +340,7 @@ function AdvancedMarketInsights() {
               <Typography variant="body2" color="text.secondary">No events.</Typography>
             ) : (
               <Box display="flex" flexDirection="column" gap={2}>
-                {marketInsightsData.upcomingEvents.map((event: any, index: number) => (
+                {marketInsightsData.upcomingEvents.map((event: { event: string; date: string; impact: string }, index: number) => (
                   <Box key={index} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
                     <Box display="flex" justifyContent="space-between" alignItems="center">
                       <Box>
@@ -353,12 +371,14 @@ function AdvancedMarketInsights() {
               <Typography variant="body2" fontWeight={600}>
                 Market Sentiment
               </Typography>
-              <Chip
-                label={marketInsightsData.marketSentiment}
-                size="small"
-                color="primary"
-                variant="outlined"
-              />
+              {marketInsightsData && (
+                <Chip
+                  label={marketInsightsData.marketSentiment}
+                  size="small"
+                  color="primary"
+                  variant="outlined"
+                />
+              )}
             </Box>
             {!marketInsightsData ? (
               <Typography variant="body2" color="text.secondary">No sentiment data.</Typography>
@@ -439,7 +459,7 @@ function RiskAnalytics() {
           <Typography variant="body2" color="text.secondary">No scenarios.</Typography>
         ) : (
           <Box display="flex" flexDirection="column" gap={2}>
-            {Object.entries(riskMetricsData.stressTestResults).map(([key, scenario]: any) => (
+            {Object.entries(riskMetricsData.stressTestResults).map(([key, scenario]) => (
               <Box key={key} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                   <Typography variant="body2" fontWeight={600}>
