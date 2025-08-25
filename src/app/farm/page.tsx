@@ -530,7 +530,14 @@ function StakingHistory() {
             <Box key={item.id} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                 <Box display="flex" alignItems="center" gap={1}>
-                  <Avatar sx={{ bgcolor: 'primary.main', width: 32, height: 32 }}>
+                  <Avatar sx={{ 
+                    bgcolor: 'primary.main', 
+                    width: 32, 
+                    height: 32,
+                    '& .MuiSvgIcon-root': {
+                      color: 'white',
+                    },
+                  }}>
                     {item.action === 'stake' ? <Add /> : item.action === 'harvest' ? <AutoAwesome /> : <Remove />}
                   </Avatar>
                   <Typography variant="body2" fontWeight={600}>

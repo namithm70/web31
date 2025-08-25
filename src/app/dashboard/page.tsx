@@ -163,6 +163,9 @@ function StatCard({ title, value, change, icon, color = 'primary', subtitle }: S
               bgcolor: `${color}.main`,
               width: 48,
               height: 48,
+              '& .MuiSvgIcon-root': {
+                color: 'white',
+              },
             }}
           >
             {icon}
@@ -587,7 +590,12 @@ function PortfolioOverview() {
             {assets.map((asset) => (
               <ListItem key={asset.id} sx={{ px: 0 }}>
                 <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: 'primary.main' }}>
+                  <Avatar sx={{ 
+                    bgcolor: 'primary.main',
+                    '& .MuiSvgIcon-root': {
+                      color: 'white',
+                    },
+                  }}>
                     {asset.icon}
                   </Avatar>
                 </ListItemAvatar>

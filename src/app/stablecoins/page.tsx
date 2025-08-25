@@ -124,7 +124,12 @@ function StablecoinCard({ stablecoin }: { stablecoin: Stablecoin }) {
       <CardContent>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
           <Box display="flex" alignItems="center" gap={2}>
-            <Avatar sx={{ bgcolor: 'primary.main' }}>
+            <Avatar sx={{ 
+              bgcolor: 'primary.main',
+              '& .MuiSvgIcon-root': {
+                color: 'white',
+              },
+            }}>
               {stablecoin.icon}
             </Avatar>
             <Box>
