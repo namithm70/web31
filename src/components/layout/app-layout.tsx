@@ -183,18 +183,28 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     icon={<AccountBalanceWallet />}
                     label={isConnected ? `${address?.slice(0, 6)}...${address?.slice(-4)}` : 'Connect Wallet'}
                     onClick={handleWalletConnect}
-                    sx={{
-                      background: isConnected ? 'rgba(76, 175, 80, 0.1)' : 'rgba(255, 255, 255, 0.1)',
-                      color: isConnected ? 'success.main' : 'primary.main',
-                      border: `1px solid ${isConnected ? 'rgba(76, 175, 80, 0.3)' : 'rgba(255, 255, 255, 0.2)'}`,
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                      '&:hover': {
-                        transform: 'translateY(-1px)',
-                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                      },
-                    }}
+                                         sx={{
+                       background: isConnected 
+                         ? 'rgba(76, 175, 80, 0.1)' 
+                         : themeMode === 'dark' 
+                           ? 'rgba(255, 255, 255, 0.1)' 
+                           : 'rgba(0, 0, 0, 0.05)',
+                       color: isConnected ? 'success.main' : 'primary.main',
+                       border: `1px solid ${isConnected 
+                         ? 'rgba(76, 175, 80, 0.3)' 
+                         : themeMode === 'dark'
+                           ? 'rgba(255, 255, 255, 0.2)'
+                           : 'rgba(0, 0, 0, 0.1)'}`,
+                       fontWeight: 600,
+                       cursor: 'pointer',
+                       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                       '&:hover': {
+                         transform: 'translateY(-1px)',
+                         boxShadow: themeMode === 'dark'
+                           ? '0 4px 12px rgba(255, 255, 255, 0.1)'
+                           : '0 4px 12px rgba(0, 0, 0, 0.15)',
+                       },
+                     }}
                   />
                 </Fade>
               )}

@@ -1,11 +1,12 @@
 'use client';
 
-import { Box, Button, Typography, Stack, Chip } from '@mui/material';
+import { Box, Button, Typography, Stack, Chip, IconButton, Tooltip } from '@mui/material';
 import Link from 'next/link';
 import { useTheme } from '@/contexts/ThemeContext';
+import { LightMode, DarkMode } from '@mui/icons-material';
 
 export default function HomePage() {
-  const { themeMode } = useTheme();
+  const { themeMode, toggleTheme } = useTheme();
   
   return (
     <Box
@@ -52,7 +53,40 @@ export default function HomePage() {
         }} />
       </Box>
 
-      <Box className="animate-fade-in-up" sx={{ maxWidth: 980, px: { xs: 2, md: 0 } }}>
+      <Box className="animate-fade-in-up" sx={{ maxWidth: 980, px: { xs: 2, md: 0 }, position: 'relative' }}>
+        {/* Theme Toggle */}
+        <Box sx={{ position: 'absolute', top: -60, right: 0 }}>
+          <Tooltip title={`Switch to ${themeMode === 'light' ? 'dark' : 'light'} mode`}>
+            <IconButton
+              onClick={toggleTheme}
+              sx={{
+                color: themeMode === 'dark' ? '#FFFFFF' : '#000000',
+                background: themeMode === 'dark' 
+                  ? 'rgba(255, 255, 255, 0.1)' 
+                  : 'rgba(0, 0, 0, 0.05)',
+                border: themeMode === 'dark'
+                  ? '1px solid rgba(255, 255, 255, 0.2)'
+                  : '1px solid rgba(0, 0, 0, 0.1)',
+                borderRadius: 2,
+                p: 1,
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                '&:hover': {
+                  background: themeMode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.15)'
+                    : 'rgba(0, 0, 0, 0.1)',
+                  transform: 'scale(1.05)',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                },
+                '& .MuiSvgIcon-root': {
+                  fontSize: '1.2rem',
+                },
+              }}
+            >
+              {themeMode === 'light' ? <DarkMode /> : <LightMode />}
+            </IconButton>
+          </Tooltip>
+        </Box>
+        
         <Chip label="Monochrome • Fast • Secure" variant="outlined" sx={{ mb: 2, borderRadius: 2 }} />
         <Typography
           variant="h2"
