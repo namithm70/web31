@@ -354,8 +354,16 @@ export default function StablecoinsPage() {
     staleTime: 60_000,
   });
 
+  interface LlamaPeggedAsset {
+    symbol?: string;
+    name?: string;
+    mcap?: { current?: number };
+    volume?: { total24h?: number };
+    price?: Array<{ pegDeviation?: number }>;
+  }
+
   const liveStablecoins = useMemo(() => {
-    const list = (llamaData?.peggedAssets || []).slice(0, 12).map((c: any) => ({
+    const list = ((llamaData?.peggedAssets as LlamaPeggedAsset[]) || []).slice(0, 12).map((c) => ({
       symbol: c.symbol || c.name || 'USD',
       name: c.name || c.symbol || 'Stablecoin',
       price: 1,
