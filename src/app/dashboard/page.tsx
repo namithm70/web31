@@ -520,56 +520,48 @@ function QuickActions() {
         <Typography variant="h5" fontWeight={600} mb={3}>
           Quick Actions
         </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={6} md={3}>
-            <Button
-              variant="outlined"
-              fullWidth
-              startIcon={<SwapHoriz />}
-              sx={{ py: 2, flexDirection: 'column', gap: 1 }}
-            >
-              <Typography variant="body2" fontWeight={600}>
-                Swap Tokens
-              </Typography>
-            </Button>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Button
-              variant="outlined"
-              fullWidth
-              startIcon={<AccountBalance />}
-              sx={{ py: 2, flexDirection: 'column', gap: 1 }}
-            >
-              <Typography variant="body2" fontWeight={600}>
-                Lend/Borrow
-              </Typography>
-            </Button>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Button
-              variant="outlined"
-              fullWidth
-              startIcon={<Agriculture />}
-              sx={{ py: 2, flexDirection: 'column', gap: 1 }}
-            >
-              <Typography variant="body2" fontWeight={600}>
-                Farm Yield
-              </Typography>
-            </Button>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Button
-              variant="outlined"
-              fullWidth
-              startIcon={<CurrencyExchange />}
-              sx={{ py: 2, flexDirection: 'column', gap: 1 }}
-            >
-              <Typography variant="body2" fontWeight={600}>
-                Stablecoins
-              </Typography>
-            </Button>
-          </Grid>
-        </Grid>
+        <Box display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }} gap={2}>
+          <Button
+            variant="outlined"
+            fullWidth
+            startIcon={<SwapHoriz />}
+            sx={{ py: 2, flexDirection: 'column', gap: 1 }}
+          >
+            <Typography variant="body2" fontWeight={600}>
+              Swap Tokens
+            </Typography>
+          </Button>
+          <Button
+            variant="outlined"
+            fullWidth
+            startIcon={<AccountBalance />}
+            sx={{ py: 2, flexDirection: 'column', gap: 1 }}
+          >
+            <Typography variant="body2" fontWeight={600}>
+              Lend/Borrow
+            </Typography>
+          </Button>
+          <Button
+            variant="outlined"
+            fullWidth
+            startIcon={<Agriculture />}
+            sx={{ py: 2, flexDirection: 'column', gap: 1 }}
+          >
+            <Typography variant="body2" fontWeight={600}>
+              Farm Yield
+            </Typography>
+          </Button>
+          <Button
+            variant="outlined"
+            fullWidth
+            startIcon={<CurrencyExchange />}
+            sx={{ py: 2, flexDirection: 'column', gap: 1 }}
+          >
+            <Typography variant="body2" fontWeight={600}>
+              Stablecoins
+            </Typography>
+          </Button>
+        </Box>
       </CardContent>
     </Card>
   );
@@ -589,40 +581,36 @@ function MarketInsights() {
           />
         </Box>
 
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <Box textAlign="center" p={2}>
-              <Typography variant="h4" fontWeight={700} color="primary.main" mb={1}>
-                $2.1T
+        <Box display="grid" gridTemplateColumns={{ xs: '1fr', md: 'repeat(2, 1fr)' }} gap={3}>
+          <Box textAlign="center" p={2}>
+            <Typography variant="h4" fontWeight={700} color="primary.main" mb={1}>
+              $2.1T
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Total DeFi TVL
+            </Typography>
+            <Box display="flex" alignItems="center" justifyContent="center" gap={1} mt={1}>
+              <TrendingUp sx={{ color: 'success.main', fontSize: 16 }} />
+              <Typography variant="body2" color="success.main" fontWeight={600}>
+                +2.3%
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Total DeFi TVL
-              </Typography>
-              <Box display="flex" alignItems="center" justifyContent="center" gap={1} mt={1}>
-                <TrendingUp sx={{ color: 'success.main', fontSize: 16 }} />
-                <Typography variant="body2" color="success.main" fontWeight={600}>
-                  +2.3%
-                </Typography>
-              </Box>
             </Box>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Box textAlign="center" p={2}>
-              <Typography variant="h4" fontWeight={700} color="success.main" mb={1}>
-                $45.2B
+          </Box>
+          <Box textAlign="center" p={2}>
+            <Typography variant="h4" fontWeight={700} color="success.main" mb={1}>
+              $45.2B
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              24h Volume
+            </Typography>
+            <Box display="flex" alignItems="center" justifyContent="center" gap={1} mt={1}>
+              <TrendingUp sx={{ color: 'success.main', fontSize: 16 }} />
+              <Typography variant="body2" color="success.main" fontWeight={600}>
+                +5.7%
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                24h Volume
-              </Typography>
-              <Box display="flex" alignItems="center" justifyContent="center" gap={1} mt={1}>
-                <TrendingUp sx={{ color: 'success.main', fontSize: 16 }} />
-                <Typography variant="body2" color="success.main" fontWeight={600}>
-                  +5.7%
-                </Typography>
-              </Box>
             </Box>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
 
         <Divider sx={{ my: 3 }} />
 
@@ -712,44 +700,36 @@ export default function DashboardPage() {
       )}
 
       {/* Stats Cards */}
-      <Grid container spacing={3} mb={4}>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard
-            title="Portfolio Value"
-            value={12500}
-            change={2.8}
-            icon={<AttachMoney />}
-            color="success"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard
-            title="24h P&L"
-            value={350}
-            change={-1.2}
-            icon={<TrendingUp />}
-            color="warning"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard
-            title="APY Earned"
-            value={1250}
-            change={5.4}
-            icon={<Star />}
-            color="info"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard
-            title="Gas Saved"
-            value={45}
-            change={12.3}
-            icon={<Speed />}
-            color="secondary"
-          />
-        </Grid>
-      </Grid>
+      <Box display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }} gap={3} mb={4}>
+        <StatCard
+          title="Portfolio Value"
+          value={12500}
+          change={2.8}
+          icon={<AttachMoney />}
+          color="success"
+        />
+        <StatCard
+          title="24h P&L"
+          value={350}
+          change={-1.2}
+          icon={<TrendingUp />}
+          color="warning"
+        />
+        <StatCard
+          title="APY Earned"
+          value={1250}
+          change={5.4}
+          icon={<Star />}
+          color="info"
+        />
+        <StatCard
+          title="Gas Saved"
+          value={45}
+          change={12.3}
+          icon={<Speed />}
+          color="secondary"
+        />
+      </Box>
 
       {/* Main Content Grid */}
       <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '2fr 1fr' }} gap={3} mb={3}>
