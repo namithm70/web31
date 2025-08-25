@@ -48,53 +48,23 @@ import { useQuery } from '@tanstack/react-query';
 import { ProtocolData, PortfolioAsset, Transaction } from '@/types';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
-// Enhanced mock data with more realistic DeFi metrics
-const mockProtocols: ProtocolData[] = [
-  {
-    id: 'uniswap-v3',
-    name: 'Uniswap V3',
-    tvl: 2500000000,
-    tvlChange24h: 2.5,
-    apy: 12.5,
-    category: 'dex',
-    chains: [1, 137, 42161],
+// Fetch real protocol data from DeFiLlama
+async function fetchProtocols(): Promise<ProtocolData[]> {
+  const res = await fetch('https://api.llama.fi/protocols', { next: { revalidate: 60 } } as any);
+  if (!res.ok) throw new Error('Failed to fetch protocols');
+  const data = await res.json();
+  return (data || []).slice(0, 10).map((p: any) => ({
+    id: String(p.slug || p.name || ''),
+    name: p.name || '',
+    tvl: Number(p.tvl ?? 0),
+    tvlChange24h: Number(p.change_1d ?? 0),
+    apy: 0,
+    category: String(p.category || ''),
+    chains: Array.isArray(p.chains) ? p.chains : [],
     risk: 'low',
-    volume24h: 1500000000,
-  },
-  {
-    id: 'aave-v3',
-    name: 'Aave V3',
-    tvl: 1800000000,
-    tvlChange24h: 1.8,
-    apy: 8.2,
-    category: 'lending',
-    chains: [1, 137, 42161],
-    risk: 'medium',
-    volume24h: 850000000,
-  },
-  {
-    id: 'compound-v3',
-    name: 'Compound V3',
-    tvl: 950000000,
-    tvlChange24h: 0.5,
-    apy: 7.8,
-    category: 'lending',
-    chains: [1],
-    risk: 'low',
-    volume24h: 420000000,
-  },
-  {
-    id: 'curve-finance',
-    name: 'Curve Finance',
-    tvl: 3200000000,
-    tvlChange24h: -0.2,
-    apy: 15.2,
-    category: 'stablecoin',
-    chains: [1, 137],
-    risk: 'medium',
-    volume24h: 2100000000,
-  },
-];
+    volume24h: 0,
+  }));
+}
 
 const mockPortfolioAssets: PortfolioAsset[] = [
   {
@@ -695,7 +665,7 @@ function PortfolioOverview() {
   );
 }
 
-function ProtocolAnalytics() {
+function ProtocolAnalytics({ protocols, isLoading }: { protocols: ProtocolData[]; isLoading: boolean }) {
   return (
     <Card className="animate-fade-in-up stagger-2">
       <CardContent sx={{ p: 3 }}>
@@ -709,7 +679,13 @@ function ProtocolAnalytics() {
         </Box>
 
         <Box display="flex" flexDirection="column" gap={2}>
-          {mockProtocols.map((protocol) => (
+          {isLoading && (
+            <Typography variant="body2" color="text.secondary">Loading protocols…</Typography>
+          )}
+          {!isLoading && protocols.length === 0 && (
+            <Typography variant="body2" color="text.secondary">No protocol data available.</Typography>
+          )}
+          {!isLoading && protocols.map((protocol) => (
             <Box key={protocol.id} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                 <Typography variant="body1" fontWeight={600}>
@@ -868,12 +844,10 @@ function QuickActions() {
 export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
-  const { error: protocolsError } = useQuery({
+  const { data: protocols = [], isLoading: protocolsLoading, error: protocolsError } = useQuery({
     queryKey: ['protocols'],
-    queryFn: async (): Promise<ProtocolData[]> => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      return mockProtocols;
-    },
+    queryFn: fetchProtocols,
+    staleTime: 60_000,
   });
 
   if (protocolsError) {
@@ -961,7 +935,7 @@ export default function DashboardPage() {
       </Box>
       
       <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '2fr 1fr' }} gap={3} mb={3}>
-        <ProtocolAnalytics />
+        <ProtocolAnalytics protocols={protocols} isLoading={protocolsLoading} />
         <RecentTransactions />
       </Box>
       
