@@ -33,31 +33,44 @@ export function Providers({ children }: { children: React.ReactNode }) {
           justifyContent: 'center', 
           alignItems: 'center', 
           height: '100vh',
-          background: '#000000',
-          color: '#FFFFFF',
+          background: '#FFFFFF',
+          color: '#000000',
           fontSize: '1.2rem',
           fontWeight: 500,
           fontFamily: 'Inter, sans-serif',
         }}>
           <div style={{
-            background: 'rgba(255, 255, 255, 0.05)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: 8,
+            background: '#FFFFFF',
+            border: '1px solid rgba(0, 0, 0, 0.08)',
+            borderRadius: 12,
             padding: '2rem 3rem',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
             textAlign: 'center',
+            maxWidth: '400px',
           }}>
             <div style={{
               width: '40px',
               height: '40px',
-              border: '2px solid rgba(255, 255, 255, 0.2)',
-              borderTop: '2px solid #FFFFFF',
+              border: '2px solid rgba(0, 0, 0, 0.1)',
+              borderTop: '2px solid #000000',
               borderRadius: '50%',
               animation: 'spin 1s linear infinite',
               margin: '0 auto 1rem auto',
             }}></div>
-            Loading DeFi Superapp...
+            <div style={{
+              fontSize: '1.5rem',
+              fontWeight: 700,
+              color: '#000000',
+              marginBottom: '0.5rem',
+            }}>
+              DeFi Superapp
+            </div>
+            <div style={{
+              fontSize: '1rem',
+              color: '#666666',
+            }}>
+              Loading...
+            </div>
             <style jsx>{`
               @keyframes spin {
                 0% { transform: rotate(0deg); }

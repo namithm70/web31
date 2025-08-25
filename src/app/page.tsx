@@ -27,12 +27,12 @@ export default function HomePage() {
         alignItems="center"
         minHeight="100vh"
         sx={{
-          background: '#000000',
-          color: '#FFFFFF',
+          background: '#FFFFFF',
+          color: '#000000',
         }}
       >
-        <CircularProgress size={60} sx={{ color: '#FFFFFF', mb: 2 }} />
-        <Typography variant="h6" sx={{ color: '#FFFFFF', fontWeight: 600 }}>
+        <CircularProgress size={60} sx={{ color: '#000000', mb: 2 }} />
+        <Typography variant="h6" sx={{ color: '#000000', fontWeight: 600 }}>
           Loading DeFi Superapp...
         </Typography>
       </Box>

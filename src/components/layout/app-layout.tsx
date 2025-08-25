@@ -29,7 +29,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 const navigationItems = [
   { text: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
@@ -58,7 +58,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   const drawer = (
     <div>
-      <Toolbar>
+      <Toolbar sx={{ borderBottom: '1px solid rgba(0, 0, 0, 0.08)' }}>
         <Typography 
           variant="h6" 
           noWrap 
@@ -67,9 +67,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           sx={{
             cursor: 'pointer',
             fontWeight: 700,
-            color: '#FFFFFF',
+            color: '#000000',
+            fontSize: '1.5rem',
             '&:hover': {
-              color: '#CCCCCC',
+              color: '#666666',
             },
             transition: 'color 0.2s ease',
           }}
@@ -77,6 +78,23 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           DeFi Superapp
         </Typography>
       </Toolbar>
+      
+      <Box sx={{ p: 2 }}>
+        <Typography 
+          variant="overline" 
+          sx={{ 
+            color: '#666666', 
+            fontWeight: 600, 
+            fontSize: '0.75rem',
+            letterSpacing: '0.1em',
+            mb: 2,
+            display: 'block'
+          }}
+        >
+          BROWSE BY
+        </Typography>
+      </Box>
+      
       <List>
         {navigationItems.map((item) => (
           <ListItem key={item.text} disablePadding>
@@ -84,28 +102,27 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               selected={pathname === item.path}
               onClick={() => handleNavigation(item.path)}
               sx={{
-                borderRadius: 4,
-                margin: '2px 4px',
+                borderRadius: 8,
+                margin: '4px 16px',
                 '&.Mui-selected': {
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+                  background: 'rgba(0, 0, 0, 0.08)',
+                  border: '1px solid rgba(0, 0, 0, 0.1)',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
                   '&:hover': {
-                    background: 'rgba(255, 255, 255, 0.15)',
+                    background: 'rgba(0, 0, 0, 0.1)',
                   }
                 },
                 '&:hover': {
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  backdropFilter: 'blur(10px)',
-                  transform: 'translateX(2px)',
+                  background: 'rgba(0, 0, 0, 0.04)',
+                  transform: 'translateX(4px)',
                 },
                 transition: 'all 0.2s ease',
               }}
             >
               <ListItemIcon sx={{ 
-                color: pathname === item.path ? '#FFFFFF' : '#999999',
+                color: pathname === item.path ? '#000000' : '#666666',
                 transition: 'color 0.2s ease',
+                minWidth: 40,
               }}>
                 {item.icon}
               </ListItemIcon>
@@ -114,7 +131,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 sx={{
                   '& .MuiTypography-root': {
                     fontWeight: pathname === item.path ? 600 : 500,
-                    color: pathname === item.path ? '#FFFFFF' : '#CCCCCC',
+                    color: pathname === item.path ? '#000000' : '#666666',
+                    fontSize: '0.875rem',
                   }
                 }}
               />
@@ -129,7 +147,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       
-      {/* Clean black background */}
+      {/* Clean white background */}
       <Box
         sx={{
           position: 'fixed',
@@ -137,7 +155,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           left: 0,
           right: 0,
           bottom: 0,
-          background: '#000000',
+          background: '#FFFFFF',
           zIndex: -1,
         }}
       />
@@ -147,10 +165,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
-          backdropFilter: 'blur(20px)',
-          color: 'text.primary',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          backgroundColor: '#FFFFFF',
+          color: '#000000',
+          borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
+          boxShadow: '0 1px 4px rgba(0, 0, 0, 0.04)',
         }}
       >
         <Toolbar>
@@ -171,9 +189,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               flexGrow: 1,
               cursor: 'pointer',
               fontWeight: 600,
-              color: '#FFFFFF',
+              color: '#000000',
               '&:hover': {
-                color: '#CCCCCC',
+                color: '#666666',
               },
               transition: 'color 0.2s ease',
             }}
@@ -191,13 +209,12 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 color="primary"
                 variant="outlined"
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  background: 'rgba(0, 0, 0, 0.04)',
+                  border: '1px solid rgba(0, 0, 0, 0.2)',
                   fontWeight: 600,
-                  color: '#FFFFFF',
+                  color: '#000000',
                   '&:hover': {
-                    background: 'rgba(255, 255, 255, 0.1)',
+                    background: 'rgba(0, 0, 0, 0.08)',
                     transform: 'scale(1.02)',
                   },
                   transition: 'all 0.2s ease',
@@ -224,9 +241,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawerWidth,
-              backgroundColor: 'rgba(0, 0, 0, 0.9)',
-              backdropFilter: 'blur(20px)',
-              borderRight: '1px solid rgba(255, 255, 255, 0.1)',
+              backgroundColor: '#FFFFFF',
+              borderRight: '1px solid rgba(0, 0, 0, 0.08)',
             },
           }}
         >
@@ -239,9 +255,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawerWidth,
-              backgroundColor: 'rgba(0, 0, 0, 0.9)',
-              backdropFilter: 'blur(20px)',
-              borderRight: '1px solid rgba(255, 255, 255, 0.1)',
+              backgroundColor: '#FFFFFF',
+              borderRight: '1px solid rgba(0, 0, 0, 0.08)',
             },
           }}
           open
@@ -253,10 +268,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
+          p: 4,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           minHeight: '100vh',
-          backgroundColor: 'transparent',
+          backgroundColor: '#FFFFFF',
           position: 'relative',
           zIndex: 1,
         }}
