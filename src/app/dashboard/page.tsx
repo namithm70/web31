@@ -806,7 +806,7 @@ export default function DashboardPage() {
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4} sx={{ gap: 2 }}>
         <Box>
           <Typography variant="h3" fontWeight={700} mb={1}>
             Dashboard
@@ -815,16 +815,20 @@ export default function DashboardPage() {
             Welcome back! Here&apos;s your DeFi overview
       </Typography>
         </Box>
-        <Box display="flex" gap={2}>
+        <Box display="flex" gap={{ xs: 1, sm: 2 }} flexWrap="wrap" justifyContent="flex-end" alignItems="center">
           <Button
             variant="outlined"
+            size="small"
             startIcon={<Notifications />}
+            sx={{ px: { xs: 1.5, sm: 2 }, py: { xs: 0.5, sm: 1 }, borderRadius: 2 }}
           >
             Notifications
           </Button>
           <Button
             variant="contained"
+            size="small"
             startIcon={<AddIcon />}
+            sx={{ px: { xs: 1.5, sm: 2 }, py: { xs: 0.5, sm: 1 }, borderRadius: 2 }}
           >
             Add Asset
           </Button>
@@ -840,7 +844,7 @@ export default function DashboardPage() {
       )}
 
       {/* Enhanced Stats Cards */}
-      <Box display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }} gap={3} mb={4}>
+      <Box display="grid" gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }} gap={{ xs: 1.5, sm: 2, md: 3 }} mb={4}>
         <StatCard
           title="Portfolio Value"
           value={12500}
