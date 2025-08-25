@@ -1,80 +1,39 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
+import Link from 'next/link';
 
 export default function HomePage() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Add a small delay to ensure proper hydration
-    const timer = setTimeout(() => {
-      router.push('/dashboard');
-      setIsLoading(false);
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [router]);
-
-  if (isLoading) {
-    return (
-      <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-        sx={{
-          background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
-          color: '#000000',
-        }}
-      >
-        <Box
-          className="animate-scale-in"
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 2,
-          }}
-        >
-          <CircularProgress 
-            size={60} 
-            sx={{ 
-              color: '#000000', 
-              mb: 2,
-              '& .MuiCircularProgress-circle': {
-                strokeLinecap: 'round',
-              }
-            }} 
-          />
-          <Typography 
-            variant="h4" 
-            className="animate-fade-in-up"
-            sx={{ 
-              color: '#000000', 
-              fontWeight: 700,
-              letterSpacing: '-0.02em',
-            }}
-          >
-            DeFi Superapp
-          </Typography>
-          <Typography 
-            variant="body1" 
-            className="animate-fade-in-up stagger-1"
-            sx={{ 
-              color: '#666666', 
-              fontWeight: 500,
-            }}
-          >
-            Loading your experience...
-          </Typography>
+  return (
+    <Box
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="100vh"
+      sx={{
+        background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
+        color: '#000000',
+        textAlign: 'center',
+        px: 2,
+      }}
+    >
+      <Box className="animate-scale-in" sx={{ maxWidth: 900 }}>
+        <Typography variant="h2" fontWeight={800} letterSpacing="-0.02em" sx={{ mb: 2 }}>
+          The monochrome DeFi superapp
+        </Typography>
+        <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
+          Swap, lend, farm and track – fast, clean, and secure. Connect your wallet to get started.
+        </Typography>
+        <Box display="flex" gap={2} justifyContent="center">
+          <Button component={Link} href="/auth/signup" variant="contained" size="large">
+            Create account
+          </Button>
+          <Button component={Link} href="/auth/signin" variant="outlined" size="large">
+            Sign in
+          </Button>
         </Box>
       </Box>
-    );
-  }
-
-  return null;
+    </Box>
+  );
 }
