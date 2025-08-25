@@ -18,8 +18,17 @@ const config = createConfig({
   },
 });
 
+// Create a client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: 3,
+    },
+  },
+});
+
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient());
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
