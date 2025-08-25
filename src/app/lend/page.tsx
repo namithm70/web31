@@ -320,7 +320,7 @@ function FlashLoanInterface() {
         </Box>
 
         <Box display="grid" gridTemplateColumns="1fr 1fr" gap={3} mb={3}>
-          <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Available Assets
             </Typography>
@@ -328,7 +328,7 @@ function FlashLoanInterface() {
               {flashLoanData.availableAssets.length}
             </Typography>
           </Box>
-          <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
                   <Typography variant="body2" color="text.secondary">
               Fee Rate
             </Typography>
@@ -387,7 +387,7 @@ function RiskManagementSystem() {
         </Box>
 
         <Box display="grid" gridTemplateColumns="1fr 1fr" gap={3} mb={3}>
-          <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Health Factor
             </Typography>
@@ -395,7 +395,7 @@ function RiskManagementSystem() {
               {riskManagementData.healthFactor}
             </Typography>
           </Box>
-          <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Liquidation Risk
           </Typography>
@@ -452,7 +452,7 @@ function LendingAnalytics() {
         </Box>
 
         <Box display="grid" gridTemplateColumns="1fr 1fr" gap={3} mb={3}>
-          <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
                   <Typography variant="body2" color="text.secondary">
                     Total Supplied
                   </Typography>
@@ -460,7 +460,7 @@ function LendingAnalytics() {
               ${lendingAnalytics.totalSupplied.toLocaleString()}
                   </Typography>
                 </Box>
-          <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
                   <Typography variant="body2" color="text.secondary">
                     Total Borrowed
                   </Typography>
@@ -468,7 +468,7 @@ function LendingAnalytics() {
               ${lendingAnalytics.totalBorrowed.toLocaleString()}
                   </Typography>
                 </Box>
-          <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
                   <Typography variant="body2" color="text.secondary">
                     Net APY
                   </Typography>
@@ -476,7 +476,7 @@ function LendingAnalytics() {
               {lendingAnalytics.netAPY}%
             </Typography>
           </Box>
-          <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Net Earnings
             </Typography>

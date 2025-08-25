@@ -256,7 +256,7 @@ function PegMonitoring() {
         </Typography>
 
         <Box display="flex" flexDirection="column" gap={3}>
-          <Box p={2} bgcolor="grey.50" borderRadius={2}>
+          <Box p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Total Market Cap
             </Typography>
@@ -265,7 +265,7 @@ function PegMonitoring() {
             </Typography>
           </Box>
 
-          <Box p={2} bgcolor="grey.100" borderRadius={2}>
+          <Box p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Average Deviation
             </Typography>
@@ -301,7 +301,7 @@ function RiskAnalysis() {
         </Typography>
 
         <Box display="flex" flexDirection="column" gap={3}>
-          <Box p={2} bgcolor="grey.50" borderRadius={2}>
+          <Box p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Portfolio Stability
             </Typography>
@@ -310,7 +310,7 @@ function RiskAnalysis() {
             </Typography>
           </Box>
 
-          <Box p={2} bgcolor="grey.100" borderRadius={2}>
+          <Box p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Diversification Score
             </Typography>

@@ -186,7 +186,7 @@ function AdvancedCharts() {
         </Box>
 
         <Box display="grid" gridTemplateColumns="1fr 1fr" gap={3} mb={3}>
-          <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Current Price
             </Typography>
@@ -194,7 +194,7 @@ function AdvancedCharts() {
               $3,200.50
             </Typography>
           </Box>
-          <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               24h Change
             </Typography>
@@ -357,7 +357,7 @@ function GasOptimization() {
         </Box>
 
         <Box display="grid" gridTemplateColumns="1fr 1fr" gap={3} mb={3}>
-          <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Current Gas Price
             </Typography>
@@ -365,7 +365,7 @@ function GasOptimization() {
               {gasPrice} Gwei
             </Typography>
           </Box>
-          <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Estimated Cost
             </Typography>
