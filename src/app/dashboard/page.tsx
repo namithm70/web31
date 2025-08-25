@@ -48,6 +48,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ProtocolData, PortfolioAsset, Transaction } from '@/types';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
+
 // Fetch real protocol data from DeFiLlama
 async function fetchProtocols(): Promise<ProtocolData[]> {
   const res = await fetch('https://api.llama.fi/protocols', { next: { revalidate: 60 } } as any);
@@ -66,84 +67,11 @@ async function fetchProtocols(): Promise<ProtocolData[]> {
   }));
 }
 
-const mockPortfolioAssets: PortfolioAsset[] = [
-  {
-    id: '1',
-    name: 'Ethereum',
-    symbol: 'ETH',
-    balance: 2.5,
-    value: 4500,
-    change24h: 3.2,
-    allocation: 35,
-    icon: '🔵',
-  },
-  {
-    id: '2',
-    name: 'USD Coin',
-    symbol: 'USDC',
-    balance: 5000,
-    value: 5000,
-    change24h: 0.1,
-    allocation: 25,
-    icon: '🔵',
-  },
-  {
-    id: '3',
-    name: 'Uniswap',
-    symbol: 'UNI',
-    balance: 150,
-    value: 1200,
-    change24h: -1.5,
-    allocation: 20,
-    icon: '🟣',
-  },
-  {
-    id: '4',
-    name: 'Aave',
-    symbol: 'AAVE',
-    balance: 8,
-    value: 800,
-    change24h: 2.8,
-    allocation: 20,
-    icon: '🔵',
-  },
-];
+// Removed mock portfolio assets – will wire balances from wagmi/viem
+const mockPortfolioAssets: PortfolioAsset[] = [];
 
-const mockTransactions: Transaction[] = [
-  {
-    id: '1',
-    type: 'swap',
-    from: 'ETH',
-    to: 'USDC',
-    amount: 0.5,
-    value: 900,
-    timestamp: new Date(Date.now() - 1000 * 60 * 30),
-    status: 'completed',
-    txHash: '0x1234...5678',
-  },
-  {
-    id: '2',
-    type: 'stake',
-    from: 'UNI',
-    to: 'UNI-V3-LP',
-    amount: 50,
-    value: 400,
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2),
-    status: 'completed',
-    txHash: '0x8765...4321',
-  },
-  {
-    id: '3',
-    type: 'lend',
-    from: 'USDC',
-    to: 'aUSDC',
-    amount: 1000,
-    value: 1000,
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 6),
-    status: 'pending',
-    txHash: '0xabcd...efgh',
-  },
-];
+// Removed mock transactions – will wire recent onchain transfers later
+const mockTransactions: Transaction[] = [];
 
 // New advanced features data
 const yieldOptimizationData = {
@@ -160,35 +88,11 @@ const yieldOptimizationData = {
   },
 };
 
-const marketInsightsData = {
-  trendingTokens: [
-    { symbol: 'PEPE', change24h: 15.2, volume: 25000000 },
-    { symbol: 'SHIB', change24h: 8.7, volume: 18000000 },
-    { symbol: 'DOGE', change24h: -2.1, volume: 12000000 },
-  ],
-  marketSentiment: 'bullish',
-  topGainers: ['PEPE', 'SHIB', 'UNI'],
-  topLosers: ['DOGE', 'LINK', 'DOT'],
-  upcomingEvents: [
-    { event: 'Ethereum Shanghai Update', date: '2024-02-15', impact: 'high' },
-    { event: 'Uniswap V4 Launch', date: '2024-03-01', impact: 'medium' },
-  ],
-};
+// Removed mock market insights – placeholder empty state
+const marketInsightsData: any = null;
 
-const riskMetricsData = {
-  portfolioRisk: 'low',
-  diversificationScore: 85,
-  correlationMatrix: [
-    { asset1: 'ETH', asset2: 'UNI', correlation: 0.75 },
-    { asset1: 'ETH', asset2: 'USDC', correlation: -0.02 },
-    { asset1: 'UNI', asset2: 'AAVE', correlation: 0.45 },
-  ],
-  stressTestResults: {
-    scenario1: { name: 'Market Crash (-50%)', impact: -25.3 },
-    scenario2: { name: 'DeFi Hack', impact: -15.7 },
-    scenario3: { name: 'Regulatory Risk', impact: -8.2 },
-  },
-};
+// Removed mock risk metrics – placeholder empty state
+const riskMetricsData: any = null;
 
 interface StatCardProps {
   title: string;
@@ -375,32 +279,36 @@ function AdvancedMarketInsights() {
             <Typography variant="body2" fontWeight={600} mb={2}>
               Trending Tokens (24h)
             </Typography>
-            <Box display="flex" flexDirection="column" gap={2}>
-              {marketInsightsData.trendingTokens.map((token, index) => (
-                <Box key={index} display="flex" justifyContent="space-between" alignItems="center" p={2} border="1px solid" borderColor="divider" borderRadius={2}>
-                  <Box>
-                    <Typography variant="body1" fontWeight={600}>
-                      {token.symbol}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Vol: ${(token.volume / 1000000).toFixed(1)}M
-                    </Typography>
+            {!marketInsightsData ? (
+              <Typography variant="body2" color="text.secondary">No trending data.</Typography>
+            ) : (
+              <Box display="flex" flexDirection="column" gap={2}>
+                {marketInsightsData.trendingTokens.map((token: any, index: number) => (
+                  <Box key={index} display="flex" justifyContent="space-between" alignItems="center" p={2} border="1px solid" borderColor="divider" borderRadius={2}>
+                    <Box>
+                      <Typography variant="body1" fontWeight={600}>
+                        {token.symbol}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Vol: ${(token.volume / 1000000).toFixed(1)}M
+                      </Typography>
+                    </Box>
+                    <Box textAlign="right">
+                      <Typography
+                        variant="body1"
+                        fontWeight={600}
+                        color={token.change24h >= 0 ? 'text.primary' : 'text.secondary'}
+                      >
+                        {token.change24h >= 0 ? '+' : ''}{token.change24h}%
+                      </Typography>
+                      <IconButton size="small">
+                        <Star />
+                      </IconButton>
+                    </Box>
                   </Box>
-                  <Box textAlign="right">
-                    <Typography
-                      variant="body1"
-                      fontWeight={600}
-                      color={token.change24h >= 0 ? 'text.primary' : 'text.secondary'}
-                    >
-                      {token.change24h >= 0 ? '+' : ''}{token.change24h}%
-                    </Typography>
-                    <IconButton size="small">
-                      <Star />
-                    </IconButton>
-                  </Box>
-                </Box>
-              ))}
-            </Box>
+                ))}
+              </Box>
+            )}
           </Box>
         )}
 
@@ -409,28 +317,32 @@ function AdvancedMarketInsights() {
             <Typography variant="body2" fontWeight={600} mb={2}>
               Upcoming Events
             </Typography>
-            <Box display="flex" flexDirection="column" gap={2}>
-              {marketInsightsData.upcomingEvents.map((event, index) => (
-                <Box key={index} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Box>
-                      <Typography variant="body2" fontWeight={600}>
-                        {event.event}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {event.date}
-                      </Typography>
+            {!marketInsightsData ? (
+              <Typography variant="body2" color="text.secondary">No events.</Typography>
+            ) : (
+              <Box display="flex" flexDirection="column" gap={2}>
+                {marketInsightsData.upcomingEvents.map((event: any, index: number) => (
+                  <Box key={index} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
+                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                      <Box>
+                        <Typography variant="body2" fontWeight={600}>
+                          {event.event}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {event.date}
+                        </Typography>
+                      </Box>
+                      <Chip
+                        label={event.impact}
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                      />
                     </Box>
-                    <Chip
-                      label={event.impact}
-                      size="small"
-                      color="primary"
-                      variant="outlined"
-                    />
                   </Box>
-                </Box>
-              ))}
-            </Box>
+                ))}
+              </Box>
+            )}
           </Box>
         )}
 
@@ -447,28 +359,32 @@ function AdvancedMarketInsights() {
                 variant="outlined"
               />
             </Box>
-            <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2}>
-              <Box>
-                <Typography variant="body2" color="text.secondary" mb={1}>
-                  Top Gainers
-                </Typography>
-                {marketInsightsData.topGainers.map((token, index) => (
-                  <Typography key={index} variant="body2" color="text.primary">
-                    {token}
+            {!marketInsightsData ? (
+              <Typography variant="body2" color="text.secondary">No sentiment data.</Typography>
+            ) : (
+              <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2}>
+                <Box>
+                  <Typography variant="body2" color="text.secondary" mb={1}>
+                    Top Gainers
                   </Typography>
-                ))}
-              </Box>
-              <Box>
-                <Typography variant="body2" color="text.secondary" mb={1}>
-                  Top Losers
-                </Typography>
-                {marketInsightsData.topLosers.map((token, index) => (
-                  <Typography key={index} variant="body2" color="text.secondary">
-                    {token}
+                  {marketInsightsData.topGainers.map((token: string, index: number) => (
+                    <Typography key={index} variant="body2" color="text.primary">
+                      {token}
+                    </Typography>
+                  ))}
+                </Box>
+                <Box>
+                  <Typography variant="body2" color="text.secondary" mb={1}>
+                    Top Losers
                   </Typography>
-                ))}
+                  {marketInsightsData.topLosers.map((token: string, index: number) => (
+                    <Typography key={index} variant="body2" color="text.secondary">
+                      {token}
+                    </Typography>
+                  ))}
+                </Box>
               </Box>
-            </Box>
+            )}
           </Box>
         )}
       </CardContent>
@@ -492,46 +408,54 @@ function RiskAnalytics() {
           </IconButton>
         </Box>
 
-        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={3} mb={3}>
-          <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
-            <Typography variant="body2" color="text.secondary">
-              Portfolio Risk
-            </Typography>
-            <Typography variant="h5" fontWeight={600} color="text.primary">
-              {riskMetricsData.portfolioRisk.toUpperCase()}
-            </Typography>
+        {!riskMetricsData ? (
+          <Typography variant="body2" color="text.secondary" mb={2}>No risk data.</Typography>
+        ) : (
+          <Box display="grid" gridTemplateColumns="1fr 1fr" gap={3} mb={3}>
+            <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
+              <Typography variant="body2" color="text.secondary">
+                Portfolio Risk
+              </Typography>
+              <Typography variant="h5" fontWeight={600} color="text.primary">
+                {riskMetricsData.portfolioRisk.toUpperCase()}
+              </Typography>
+            </Box>
+            <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
+              <Typography variant="body2" color="text.secondary">
+                Diversification
+              </Typography>
+              <Typography variant="h5" fontWeight={600} color="text.primary">
+                {riskMetricsData.diversificationScore}/100
+              </Typography>
+            </Box>
           </Box>
-          <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
-            <Typography variant="body2" color="text.secondary">
-              Diversification
-            </Typography>
-            <Typography variant="h5" fontWeight={600} color="text.primary">
-              {riskMetricsData.diversificationScore}/100
-            </Typography>
-          </Box>
-        </Box>
+        )}
 
         <Typography variant="body2" fontWeight={600} mb={2}>
           Stress Test Scenarios
         </Typography>
-        <Box display="flex" flexDirection="column" gap={2}>
-          {Object.entries(riskMetricsData.stressTestResults).map(([key, scenario]) => (
-            <Box key={key} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
-              <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Typography variant="body2" fontWeight={600}>
-                  {scenario.name}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  fontWeight={600}
-                  color={scenario.impact > -10 ? 'text.primary' : 'text.secondary'}
-                >
-                  {scenario.impact}%
-                </Typography>
+        {!riskMetricsData ? (
+          <Typography variant="body2" color="text.secondary">No scenarios.</Typography>
+        ) : (
+          <Box display="flex" flexDirection="column" gap={2}>
+            {Object.entries(riskMetricsData.stressTestResults).map(([key, scenario]: any) => (
+              <Box key={key} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
+                <Box display="flex" justifyContent="space-between" alignItems="center">
+                  <Typography variant="body2" fontWeight={600}>
+                    {scenario.name}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    fontWeight={600}
+                    color={scenario.impact > -10 ? 'text.primary' : 'text.secondary'}
+                  >
+                    {scenario.impact}%
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
-          ))}
-        </Box>
+            ))}
+          </Box>
+        )}
       </CardContent>
     </Card>
   );
@@ -541,7 +465,7 @@ function RiskAnalytics() {
 function PortfolioOverview() {
   const totalValue = mockPortfolioAssets.reduce((sum, asset) => sum + asset.value, 0);
   const totalChange = mockPortfolioAssets.reduce((sum, asset) => sum + (asset.value * asset.change24h / 100), 0);
-  const totalChangePercent = (totalChange / totalValue) * 100;
+  const totalChangePercent = totalValue ? (totalChange / totalValue) * 100 : 0;
 
   return (
     <Card className="animate-fade-in-up stagger-1">
@@ -606,60 +530,64 @@ function PortfolioOverview() {
         <Typography variant="h6" fontWeight={600} mb={2}>
           Asset Allocation
         </Typography>
-        <List>
-          {mockPortfolioAssets.map((asset) => (
-            <ListItem key={asset.id} sx={{ px: 0 }}>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: 'primary.main' }}>
-                  {asset.icon}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="body1" fontWeight={600}>
-                      {asset.name}
-                    </Typography>
-                    <Typography variant="body1" fontWeight={600}>
-                      ${asset.value.toLocaleString()}
-                    </Typography>
-                  </Box>
-                }
-                secondary={
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="body2" color="text.secondary">
-                      {asset.balance} {asset.symbol}
-                    </Typography>
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <Typography
-                        variant="body2"
-                        color={asset.change24h >= 0 ? 'text.primary' : 'text.secondary'}
-                      >
-                        {asset.change24h >= 0 ? '+' : ''}{asset.change24h.toFixed(2)}%
+        {mockPortfolioAssets.length === 0 ? (
+          <Typography variant="body2" color="text.secondary">No assets yet.</Typography>
+        ) : (
+          <List>
+            {mockPortfolioAssets.map((asset) => (
+              <ListItem key={asset.id} sx={{ px: 0 }}>
+                <ListItemAvatar>
+                  <Avatar sx={{ bgcolor: 'primary.main' }}>
+                    {asset.icon}
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                      <Typography variant="body1" fontWeight={600}>
+                        {asset.name}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {asset.allocation}%
+                      <Typography variant="body1" fontWeight={600}>
+                        ${asset.value.toLocaleString()}
                       </Typography>
                     </Box>
-                  </Box>
-                }
-              />
-              <LinearProgress
-                variant="determinate"
-                value={asset.allocation}
-                sx={{
-                  width: 60,
-                  height: 6,
-                  borderRadius: 3,
-                  bgcolor: 'grey.200',
-                  '& .MuiLinearProgress-bar': {
+                  }
+                  secondary={
+                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                      <Typography variant="body2" color="text.secondary">
+                        {asset.balance} {asset.symbol}
+                      </Typography>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <Typography
+                          variant="body2"
+                          color={asset.change24h >= 0 ? 'text.primary' : 'text.secondary'}
+                        >
+                          {asset.change24h >= 0 ? '+' : ''}{asset.change24h.toFixed(2)}%
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {asset.allocation}%
+                        </Typography>
+                      </Box>
+                    </Box>
+                  }
+                />
+                <LinearProgress
+                  variant="determinate"
+                  value={asset.allocation}
+                  sx={{
+                    width: 60,
+                    height: 6,
                     borderRadius: 3,
-                  },
-                }}
-              />
-            </ListItem>
-          ))}
-        </List>
+                    bgcolor: 'grey.200',
+                    '& .MuiLinearProgress-bar': {
+                      borderRadius: 3,
+                    },
+                  }}
+                />
+              </ListItem>
+            ))}
+          </List>
+        )}
       </CardContent>
     </Card>
   );
@@ -759,35 +687,7 @@ function RecentTransactions() {
         </Box>
 
         <Box display="flex" flexDirection="column" gap={2}>
-          {mockTransactions.map((tx) => (
-            <Box key={tx.id} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                <Box display="flex" alignItems="center" gap={1}>
-                  <Avatar sx={{ bgcolor: 'primary.main', width: 32, height: 32 }}>
-                    {tx.type === 'swap' ? <SwapHoriz /> : tx.type === 'stake' ? <Agriculture /> : <CurrencyExchange />}
-                  </Avatar>
-                  <Typography variant="body2" fontWeight={600}>
-                    {tx.from} → {tx.to}
-                  </Typography>
-                </Box>
-                <Chip
-                  label={tx.status}
-                  color="primary"
-                  size="small"
-                  variant="outlined"
-                />
-              </Box>
-              
-              <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Typography variant="body2" color="text.secondary">
-                  {tx.amount} {tx.from} (${tx.value})
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  {tx.timestamp.toLocaleString()}
-                </Typography>
-              </Box>
-            </Box>
-          ))}
+          <Typography variant="body2" color="text.secondary">No transactions yet.</Typography>
         </Box>
       </CardContent>
     </Card>
