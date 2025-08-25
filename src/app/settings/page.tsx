@@ -68,6 +68,39 @@ function ProfileSettings() {
   const [editing, setEditing] = useState(false);
   const [joinDate, setJoinDate] = useState<string>('');
 
+  const fullName = session?.user?.name || '';
+  const [firstName, ...rest] = fullName.split(' ').filter(Boolean);
+  const lastName = rest.length ? rest.join(' ') : '';
+
+  const [formData, setFormData] = useState({
+    name: fullName,
+    email: session?.user?.email || '',
+  });
+
+  useEffect(() => {
+    // Keep form in sync with active session when not editing
+    if (!editing && session?.user) {
+      setFormData({ name: fullName, email: session.user.email || '' });
+    }
+  }, [fullName, session?.user?.email, editing, session?.user]);
+
+  useEffect(() => {
+    // Store a simple client-side join date per user (keyed by email) the first time they visit settings
+    const email = session?.user?.email;
+    if (!email) {
+      setJoinDate('');
+      return;
+    }
+    
+    const key = `defiapp_join_date_${email}`;
+    let stored = typeof window !== 'undefined' ? window.localStorage.getItem(key) : null;
+    if (!stored) {
+      stored = new Date().toISOString();
+      if (typeof window !== 'undefined') window.localStorage.setItem(key, stored);
+    }
+    setJoinDate(stored || new Date().toISOString());
+  }, [session?.user?.email]);
+
   // Show loading state while session is loading
   if (status === 'loading') {
     return (
@@ -123,43 +156,6 @@ function ProfileSettings() {
       </Card>
     );
   }
-
-  const fullName = session?.user?.name || '';
-  const [firstName, ...rest] = fullName.split(' ').filter(Boolean);
-  const lastName = rest.length ? rest.join(' ') : '';
-
-  const [formData, setFormData] = useState({
-    name: fullName,
-    email: session?.user?.email || '',
-  });
-
-
-
-  useEffect(() => {
-    // Keep form in sync with active session when not editing
-    if (!editing && session?.user) {
-      setFormData({ name: fullName, email: session.user.email || '' });
-    }
-  }, [fullName, session?.user?.email, editing, session?.user]);
-
-  useEffect(() => {
-    // Store a simple client-side join date per user (keyed by email) the first time they visit settings
-    const email = session?.user?.email;
-    if (!email) {
-      setJoinDate('');
-      return;
-    }
-    
-    const key = `defiapp_join_date_${email}`;
-    let stored = typeof window !== 'undefined' ? window.localStorage.getItem(key) : null;
-    if (!stored) {
-      stored = new Date().toISOString();
-      if (typeof window !== 'undefined') window.localStorage.setItem(key, stored);
-    }
-    setJoinDate(stored || new Date().toISOString());
-    
-
-  }, [session?.user?.email]);
 
   const handleSave = () => {
     console.log('Saving profile:', formData);
