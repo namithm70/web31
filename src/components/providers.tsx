@@ -1,15 +1,14 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
-import { theme } from '@/lib/theme';
 import { useState, useEffect } from 'react';
 import { WagmiProvider, createConfig, http } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 import { SessionProvider } from 'next-auth/react';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 const config = createConfig({
   chains: [mainnet, sepolia],
@@ -121,7 +120,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <SessionProvider>
         <WagmiProvider config={config}>
           <RainbowKitProvider>
-            <ThemeProvider theme={theme}>
+            <ThemeProvider>
               <CssBaseline />
               {children}
             </ThemeProvider>

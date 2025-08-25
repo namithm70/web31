@@ -21,6 +21,8 @@ import {
 } from '@mui/icons-material';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { useRouter, usePathname } from 'next/navigation';
+import ThemeToggle from '@/components/ThemeToggle';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const navigationItems = [
   { name: 'Dashboard', href: '/dashboard' },
@@ -38,6 +40,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { address, isConnected } = useAccount();
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
+  const { themeMode } = useTheme();
 
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(null);
 
@@ -82,9 +85,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         position="static"
         elevation={0}
         sx={{
-          background: 'rgba(0, 0, 0, 0.95)',
+          background: themeMode === 'dark' 
+            ? 'rgba(0, 0, 0, 0.95)' 
+            : 'rgba(255, 255, 255, 0.8)',
           backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          borderBottom: themeMode === 'dark'
+            ? '1px solid rgba(255, 255, 255, 0.08)'
+            : '1px solid rgba(0, 0, 0, 0.06)',
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
@@ -97,7 +104,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 component="div"
                 sx={{
                   fontWeight: 700,
-                  background: 'linear-gradient(135deg, #FFFFFF 0%, #CCCCCC 100%)',
+                  background: themeMode === 'dark'
+                    ? 'linear-gradient(135deg, #FFFFFF 0%, #CCCCCC 100%)'
+                    : 'linear-gradient(135deg, #000000 0%, #333333 100%)',
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
@@ -134,7 +143,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                           left: '50%',
                           width: 0,
                           height: 2,
-                          background: 'linear-gradient(135deg, #FFFFFF 0%, #CCCCCC 100%)',
+                          background: themeMode === 'dark'
+                            ? 'linear-gradient(135deg, #FFFFFF 0%, #CCCCCC 100%)'
+                            : 'linear-gradient(135deg, #000000 0%, #333333 100%)',
                           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                           transform: 'translateX(-50%)',
                         },
@@ -142,7 +153,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                           width: '100%',
                         },
                         '&:hover': {
-                          background: 'rgba(255, 255, 255, 0.05)',
+                          background: themeMode === 'dark'
+                            ? 'rgba(255, 255, 255, 0.05)'
+                            : 'rgba(0, 0, 0, 0.04)',
                           transform: 'translateY(-1px)',
                         },
                       }}
@@ -187,9 +200,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               )}
 
               {showNav && (
-                <Button variant="outlined" size="small" onClick={handleSignOut} sx={{ ml: 1 }}>
-                  Sign out
-                </Button>
+                <>
+                  <ThemeToggle />
+                  <Button variant="outlined" size="small" onClick={handleSignOut} sx={{ ml: 1 }}>
+                    Sign out
+                  </Button>
+                </>
               )}
 
               {/* Mobile Menu Button */}
@@ -215,11 +231,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         onClose={handleMobileMenuClose}
         sx={{
           '& .MuiPaper-root': {
-            background: '#111111',
+            background: themeMode === 'dark' ? '#111111' : '#FFFFFF',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            border: themeMode === 'dark'
+              ? '1px solid rgba(255, 255, 255, 0.08)'
+              : '1px solid rgba(0, 0, 0, 0.08)',
             borderRadius: 3,
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
+            boxShadow: themeMode === 'dark'
+              ? '0 8px 32px rgba(0, 0, 0, 0.5)'
+              : '0 8px 32px rgba(0, 0, 0, 0.12)',
             minWidth: 200,
           },
         }}
@@ -232,7 +252,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 fontWeight: 500,
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 '&:hover': {
-                  background: 'rgba(255, 255, 255, 0.05)',
+                  background: themeMode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.05)'
+                    : 'rgba(0, 0, 0, 0.04)',
                 },
               }}
             >
@@ -247,7 +269,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         component="main"
         sx={{
           flexGrow: 1,
-          background: 'linear-gradient(135deg, #000000 0%, #111111 50%, #000000 100%)',
+          background: themeMode === 'dark'
+            ? 'linear-gradient(135deg, #000000 0%, #111111 50%, #000000 100%)'
+            : 'linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%)',
           minHeight: 'calc(100vh - 64px)',
         }}
       >
