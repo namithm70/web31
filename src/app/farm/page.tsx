@@ -10,48 +10,17 @@ import {
   Button,
   IconButton,
   Avatar,
-  LinearProgress,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
   Tabs,
   Tab,
-  Tooltip,
-  Alert,
   Switch,
   FormControlLabel,
   Slider,
-  Badge,
-  Menu,
-  MenuItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  ListItemIcon,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Grid,
-  Paper,
 } from '@mui/material';
 import {
   Refresh,
   Add,
   Remove,
   Download,
-  Share,
-  Visibility,
-  Expand,
-  Compress,
-  TrendingUp,
-  TrendingDown,
-  AccountBalance,
-  SwapHoriz,
-  Agriculture,
-  CurrencyExchange,
   Notifications,
   Star,
   StarBorder,
@@ -252,11 +221,26 @@ const stakingHistory = [
   },
 ];
 
-function getRiskColor(risk: string) {
-  return 'primary';
+
+
+interface Pool {
+  id: string;
+  name: string;
+  tokens: string[];
+  tvl: number;
+  apr: number;
+  rewards: string[];
+  chain: string;
+  impermanentLoss: number;
+  autoCompound: boolean;
+  volume24h: number;
+  fees24h: number;
+  userStaked: number;
+  userRewards: number;
+  boost: number;
 }
 
-function AdvancedPoolCard({ pool }: { pool: any }) {
+function AdvancedPoolCard({ pool }: { pool: Pool }) {
   const [showDetails, setShowDetails] = useState(false);
 
   return (
@@ -339,7 +323,7 @@ function AdvancedPoolCard({ pool }: { pool: any }) {
             Harvest
           </Button>
           <IconButton size="small" onClick={() => setShowDetails(!showDetails)}>
-            {showDetails ? <Compress /> : <Expand />}
+            {showDetails ? <CompressOutlined /> : <ExpandOutlined />}
           </IconButton>
         </Box>
 
@@ -659,7 +643,7 @@ function StakingHistory() {
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                 <Box display="flex" alignItems="center" gap={1}>
                   <Avatar sx={{ bgcolor: 'primary.main', width: 32, height: 32 }}>
-                    {item.action === 'stake' ? <Add /> : item.action === 'harvest' ? <Agriculture /> : <Remove />}
+                    {item.action === 'stake' ? <Add /> : item.action === 'harvest' ? <AutoAwesome /> : <Remove />}
                   </Avatar>
                   <Typography variant="body2" fontWeight={600}>
                     {item.action.charAt(0).toUpperCase() + item.action.slice(1)} {item.pool}

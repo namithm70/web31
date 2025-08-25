@@ -10,48 +10,17 @@ import {
   Button,
   IconButton,
   Avatar,
-  LinearProgress,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
   Tabs,
   Tab,
-  Tooltip,
-  Alert,
   Switch,
   FormControlLabel,
   Slider,
-  Badge,
-  Menu,
-  MenuItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  ListItemIcon,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Grid,
-  Paper,
 } from '@mui/material';
 import {
   Refresh,
   Add,
   Remove,
   Download,
-  Share,
-  Visibility,
-  Expand,
-  Compress,
-  TrendingUp,
-  TrendingDown,
-  AccountBalance,
-  SwapHoriz,
-  Agriculture,
-  CurrencyExchange,
   Notifications,
   Star,
   StarBorder,
@@ -277,11 +246,26 @@ const borrowingHistory = [
   },
 ];
 
-function getUtilizationColor(utilization: number) {
-  return 'primary';
+
+
+interface LendingPool {
+  id: string;
+  name: string;
+  asset: string;
+  symbol: string;
+  totalSupply: number;
+  totalBorrow: number;
+  supplyRate: number;
+  borrowRate: number;
+  utilization: number;
+  liquidationThreshold: number;
+  collateralFactor: number;
+  userSupply: number;
+  userBorrow: number;
+  healthFactor: number;
 }
 
-function AdvancedLendingPoolCard({ pool }: { pool: any }) {
+function AdvancedLendingPoolCard({ pool }: { pool: LendingPool }) {
   const [showDetails, setShowDetails] = useState(false);
 
   return (
@@ -357,7 +341,7 @@ function AdvancedLendingPoolCard({ pool }: { pool: any }) {
             Borrow
           </Button>
           <IconButton size="small" onClick={() => setShowDetails(!showDetails)}>
-            {showDetails ? <Compress /> : <Expand />}
+            {showDetails ? <CompressOutlined /> : <ExpandMoreOutlined />}
           </IconButton>
         </Box>
 
@@ -622,7 +606,7 @@ function BorrowingHistory() {
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                 <Box display="flex" alignItems="center" gap={1}>
                   <Avatar sx={{ bgcolor: 'primary.main', width: 32, height: 32 }}>
-                    {item.action === 'supply' ? <Add /> : item.action === 'borrow' ? <Remove /> : <AccountBalance />}
+                    {item.action === 'supply' ? <Add /> : item.action === 'borrow' ? <Remove /> : <AccountBalanceWallet />}
                   </Avatar>
                   <Typography variant="body2" fontWeight={600}>
                     {item.action.charAt(0).toUpperCase() + item.action.slice(1)} {item.asset}

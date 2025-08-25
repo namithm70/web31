@@ -10,26 +10,25 @@ import {
   Button,
   IconButton,
   Avatar,
-  LinearProgress,
+  Tabs,
+  Tab,
+  Tooltip,
   Divider,
   List,
   ListItem,
   ListItemText,
   ListItemAvatar,
-  Tabs,
-  Tab,
-  Tooltip,
+  LinearProgress,
   Alert,
 } from '@mui/material';
 import {
   Refresh,
-  Add,
-  Remove,
-  Download,
-  Share,
-  Visibility,
-  Expand,
-  Compress,
+  Add as AddIcon,
+  Download as DownloadIcon,
+  Share as ShareIcon,
+  Visibility as VisibilityIcon,
+  Expand as ExpandIcon,
+  Compress as CompressIcon,
   TrendingUp,
   TrendingDown,
   AccountBalance,
@@ -42,75 +41,17 @@ import {
   Security,
   Analytics,
   AutoGraph,
-  PsychologyAlt,
-  Lightbulb,
   Info,
-  Settings,
-  Timeline,
   AttachMoney,
-  Bolt,
-  RocketLaunch,
-  Diamond,
-  EmojiEvents,
-  LocalFireDepartment,
-  WaterDrop,
-  ElectricBolt,
-  FilterList,
-  Sort,
-  ViewList,
-  ViewModule,
-  PieChart,
-  BarChart,
-  ShowChart,
-  TrendingFlat,
-  ExpandMore,
-  ContentCopy,
-  Upload,
-  VisibilityOff,
-  AutoAwesome,
-  Calculate,
   TrendingUpOutlined,
   TrendingDownOutlined,
   SpeedOutlined,
   SecurityOutlined,
   AnalyticsOutlined,
   AutoGraphOutlined,
-  ShowChartOutlined,
-  TimelineOutlined,
-  BoltOutlined,
-  LocalFireDepartmentOutlined,
-  WaterDropOutlined,
-  ElectricBoltOutlined,
-  CompressOutlined,
-  ExpandOutlined,
-  FilterListOutlined,
-  SortOutlined,
-  ViewListOutlined,
-  ViewModuleOutlined,
-  PieChartOutlined,
-  BarChartOutlined,
   AttachMoneyOutlined,
   AccountBalanceWalletOutlined,
   CurrencyExchangeOutlined,
-  PsychologyOutlined,
-  LightbulbOutlined,
-  DiamondOutlined,
-  EmojiEventsOutlined,
-  RocketLaunchOutlined,
-  TrendingFlatOutlined,
-  ExpandMoreOutlined,
-  AddOutlined,
-  RemoveOutlined,
-  ContentCopyOutlined,
-  ShareOutlined,
-  DownloadOutlined,
-  UploadOutlined,
-  VisibilityOutlined,
-  VisibilityOffOutlined,
-  AutoAwesomeOutlined,
-  PsychologyAltOutlined,
-  CalculateOutlined,
-  TimelineIconOutlined,
 } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
 import { ProtocolData, PortfolioAsset, Transaction } from '@/types';
@@ -362,7 +303,7 @@ function YieldOptimization() {
             </Typography>
           </Box>
           <IconButton size="small" onClick={() => setShowDetails(!showDetails)}>
-            {showDetails ? <Compress /> : <Expand />}
+            {showDetails ? <CompressIcon /> : <ExpandIcon />}
           </IconButton>
         </Box>
 
@@ -651,16 +592,16 @@ function PortfolioOverview() {
           <Box display="flex" gap={1}>
             <Tooltip title="Export Portfolio">
               <IconButton size="small">
-                <Download />
+                <DownloadIcon />
               </IconButton>
             </Tooltip>
             <Tooltip title="Share Portfolio">
               <IconButton size="small">
-                <Share />
+                <ShareIcon />
               </IconButton>
             </Tooltip>
             <IconButton size="small">
-              <Visibility />
+              <VisibilityIcon />
             </IconButton>
             <IconButton size="small">
               <Refresh />
@@ -968,7 +909,7 @@ export default function DashboardPage() {
           </Button>
           <Button
             variant="contained"
-            startIcon={<Add />}
+            startIcon={<AddIcon />}
           >
             Add Asset
           </Button>

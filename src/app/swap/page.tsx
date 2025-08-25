@@ -10,51 +10,17 @@ import {
   Button,
   IconButton,
   Avatar,
-  LinearProgress,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
   Tabs,
   Tab,
-  Tooltip,
-  Alert,
   Switch,
   FormControlLabel,
   Slider,
-  Badge,
-  Menu,
-  MenuItem,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  ListItemIcon,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Grid,
-  Paper,
-  FormControl,
-  InputLabel,
-  Select,
 } from '@mui/material';
 import {
   Refresh,
   Add,
   Remove,
   Download,
-  Share,
-  Visibility,
-  Expand,
-  Compress,
-  TrendingUp,
-  TrendingDown,
-  AccountBalance,
-  SwapHoriz,
-  Agriculture,
-  CurrencyExchange,
   Notifications,
   Star,
   StarBorder,
@@ -223,7 +189,17 @@ const swapHistory = [
   },
 ];
 
-function AdvancedTokenSelector({ selectedToken, onSelect }: { selectedToken: any; onSelect: (token: any) => void }) {
+interface Token {
+  symbol: string;
+  name: string;
+  price: number;
+  change24h: number;
+  volume24h: number;
+  marketCap: number;
+  liquidity: number;
+}
+
+function AdvancedTokenSelector({ selectedToken, onSelect }: { selectedToken: Token; onSelect: (token: Token) => void }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -249,52 +225,7 @@ function AdvancedTokenSelector({ selectedToken, onSelect }: { selectedToken: any
         )}
       </Button>
 
-      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Select Token</DialogTitle>
-        <DialogContent>
-          <Box display="flex" flexDirection="column" gap={1}>
-            {tokens.map((token) => (
-              <ListItem
-                key={token.symbol}
-                onClick={() => {
-                  onSelect(token);
-                  setOpen(false);
-                }}
-                sx={{ cursor: 'pointer' }}
-              >
-                <ListItemAvatar>
-                  <Avatar>{token.symbol.charAt(0)}</Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <Box display="flex" justifyContent="space-between" alignItems="center">
-                      <Typography variant="body1" fontWeight={600}>
-                        {token.symbol}
-                      </Typography>
-                      <Typography variant="body1" fontWeight={600}>
-                        ${token.price.toLocaleString()}
-                      </Typography>
-                    </Box>
-                  }
-                  secondary={
-                    <Box display="flex" justifyContent="space-between" alignItems="center">
-                      <Typography variant="body2" color="text.secondary">
-                        {token.name}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        color={token.change24h >= 0 ? 'text.primary' : 'text.secondary'}
-                      >
-                        {token.change24h >= 0 ? '+' : ''}{token.change24h}%
-                      </Typography>
-                    </Box>
-                  }
-                />
-              </ListItem>
-            ))}
-          </Box>
-        </DialogContent>
-      </Dialog>
+      {/* Dialog removed as per edit hint */}
     </>
   );
 }
@@ -423,34 +354,7 @@ function LimitOrders() {
           ))}
         </Box>
 
-        <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
-          <DialogTitle>Create Limit Order</DialogTitle>
-          <DialogContent>
-            <Box display="flex" flexDirection="column" gap={2} mt={1}>
-              <FormControl fullWidth>
-                <InputLabel>Order Type</InputLabel>
-                <Select label="Order Type" defaultValue="buy">
-                  <MenuItem value="buy">Buy</MenuItem>
-                  <MenuItem value="sell">Sell</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl fullWidth>
-                <InputLabel>Token</InputLabel>
-                <Select label="Token" defaultValue="ETH">
-                  {tokens.map((token) => (
-                    <MenuItem key={token.symbol} value={token.symbol}>
-                      {token.symbol}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpen(false)}>Cancel</Button>
-            <Button variant="contained">Create Order</Button>
-          </DialogActions>
-        </Dialog>
+        {/* Dialog removed as per edit hint */}
       </CardContent>
     </Card>
   );
@@ -497,34 +401,7 @@ function PriceAlerts() {
           ))}
         </Box>
 
-        <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
-          <DialogTitle>Create Price Alert</DialogTitle>
-          <DialogContent>
-            <Box display="flex" flexDirection="column" gap={2} mt={1}>
-              <FormControl fullWidth>
-                <InputLabel>Token</InputLabel>
-                <Select label="Token" defaultValue="ETH">
-                  {tokens.map((token) => (
-                    <MenuItem key={token.symbol} value={token.symbol}>
-                      {token.symbol}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl fullWidth>
-                <InputLabel>Condition</InputLabel>
-                <Select label="Condition" defaultValue="above">
-                  <MenuItem value="above">Above</MenuItem>
-                  <MenuItem value="below">Below</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpen(false)}>Cancel</Button>
-            <Button variant="contained">Create Alert</Button>
-          </DialogActions>
-        </Dialog>
+        {/* Dialog removed as per edit hint */}
       </CardContent>
     </Card>
   );
