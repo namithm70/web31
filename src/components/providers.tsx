@@ -117,7 +117,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SessionProvider>
+      <SessionProvider refetchOnWindowFocus refetchWhenOffline={false}>
         <WagmiProvider config={config}>
           <RainbowKitProvider>
             <ThemeProvider>

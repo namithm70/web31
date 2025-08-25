@@ -78,19 +78,23 @@ function ProfileSettings() {
   });
 
   useEffect(() => {
-    setFormData({ name: fullName, email: session?.user?.email || '' });
-  }, [fullName, session?.user?.email]);
+    // Keep form in sync with active session when not editing
+    if (!editing) {
+      setFormData({ name: fullName, email: session?.user?.email || '' });
+    }
+  }, [fullName, session?.user?.email, editing]);
 
   useEffect(() => {
-    // Store a simple client-side join date the first time user visits settings
-    const key = 'defiapp_join_date';
+    // Store a simple client-side join date per user (keyed by email) the first time they visit settings
+    const email = session?.user?.email || 'anonymous';
+    const key = `defiapp_join_date_${email}`;
     let stored = typeof window !== 'undefined' ? window.localStorage.getItem(key) : null;
     if (!stored) {
       stored = new Date().toISOString();
       if (typeof window !== 'undefined') window.localStorage.setItem(key, stored);
     }
     setJoinDate(stored || new Date().toISOString());
-  }, []);
+  }, [session?.user?.email]);
 
   const handleSave = () => {
     console.log('Saving profile:', formData);
