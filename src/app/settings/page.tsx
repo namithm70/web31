@@ -9,25 +9,11 @@ import {
   Button,
   TextField,
   IconButton,
-  Chip,
   Avatar,
   Divider,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
   Alert,
   Switch,
   FormControlLabel,
-  Tabs,
-  Tab,
-  Paper,
-  LinearProgress,
-  Badge,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Select,
   MenuItem,
   FormControl,
@@ -39,17 +25,6 @@ import {
   AccountCircle,
   Security,
   Notifications,
-  Language,
-  Palette,
-  Speed,
-  Storage,
-  NetworkCheck,
-  VpnKey,
-  Visibility,
-  VisibilityOff,
-  Edit,
-  Delete,
-  Add,
   Refresh,
   Save,
   Cancel,
@@ -131,7 +106,7 @@ function ProfileSettings() {
           </Typography>
           <Button
             variant="outlined"
-            startIcon={editing ? <Save /> : <Edit />}
+            startIcon={editing ? <Save /> : <Settings />}
             onClick={editing ? handleSave : () => setEditing(true)}
           >
             {editing ? 'Save' : 'Edit'}
@@ -283,7 +258,7 @@ function SecuritySettings() {
                 InputProps={{
                   endAdornment: (
                     <IconButton onClick={() => setShowPassword(!showPassword)}>
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                      {showPassword ? <VolumeOff /> : <VolumeUp />}
                     </IconButton>
                   ),
                 }}
@@ -616,15 +591,6 @@ function PreferencesSettings() {
 }
 
 export default function SettingsPage() {
-  const [selectedTab, setSelectedTab] = useState(0);
-
-  const tabs = [
-    { label: 'Profile', icon: <AccountCircle /> },
-    { label: 'Security', icon: <Security /> },
-    { label: 'Notifications', icon: <Notifications /> },
-    { label: 'Preferences', icon: <Settings /> },
-  ];
-
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>

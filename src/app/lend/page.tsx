@@ -8,48 +8,24 @@ import {
   Typography,
   Button,
   TextField,
-  IconButton,
   Chip,
   Avatar,
-  Divider,
   List,
   ListItem,
   ListItemText,
   ListItemAvatar,
   Alert,
-  Switch,
-  FormControlLabel,
-  Tabs,
-  Tab,
-  Paper,
-  LinearProgress,
-  Badge,
 } from '@mui/material';
 import {
-  AccountBalance,
-  TrendingUp,
-  TrendingDown,
   Refresh,
   Settings,
-  ArrowDownward,
-  ArrowUpward,
-  Info,
   Warning,
   CheckCircle,
-  Timeline,
   ShowChart,
   WaterDrop,
-  Speed,
-  Lock,
-  LockOpen,
-  Star,
-  LocalFireDepartment,
-  EmojiEvents,
-  MonetizationOn,
   CreditCard,
   Savings,
   Calculate,
-  Security,
 } from '@mui/icons-material';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
@@ -138,7 +114,30 @@ const portfolioData = {
   totalCollateral: 12500,
 };
 
-function LendingPoolCard({ pool, onSupply, onBorrow, onRepay, onWithdraw }: any) {
+interface LendingPool {
+  id: number;
+  asset: string;
+  name: string;
+  supplyRate: number;
+  borrowRate: number;
+  totalSupply: number;
+  totalBorrow: number;
+  utilization: number;
+  collateralFactor: number;
+  yourSupply: number;
+  yourBorrow: number;
+  price: number;
+  change24h: number;
+  icon: string;
+}
+
+function LendingPoolCard({ pool, onSupply, onBorrow, onRepay, onWithdraw }: {
+  pool: LendingPool;
+  onSupply: (poolId: number, amount: string) => void;
+  onBorrow: (poolId: number, amount: string) => void;
+  onRepay: (poolId: number, amount: string) => void;
+  onWithdraw: (poolId: number, amount: string) => void;
+}) {
   const [showDetails, setShowDetails] = useState(false);
   const [action, setAction] = useState<'supply' | 'borrow' | 'repay' | 'withdraw'>('supply');
   const [amount, setAmount] = useState('');
@@ -484,7 +483,6 @@ function InterestRateChart() {
 }
 
 export default function LendPage() {
-  const [selectedTab, setSelectedTab] = useState(0);
   const [filterAsset, setFilterAsset] = useState('all');
 
   const handleSupply = (poolId: number, amount: string) => {

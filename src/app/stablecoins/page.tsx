@@ -7,44 +7,23 @@ import {
   CardContent,
   Typography,
   Button,
-  IconButton,
+  TextField,
   Chip,
   Avatar,
-  Divider,
   List,
   ListItem,
   ListItemText,
   ListItemAvatar,
   Alert,
-  Switch,
-  FormControlLabel,
-  Tabs,
-  Tab,
-  Paper,
   LinearProgress,
-  Badge,
 } from '@mui/material';
 import {
-  AccountBalance,
-  TrendingUp,
-  TrendingDown,
   Refresh,
   Settings,
-  ArrowDownward,
-  ArrowUpward,
-  Info,
   Warning,
   CheckCircle,
-  Timeline,
   ShowChart,
   WaterDrop,
-  Speed,
-  Lock,
-  LockOpen,
-  Star,
-  LocalFireDepartment,
-  EmojiEvents,
-  MonetizationOn,
   CreditCard,
   Savings,
   Calculate,
@@ -216,7 +195,30 @@ const pegMonitoring = {
   ],
 };
 
-function StablecoinCard({ stablecoin, onDeposit, onWithdraw }: any) {
+interface Stablecoin {
+  id: number;
+  symbol: string;
+  name: string;
+  price: number;
+  change24h: number;
+  marketCap: number;
+  volume24h: number;
+  supply: number;
+  apy: number;
+  pegStatus: string;
+  risk: string;
+  issuer: string;
+  collateral: string;
+  icon: string;
+  yourBalance: number;
+  yourValue: number;
+}
+
+function StablecoinCard({ stablecoin, onDeposit, onWithdraw }: {
+  stablecoin: Stablecoin;
+  onDeposit: (stablecoinId: number, amount: string) => void;
+  onWithdraw: (stablecoinId: number) => void;
+}) {
   const [showDetails, setShowDetails] = useState(false);
 
   const getPegStatusColor = (status: string) => {
@@ -399,7 +401,7 @@ function YieldOpportunities() {
                   }}
                 >
                   {opportunity.type === 'Lending' ? <Savings /> : 
-                   opportunity.type === 'LP Farming' ? <WaterDrop /> : <LocalFireDepartment />}
+                   opportunity.type === 'LP Farming' ? <WaterDrop /> : <Calculate />}
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -574,7 +576,6 @@ function RiskAnalysis() {
 }
 
 export default function StablecoinsPage() {
-  const [selectedTab, setSelectedTab] = useState(0);
   const [filterRisk, setFilterRisk] = useState('all');
 
   const handleDeposit = (stablecoinId: number, amount: string) => {

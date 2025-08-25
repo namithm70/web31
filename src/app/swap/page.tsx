@@ -9,28 +9,20 @@ import {
   Button,
   TextField,
   IconButton,
-  Chip,
   Avatar,
   Divider,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
   Alert,
-  Switch,
-  FormControlLabel,
-  Tabs,
-  Tab,
-  Paper,
-  Grid,
-  LinearProgress,
+  Chip,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Slider,
 } from '@mui/material';
 import {
   SwapHoriz,
   TrendingUp,
   TrendingDown,
-  Refresh,
-  Settings,
   ArrowDownward,
   ArrowUpward,
   Info,
@@ -38,83 +30,166 @@ import {
   CheckCircle,
   Timeline,
   ShowChart,
-  WaterDrop,
   Speed,
-  AccountBalance,
+  Lock,
+  LockOpen,
+  Star,
+  LocalFireDepartment,
+  EmojiEvents,
+  MonetizationOn,
+  CreditCard,
+  Calculate,
+  Security,
+  PieChart,
+  BarChart,
+  AttachMoney,
+  AccountBalanceWallet,
+  Agriculture,
+  Refresh,
+  Settings,
+  History,
+  Visibility,
+  VisibilityOff,
 } from '@mui/icons-material';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
 
-// Mock data for tokens
+// Mock data
 const tokens = [
-  { symbol: 'ETH', name: 'Ethereum', price: 3200, change24h: 2.5, icon: '🔵' },
-  { symbol: 'USDC', name: 'USD Coin', price: 1.00, change24h: 0.1, icon: '🔵' },
-  { symbol: 'UNI', name: 'Uniswap', price: 8.50, change24h: -1.2, icon: '🟣' },
-  { symbol: 'AAVE', name: 'Aave', price: 95.20, change24h: 3.8, icon: '🔵' },
-  { symbol: 'LINK', name: 'Chainlink', price: 15.75, change24h: 1.9, icon: '🔵' },
+  { symbol: 'ETH', name: 'Ethereum', price: 2500, change24h: 2.5, icon: '🔵' },
+  { symbol: 'USDC', name: 'USD Coin', price: 1.00, change24h: 0.01, icon: '🔵' },
+  { symbol: 'USDT', name: 'Tether', price: 1.00, change24h: -0.02, icon: '🟢' },
+  { symbol: 'DAI', name: 'Dai', price: 1.00, change24h: 0.00, icon: '🟡' },
+  { symbol: 'WBTC', name: 'Wrapped Bitcoin', price: 45000, change24h: 1.8, icon: '🟠' },
+  { symbol: 'UNI', name: 'Uniswap', price: 12.50, change24h: -3.2, icon: '🟣' },
 ];
 
-// Mock liquidity pools
 const liquidityPools = [
-  { pair: 'ETH/USDC', liquidity: 12500000, volume24h: 2500000, fee: 0.3, apy: 12.5 },
-  { pair: 'UNI/ETH', liquidity: 8500000, volume24h: 1800000, fee: 0.3, apy: 15.2 },
-  { pair: 'AAVE/USDC', liquidity: 3200000, volume24h: 750000, fee: 0.3, apy: 18.7 },
-  { pair: 'LINK/ETH', liquidity: 2100000, volume24h: 420000, fee: 0.3, apy: 14.3 },
+  { pair: 'ETH/USDC', liquidity: 15000000, volume24h: 2500000, fee: 0.3, apy: 12.5 },
+  { pair: 'USDC/USDT', liquidity: 8000000, volume24h: 1800000, fee: 0.05, apy: 8.2 },
+  { pair: 'ETH/DAI', liquidity: 12000000, volume24h: 2100000, fee: 0.3, apy: 11.8 },
+  { pair: 'WBTC/ETH', liquidity: 9000000, volume24h: 1600000, fee: 0.3, apy: 9.5 },
 ];
 
-// Mock transaction history
 const swapHistory = [
-  { id: 1, from: 'ETH', to: 'USDC', amount: 0.5, value: 1600, timestamp: new Date(Date.now() - 1000 * 60 * 30), status: 'completed' },
-  { id: 2, from: 'UNI', to: 'ETH', amount: 100, value: 850, timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), status: 'completed' },
-  { id: 3, from: 'USDC', to: 'AAVE', amount: 500, value: 500, timestamp: new Date(Date.now() - 1000 * 60 * 60 * 6), status: 'pending' },
+  { from: 'ETH', to: 'USDC', amount: 2.5, value: 6250, timestamp: '2024-01-15T10:30:00Z', status: 'completed' },
+  { from: 'USDC', to: 'DAI', amount: 1000, value: 1000, timestamp: '2024-01-15T09:15:00Z', status: 'completed' },
+  { from: 'WBTC', to: 'ETH', amount: 0.1, value: 4500, timestamp: '2024-01-15T08:45:00Z', status: 'pending' },
+  { from: 'UNI', to: 'USDT', amount: 50, value: 625, timestamp: '2024-01-15T08:00:00Z', status: 'failed' },
 ];
 
-function TokenSelector({ label, value, onTokenSelect, onAmountChange }: any) {
+interface Token {
+  symbol: string;
+  name: string;
+  price: number;
+  change24h: number;
+  icon: string;
+}
+
+interface LiquidityPool {
+  pair: string;
+  liquidity: number;
+  volume24h: number;
+  fee: number;
+  apy: number;
+}
+
+interface SwapHistoryItem {
+  from: string;
+  to: string;
+  amount: number;
+  value: number;
+  timestamp: string;
+  status: 'completed' | 'pending' | 'failed';
+}
+
+function TokenSelector({ 
+  label, 
+  value, 
+  onTokenChange, 
+  amount, 
+  onAmountChange 
+}: { 
+  label: string; 
+  value: Token | null; 
+  onTokenChange: (token: Token) => void; 
+  amount: string; 
+  onAmountChange: (amount: string) => void; 
+}) {
   const [open, setOpen] = useState(false);
 
   return (
-    <Card variant="outlined" sx={{ p: 2 }}>
-      <Typography variant="body2" color="text.secondary" mb={1}>
-        {label}
-      </Typography>
-      <Box display="flex" alignItems="center" gap={2}>
-        <Button
-          variant="outlined"
-          onClick={() => setOpen(!open)}
-          sx={{ minWidth: 120, justifyContent: 'space-between' }}
-        >
-          <Box display="flex" alignItems="center" gap={1}>
-            <span>{value?.icon || '🔵'}</span>
-            <Typography>{value?.symbol || 'Select Token'}</Typography>
-          </Box>
-          <ArrowDownward sx={{ fontSize: 16 }} />
-        </Button>
-        <TextField
-          fullWidth
-          placeholder="0.0"
-          type="number"
-          onChange={(e) => onAmountChange(e.target.value)}
-          sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
-        />
-      </Box>
-      {value && (
-        <Box display="flex" justifyContent="space-between" mt={1}>
-          <Typography variant="body2" color="text.secondary">
-            ${value.price}
-          </Typography>
-          <Typography variant="body2" color={value.change24h >= 0 ? 'success.main' : 'error.main'}>
-            {value.change24h >= 0 ? '+' : ''}{value.change24h}%
-          </Typography>
+    <Card>
+      <CardContent>
+        <Typography variant="body2" color="text.secondary" mb={2}>
+          {label}
+        </Typography>
+        
+        <Box display="flex" gap={2} mb={2}>
+          <Button
+            variant="outlined"
+            onClick={() => setOpen(true)}
+            startIcon={value ? <Avatar sx={{ width: 20, height: 20 }}>{value.icon}</Avatar> : undefined}
+            fullWidth
+          >
+            {value ? `${value.symbol} - $${value.price.toFixed(2)}` : 'Select Token'}
+          </Button>
         </Box>
-      )}
+
+        <TextField
+          label="Amount"
+          type="number"
+          value={amount}
+          onChange={(e) => onAmountChange(e.target.value)}
+          fullWidth
+          InputProps={{
+            endAdornment: value && (
+              <Typography variant="body2" color="text.secondary">
+                ≈ ${value.price * parseFloat(amount || '0')}
+              </Typography>
+            ),
+          }}
+        />
+
+        {open && (
+          <Box mt={2} p={2} bgcolor="grey.50" borderRadius={2}>
+            <Typography variant="body2" fontWeight={600} mb={2}>
+              Select Token
+            </Typography>
+            <Box display="flex" flexDirection="column" gap={1}>
+              {tokens.map((token) => (
+                <Button
+                  key={token.symbol}
+                  variant="text"
+                  onClick={() => {
+                    onTokenChange(token);
+                    setOpen(false);
+                  }}
+                  startIcon={<Avatar sx={{ width: 20, height: 20 }}>{token.icon}</Avatar>}
+                  sx={{ justifyContent: 'flex-start' }}
+                >
+                  <Box display="flex" flexDirection="column" alignItems="flex-start">
+                    <Typography variant="body2" fontWeight={600}>
+                      {token.symbol}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {token.name}
+                    </Typography>
+                  </Box>
+                </Button>
+              ))}
+            </Box>
+          </Box>
+        )}
+      </CardContent>
     </Card>
   );
 }
 
 function PriceChart() {
   return (
-    <Card className="animate-fade-in-up">
+    <Card>
       <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
           <Typography variant="h6" fontWeight={600}>
             Price Chart
           </Typography>
@@ -125,23 +200,23 @@ function PriceChart() {
             <Button size="small" variant="outlined">1M</Button>
           </Box>
         </Box>
-        <Box
-          sx={{
-            height: 200,
-            background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
-            borderRadius: 2,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: '1px solid rgba(102, 126, 234, 0.2)',
-          }}
-        >
+
+        <Box height={200} display="flex" alignItems="center" justifyContent="center" bgcolor="grey.50" borderRadius={2}>
           <Box textAlign="center">
-            <ShowChart sx={{ fontSize: 48, color: 'primary.main', mb: 1 }} />
+            <ShowChart sx={{ fontSize: 48, color: 'grey.400', mb: 2 }} />
             <Typography variant="body2" color="text.secondary">
-              Interactive Chart Coming Soon
+              Chart data will be displayed here
             </Typography>
           </Box>
+        </Box>
+
+        <Box display="flex" justifyContent="space-between" mt={2}>
+          <Typography variant="body2" color="text.secondary">
+            Volume: $2.5M
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Market Cap: $45.2B
+          </Typography>
         </Box>
       </CardContent>
     </Card>
@@ -150,135 +225,138 @@ function PriceChart() {
 
 function LiquidityPools() {
   return (
-    <Card className="animate-fade-in-up stagger-1">
+    <Card>
       <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-          <Typography variant="h6" fontWeight={600}>
-            Liquidity Pools
-          </Typography>
-          <Button variant="outlined" size="small" startIcon={<WaterDrop />}>
-            Add Liquidity
-          </Button>
-        </Box>
-        <List>
-          {liquidityPools.map((pool, index) => (
-            <ListItem key={index} sx={{ px: 0, py: 1 }}>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: 'primary.main' }}>
-                  <WaterDrop />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="body1" fontWeight={600}>
-                      {pool.pair}
-                    </Typography>
-                    <Chip label={`${pool.fee}%`} size="small" color="primary" />
-                  </Box>
-                }
-                secondary={
-                  <Box display="flex" justifyContent="space-between" alignItems="center" mt={1}>
-                    <Box>
-                      <Typography variant="body2" color="text.secondary">
-                        Liquidity: ${(pool.liquidity / 1000000).toFixed(1)}M
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Volume 24h: ${(pool.volume24h / 1000000).toFixed(1)}M
-                      </Typography>
-                    </Box>
-                    <Box textAlign="right">
-                      <Typography variant="body2" color="success.main" fontWeight={600}>
-                        {pool.apy}% APY
-                      </Typography>
-                    </Box>
-                  </Box>
-                }
-              />
-            </ListItem>
+        <Typography variant="h6" fontWeight={600} mb={3}>
+          Liquidity Pools
+        </Typography>
+
+        <Box display="flex" flexDirection="column" gap={2}>
+          {liquidityPools.map((pool) => (
+            <Box key={pool.pair} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                <Typography variant="body1" fontWeight={600}>
+                  {pool.pair}
+                </Typography>
+                <Chip label={`${pool.fee}%`} size="small" color="primary" />
+              </Box>
+              
+              <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2}>
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    Liquidity
+                  </Typography>
+                  <Typography variant="body2" fontWeight={600}>
+                    ${(pool.liquidity / 1000000).toFixed(1)}M
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    Volume (24h)
+                  </Typography>
+                  <Typography variant="body2" fontWeight={600}>
+                    ${(pool.volume24h / 1000000).toFixed(1)}M
+                  </Typography>
+                </Box>
+              </Box>
+              
+              <Box mt={1}>
+                <Typography variant="body2" color="text.secondary">
+                  APY: <span style={{ color: 'green', fontWeight: 600 }}>{pool.apy}%</span>
+                </Typography>
+              </Box>
+            </Box>
           ))}
-        </List>
+        </Box>
       </CardContent>
     </Card>
   );
 }
 
 function SwapHistory() {
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed': return 'success';
+      case 'pending': return 'warning';
+      case 'failed': return 'error';
+      default: return 'default';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'completed': return <CheckCircle />;
+      case 'pending': return <Warning />;
+      case 'failed': return <Info />;
+      default: return <Info />;
+    }
+  };
+
   return (
-    <Card className="animate-fade-in-up stagger-2">
+    <Card>
       <CardContent>
         <Typography variant="h6" fontWeight={600} mb={3}>
           Recent Swaps
         </Typography>
-        <List>
-          {swapHistory.map((swap) => (
-            <ListItem key={swap.id} sx={{ px: 0, py: 1 }}>
-              <ListItemAvatar>
-                <Avatar
-                  sx={{
-                    bgcolor: swap.status === 'completed' ? 'success.main' : 'warning.main',
-                  }}
-                >
-                  {swap.status === 'completed' ? <CheckCircle /> : <Warning />}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="body1" fontWeight={600}>
-                      {swap.from} → {swap.to}
-                    </Typography>
-                    <Typography variant="body1" fontWeight={600}>
-                      ${swap.value.toLocaleString()}
-                    </Typography>
-                  </Box>
-                }
-                secondary={
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="body2" color="text.secondary">
-                      {swap.amount} {swap.from}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {swap.timestamp.toLocaleTimeString()}
-                    </Typography>
-                  </Box>
-                }
-              />
-            </ListItem>
+
+        <Box display="flex" flexDirection="column" gap={2}>
+          {swapHistory.map((swap, index) => (
+            <Box key={index} p={2} border="1px solid" borderColor="divider" borderRadius={2}>
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                <Typography variant="body1" fontWeight={600}>
+                  {swap.from} → {swap.to}
+                </Typography>
+                <Chip
+                  icon={getStatusIcon(swap.status)}
+                  label={swap.status}
+                  color={getStatusColor(swap.status) as any}
+                  size="small"
+                />
+              </Box>
+              
+              <Typography variant="body2" color="text.secondary">
+                {swap.amount} {swap.from} (${swap.value.toFixed(2)})
+              </Typography>
+              
+              <Typography variant="caption" color="text.secondary">
+                {new Date(swap.timestamp).toLocaleString()}
+              </Typography>
+            </Box>
           ))}
-        </List>
+        </Box>
       </CardContent>
     </Card>
   );
 }
 
 export default function SwapPage() {
-  const [fromToken, setFromToken] = useState(tokens[0]);
-  const [toToken, setToToken] = useState(tokens[1]);
+  const [fromToken, setFromToken] = useState<Token | null>(null);
+  const [toToken, setToToken] = useState<Token | null>(null);
   const [fromAmount, setFromAmount] = useState('');
   const [toAmount, setToAmount] = useState('');
   const [slippage, setSlippage] = useState(0.5);
-  const [selectedTab, setSelectedTab] = useState(0);
+  const [showSlippage, setShowSlippage] = useState(false);
 
   const handleSwap = () => {
-    // Mock swap functionality
-    console.log('Swapping', fromAmount, fromToken.symbol, 'for', toAmount, toToken.symbol);
+    console.log('Swapping:', { fromToken, toToken, fromAmount, toAmount, slippage });
   };
+
+  const estimatedRate = fromToken && toToken ? toToken.price / fromToken.price : 0;
 
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
         <Box>
           <Typography variant="h3" fontWeight={700} mb={1}>
-            Swap Tokens
+            Swap
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            Trade tokens instantly with the best rates
+            Exchange tokens with the best rates and lowest fees
           </Typography>
         </Box>
         <Box display="flex" gap={2}>
-          <Button variant="outlined" startIcon={<Refresh />}>
-            Refresh
+          <Button variant="outlined" startIcon={<History />}>
+            History
           </Button>
           <Button variant="outlined" startIcon={<Settings />}>
             Settings
@@ -288,35 +366,49 @@ export default function SwapPage() {
 
       <WalletConnectionTest />
 
-      <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '1fr 1fr' }} gap={4}>
-        {/* Swap Interface */}
+      <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '2fr 1fr' }} gap={4}>
+        {/* Main Swap Interface */}
         <Box>
-          <Card className="animate-fade-in-up">
-            <CardContent sx={{ p: 3 }}>
-              <Typography variant="h5" fontWeight={600} mb={3}>
-                Swap
-              </Typography>
+          <Card>
+            <CardContent>
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+                <Typography variant="h6" fontWeight={600}>
+                  Swap Tokens
+                </Typography>
+                <IconButton onClick={() => setShowSlippage(!showSlippage)}>
+                  <Settings />
+                </IconButton>
+              </Box>
 
-              <Box display="flex" flexDirection="column" gap={2} mb={3}>
+              {showSlippage && (
+                <Box mb={3} p={2} bgcolor="grey.50" borderRadius={2}>
+                  <Typography variant="body2" fontWeight={600} mb={2}>
+                    Slippage Tolerance
+                  </Typography>
+                  <Slider
+                    value={slippage}
+                    onChange={(_, value) => setSlippage(value as number)}
+                    min={0.1}
+                    max={5}
+                    step={0.1}
+                    marks
+                    valueLabelDisplay="auto"
+                    valueLabelFormat={(value) => `${value}%`}
+                  />
+                </Box>
+              )}
+
+              <Box display="flex" flexDirection="column" gap={3}>
                 <TokenSelector
                   label="From"
                   value={fromToken}
-                  onTokenSelect={setFromToken}
+                  onTokenChange={setFromToken}
+                  amount={fromAmount}
                   onAmountChange={setFromAmount}
                 />
-                
+
                 <Box display="flex" justifyContent="center">
-                  <IconButton
-                    sx={{
-                      border: '2px solid',
-                      borderColor: 'primary.main',
-                      color: 'primary.main',
-                      '&:hover': {
-                        transform: 'rotate(180deg)',
-                        transition: 'transform 0.3s ease',
-                      },
-                    }}
-                  >
+                  <IconButton>
                     <ArrowDownward />
                   </IconButton>
                 </Box>
@@ -324,59 +416,42 @@ export default function SwapPage() {
                 <TokenSelector
                   label="To"
                   value={toToken}
-                  onTokenSelect={setToToken}
+                  onTokenChange={setToToken}
+                  amount={toAmount}
                   onAmountChange={setToAmount}
                 />
-              </Box>
 
-              {/* Swap Details */}
-              <Box sx={{ bgcolor: 'grey.50', p: 2, borderRadius: 2, mb: 3 }}>
-                <Box display="flex" justifyContent="space-between" mb={1}>
-                  <Typography variant="body2" color="text.secondary">
-                    Rate
-                  </Typography>
-                  <Typography variant="body2" fontWeight={600}>
-                    1 {fromToken?.symbol} = {(toToken?.price / fromToken?.price).toFixed(4)} {toToken?.symbol}
-                  </Typography>
-                </Box>
-                <Box display="flex" justifyContent="space-between" mb={1}>
-                  <Typography variant="body2" color="text.secondary">
-                    Slippage
-                  </Typography>
-                  <Typography variant="body2" fontWeight={600}>
-                    {slippage}%
-                  </Typography>
-                </Box>
-                <Box display="flex" justifyContent="space-between">
-                  <Typography variant="body2" color="text.secondary">
-                    Network Fee
-                  </Typography>
-                  <Typography variant="body2" fontWeight={600}>
-                    ~$5.20
-                  </Typography>
-                </Box>
-              </Box>
+                {fromToken && toToken && (
+                  <Box p={2} bgcolor="grey.50" borderRadius={2}>
+                    <Typography variant="body2" color="text.secondary" mb={1}>
+                      Exchange Rate
+                    </Typography>
+                    <Typography variant="body1" fontWeight={600}>
+                      1 {fromToken.symbol} = {estimatedRate.toFixed(6)} {toToken.symbol}
+                    </Typography>
+                  </Box>
+                )}
 
-              <Button
-                variant="contained"
-                fullWidth
-                size="large"
-                onClick={handleSwap}
-                startIcon={<SwapHoriz />}
-                sx={{ py: 1.5 }}
-              >
-                Swap {fromToken?.symbol} for {toToken?.symbol}
-              </Button>
+                <Button
+                  variant="contained"
+                  size="large"
+                  startIcon={<SwapHoriz />}
+                  onClick={handleSwap}
+                  disabled={!fromToken || !toToken || !fromAmount || !toAmount}
+                  fullWidth
+                >
+                  Swap
+                </Button>
+              </Box>
             </CardContent>
           </Card>
 
-          {/* Swap History */}
           <Box mt={3}>
             <SwapHistory />
           </Box>
         </Box>
 
-        {/* Charts and Analytics */}
+        {/* Sidebar */}
         <Box>
           <PriceChart />
           

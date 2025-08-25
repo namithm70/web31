@@ -10,35 +10,27 @@ import {
   IconButton,
   Chip,
   Avatar,
-  Divider,
   List,
   ListItem,
   ListItemText,
   ListItemAvatar,
-  Alert,
   Switch,
   FormControlLabel,
-  Tabs,
-  Tab,
   Paper,
   LinearProgress,
-  Badge,
 } from '@mui/material';
 import {
   AccountBalance,
   TrendingUp,
-  TrendingDown,
   Refresh,
   Settings,
   ArrowDownward,
   ArrowUpward,
-  Info,
   Warning,
   CheckCircle,
   Timeline,
   ShowChart,
   WaterDrop,
-  Speed,
   Lock,
   LockOpen,
   Star,
@@ -489,8 +481,6 @@ function PerformanceChart() {
 }
 
 export default function PortfolioPage() {
-  const [selectedTab, setSelectedTab] = useState(0);
-
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>

@@ -8,39 +8,23 @@ import {
   Typography,
   Button,
   TextField,
-  IconButton,
   Chip,
   Avatar,
-  Divider,
   List,
   ListItem,
   ListItemText,
   ListItemAvatar,
   Alert,
-  Switch,
-  FormControlLabel,
-  Tabs,
-  Tab,
-  Paper,
-  LinearProgress,
-  Badge,
 } from '@mui/material';
 import {
   Agriculture,
-  TrendingUp,
-  TrendingDown,
   Refresh,
   Settings,
   ArrowDownward,
-  ArrowUpward,
-  Info,
   Warning,
   CheckCircle,
-  Timeline,
   ShowChart,
   WaterDrop,
-  Speed,
-  AccountBalance,
   Lock,
   LockOpen,
   Star,
@@ -121,7 +105,26 @@ const rewardsData = {
   lastClaim: new Date(Date.now() - 1000 * 60 * 60 * 24),
 };
 
-function FarmingPoolCard({ pool, onStake, onUnstake, onClaim }: any) {
+interface Pool {
+  id: number;
+  name: string;
+  tokens: string[];
+  apy: number;
+  tvl: number;
+  staked: number;
+  rewards: string[];
+  multiplier: number;
+  lockPeriod: number;
+  risk: string;
+  status: string;
+}
+
+function FarmingPoolCard({ pool, onStake, onUnstake, onClaim }: {
+  pool: Pool;
+  onStake: (poolId: number, amount: string) => void;
+  onUnstake: (poolId: number, amount?: string) => void;
+  onClaim: (poolId: number) => void;
+}) {
   const [showDetails, setShowDetails] = useState(false);
   const [stakeAmount, setStakeAmount] = useState('');
   const [unstakeAmount, setUnstakeAmount] = useState('');
@@ -407,7 +410,6 @@ function StakingHistory() {
 }
 
 export default function FarmPage() {
-  const [selectedTab, setSelectedTab] = useState(0);
   const [filterRisk, setFilterRisk] = useState('all');
 
   const handleStake = (poolId: number, amount: string) => {
