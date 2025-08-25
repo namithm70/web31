@@ -29,8 +29,9 @@ export default function SignUpPage() {
       setTimeout(() => {
         window.location.href = '/auth/signin';
       }, 800);
-    } catch (err: any) {
-      setError(err.message || 'Sign up failed');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Sign up failed';
+      setError(message);
     } finally {
       setLoading(false);
     }

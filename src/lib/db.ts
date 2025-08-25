@@ -5,16 +5,19 @@ if (!uri) {
   throw new Error('MONGODB_URI is not set');
 }
 
-// Cache the connection across hot reloads in development
-// to avoid creating multiple connections.
-let cached = (global as any)._mongoose as {
+declare global {
+  // eslint-disable-next-line no-var
+  var _mongoose: {
+    conn: typeof mongoose | null;
+    promise: Promise<typeof mongoose> | null;
+  } | undefined;
+}
+
+const cached = global._mongoose || { conn: null, promise: null } as {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
 };
-
-if (!cached) {
-  cached = (global as any)._mongoose = { conn: null, promise: null };
-}
+if (!global._mongoose) global._mongoose = cached;
 
 export async function connectToDatabase() {
   if (cached.conn) return cached.conn;

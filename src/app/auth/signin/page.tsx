@@ -22,10 +22,10 @@ export default function SignInPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || 'Sign in failed');
-      // success: redirect to dashboard
       window.location.href = '/dashboard';
-    } catch (err: any) {
-      setError(err.message || 'Sign in failed');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Sign in failed';
+      setError(message);
     } finally {
       setLoading(false);
     }

@@ -32,8 +32,8 @@ export async function POST(req: NextRequest) {
     const doc = await User.create({ name, email, password: hashed });
 
     return NextResponse.json({ id: doc._id.toString(), email: doc.email, name: doc.name }, { status: 201 });
-  } catch (err: any) {
-    if (err?.code === 11000) {
+  } catch (err: unknown) {
+    if (typeof err === 'object' && err !== null && 'code' in err && (err as { code?: number }).code === 11000) {
       return NextResponse.json({ error: 'Email already in use' }, { status: 409 });
     }
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
