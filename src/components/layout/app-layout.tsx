@@ -224,7 +224,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           },
         }}
       >
-        {isConnected && navigationItems.map((item) => (
+        {showNav && navigationItems.map((item) => (
           <Fade key={item.name} in timeout={300}>
             <MenuItem
               onClick={() => handleNavigation(item.href)}
