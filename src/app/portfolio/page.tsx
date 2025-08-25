@@ -57,40 +57,40 @@ function PortfolioOverview() {
         </Typography>
 
         <Box display="flex" flexDirection="column" gap={3}>
-          <Box p={2} bgcolor="success.light" borderRadius={2}>
+          <Box p={2} bgcolor="grey.50" borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Total Portfolio Value
             </Typography>
-            <Typography variant="h4" fontWeight={700} color="success.main">
+            <Typography variant="h4" fontWeight={700} color="text.primary">
               ${performanceData.totalValue.toLocaleString()}
             </Typography>
-            <Typography variant="body2" color="success.main" fontWeight={600}>
+            <Typography variant="body2" color="text.primary" fontWeight={600}>
               +${performanceData.totalGain.toLocaleString()} (+{performanceData.gainPercentage}%)
             </Typography>
           </Box>
 
           <Box display="grid" gridTemplateColumns="1fr 1fr 1fr" gap={2}>
-            <Box textAlign="center" p={2} bgcolor="info.light" borderRadius={2}>
+            <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
               <Typography variant="body2" color="text.secondary">
                 24h Change
               </Typography>
-              <Typography variant="h6" fontWeight={600} color="info.main">
+              <Typography variant="h6" fontWeight={600} color="text.primary">
                 +${performanceData.change24h.toLocaleString()}
               </Typography>
             </Box>
-            <Box textAlign="center" p={2} bgcolor="warning.light" borderRadius={2}>
+            <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
               <Typography variant="body2" color="text.secondary">
                 7d Change
               </Typography>
-              <Typography variant="h6" fontWeight={600} color="warning.main">
+              <Typography variant="h6" fontWeight={600} color="text.primary">
                 +${performanceData.change7d.toLocaleString()}
               </Typography>
             </Box>
-            <Box textAlign="center" p={2} bgcolor="error.light" borderRadius={2}>
+            <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
               <Typography variant="body2" color="text.secondary">
                 30d Change
               </Typography>
-              <Typography variant="h6" fontWeight={600} color="error.main">
+              <Typography variant="h6" fontWeight={600} color="text.primary">
                 +${performanceData.change30d.toLocaleString()}
               </Typography>
             </Box>
@@ -132,7 +132,7 @@ function AssetAllocation() {
                   </Typography>
                   <Typography 
                     variant="body2" 
-                    color={asset.change24h >= 0 ? 'success.main' : 'error.main'}
+                    color={asset.change24h >= 0 ? 'text.primary' : 'text.secondary'}
                   >
                     {asset.change24h >= 0 ? '+' : ''}{asset.change24h}%
                   </Typography>
@@ -179,7 +179,7 @@ function DeFiPositions() {
                     {position.pair || position.asset}
                   </Typography>
                 </Box>
-                <Chip label={position.type} size="small" color="primary" />
+                <Chip label={position.type} size="small" color="primary" variant="outlined" />
               </Box>
               
               <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -195,7 +195,7 @@ function DeFiPositions() {
                   <Typography variant="body2" color="text.secondary">
                     APY
                   </Typography>
-                  <Typography variant="body1" fontWeight={600} color="success.main">
+                  <Typography variant="body1" fontWeight={600} color="text.primary">
                     {position.apy}%
                   </Typography>
                 </Box>
@@ -206,7 +206,7 @@ function DeFiPositions() {
                   <Typography 
                     variant="body1" 
                     fontWeight={600}
-                    color={position.change24h >= 0 ? 'success.main' : 'error.main'}
+                    color={position.change24h >= 0 ? 'text.primary' : 'text.secondary'}
                   >
                     {position.change24h >= 0 ? '+' : ''}{position.change24h}%
                   </Typography>
@@ -224,9 +224,9 @@ function TransactionHistory() {
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'swap': return 'primary';
-      case 'stake': return 'success';
-      case 'farm': return 'warning';
-      case 'lend': return 'info';
+      case 'stake': return 'primary';
+      case 'farm': return 'primary';
+      case 'lend': return 'primary';
       default: return 'default';
     }
   };
@@ -250,8 +250,9 @@ function TransactionHistory() {
                 </Typography>
                 <Chip
                   label={tx.type}
-                  color={getTypeColor(tx.type) as 'primary' | 'success' | 'warning' | 'info' | 'default'}
+                  color={getTypeColor(tx.type) as 'primary' | 'default'}
                   size="small"
+                  variant="outlined"
                 />
               </Box>
               

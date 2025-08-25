@@ -102,9 +102,9 @@ function LendingPoolCard({ pool }: { pool: LendingPool }) {
   const [action, setAction] = useState<'supply' | 'borrow' | 'repay' | 'withdraw'>('supply');
 
   const getUtilizationColor = (utilization: number) => {
-    if (utilization > 80) return 'error';
-    if (utilization > 60) return 'warning';
-    return 'success';
+    if (utilization > 80) return 'primary';
+    if (utilization > 60) return 'primary';
+    return 'primary';
   };
 
   return (
@@ -126,8 +126,9 @@ function LendingPoolCard({ pool }: { pool: LendingPool }) {
           </Box>
           <Chip
             label={`${pool.utilization}%`}
-            color={getUtilizationColor(pool.utilization) as 'success' | 'warning' | 'error'}
+            color={getUtilizationColor(pool.utilization) as 'primary'}
             size="small"
+            variant="outlined"
           />
         </Box>
 
@@ -136,7 +137,7 @@ function LendingPoolCard({ pool }: { pool: LendingPool }) {
             <Typography variant="body2" color="text.secondary">
               Supply Rate
             </Typography>
-            <Typography variant="h6" fontWeight={600} color="success.main">
+            <Typography variant="h6" fontWeight={600} color="text.primary">
               {pool.supplyRate}%
             </Typography>
           </Box>
@@ -144,7 +145,7 @@ function LendingPoolCard({ pool }: { pool: LendingPool }) {
             <Typography variant="body2" color="text.secondary">
               Borrow Rate
             </Typography>
-            <Typography variant="h6" fontWeight={600} color="error.main">
+            <Typography variant="h6" fontWeight={600} color="text.secondary">
               {pool.borrowRate}%
             </Typography>
           </Box>
@@ -228,38 +229,38 @@ function PortfolioOverview() {
         </Typography>
 
         <Box display="flex" flexDirection="column" gap={3}>
-          <Box p={2} bgcolor="success.light" borderRadius={2}>
+          <Box p={2} bgcolor="grey.50" borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Total Supplied
             </Typography>
-            <Typography variant="h5" fontWeight={600} color="success.main">
+            <Typography variant="h5" fontWeight={600} color="text.primary">
               ${portfolioData.totalSupplied.toLocaleString()}
             </Typography>
           </Box>
 
-          <Box p={2} bgcolor="error.light" borderRadius={2}>
+          <Box p={2} bgcolor="grey.100" borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Total Borrowed
             </Typography>
-            <Typography variant="h5" fontWeight={600} color="error.main">
+            <Typography variant="h5" fontWeight={600} color="text.secondary">
               ${portfolioData.totalBorrowed.toLocaleString()}
             </Typography>
           </Box>
 
-          <Box p={2} bgcolor="info.light" borderRadius={2}>
+          <Box p={2} bgcolor="grey.50" borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Health Factor
             </Typography>
-            <Typography variant="h5" fontWeight={600} color="info.main">
+            <Typography variant="h5" fontWeight={600} color="text.primary">
               {portfolioData.healthFactor}
             </Typography>
           </Box>
 
-          <Box p={2} bgcolor="warning.light" borderRadius={2}>
+          <Box p={2} bgcolor="grey.100" borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Available to Borrow
             </Typography>
-            <Typography variant="h5" fontWeight={600} color="warning.main">
+            <Typography variant="h5" fontWeight={600} color="text.primary">
               ${portfolioData.availableToBorrow.toLocaleString()}
             </Typography>
           </Box>
@@ -295,8 +296,9 @@ function BorrowingHistory() {
                 </Typography>
                 <Chip
                   label={item.action}
-                  color={item.action === 'borrow' ? 'error' : 'success'}
+                  color="primary"
                   size="small"
+                  variant="outlined"
                 />
               </Box>
               <Typography variant="body2" color="text.secondary">

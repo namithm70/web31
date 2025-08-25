@@ -139,7 +139,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </Box>
 
             {/* Wallet Connection & Mobile Menu */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                color: isConnected ? 'text.primary' : 'primary.main',
+              }}
+            >
               {/* Wallet Connection */}
               <Fade in timeout={1000}>
                 <Chip

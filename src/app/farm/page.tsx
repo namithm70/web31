@@ -104,9 +104,9 @@ function FarmingPoolCard({ pool }: { pool: Pool }) {
 
   const getRiskColor = (risk: string) => {
     switch (risk) {
-      case 'low': return 'success';
-      case 'medium': return 'warning';
-      case 'high': return 'error';
+      case 'low': return 'primary';
+      case 'medium': return 'primary';
+      case 'high': return 'primary';
       default: return 'default';
     }
   };
@@ -125,8 +125,9 @@ function FarmingPoolCard({ pool }: { pool: Pool }) {
           </Box>
           <Chip
             label={pool.risk.toUpperCase()}
-            color={getRiskColor(pool.risk) as 'success' | 'warning' | 'error' | 'default'}
+            color={getRiskColor(pool.risk) as 'primary' | 'default'}
             size="small"
+            variant="outlined"
           />
         </Box>
 
@@ -135,7 +136,7 @@ function FarmingPoolCard({ pool }: { pool: Pool }) {
             <Typography variant="body2" color="text.secondary">
               APY
             </Typography>
-            <Typography variant="h6" fontWeight={600} color="success.main">
+            <Typography variant="h6" fontWeight={600} color="text.primary">
               {pool.apy}%
             </Typography>
           </Box>
@@ -214,20 +215,20 @@ function RewardsOverview() {
         </Typography>
 
         <Box display="flex" flexDirection="column" gap={3}>
-          <Box p={2} bgcolor="success.light" borderRadius={2}>
+          <Box p={2} bgcolor="grey.50" borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Total Earned
             </Typography>
-            <Typography variant="h5" fontWeight={600} color="success.main">
+            <Typography variant="h5" fontWeight={600} color="text.primary">
               {rewardsData.totalEarned} FARM
             </Typography>
           </Box>
 
-          <Box p={2} bgcolor="warning.light" borderRadius={2}>
+          <Box p={2} bgcolor="grey.100" borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Pending Rewards
             </Typography>
-            <Typography variant="h5" fontWeight={600} color="warning.main">
+            <Typography variant="h5" fontWeight={600} color="text.primary">
               {rewardsData.pendingRewards} FARM
             </Typography>
           </Box>
@@ -238,7 +239,7 @@ function RewardsOverview() {
             </Typography>
             <Box display="flex" gap={1} flexWrap="wrap">
               {rewardsData.claimableTokens.map((token) => (
-                <Chip key={token} label={token} size="small" />
+                <Chip key={token} label={token} size="small" variant="outlined" />
               ))}
             </Box>
           </Box>
@@ -269,8 +270,9 @@ function StakingHistory() {
                 </Typography>
                 <Chip
                   label={item.action}
-                  color={item.action === 'stake' ? 'success' : item.action === 'unstake' ? 'warning' : 'info'}
+                  color="primary"
                   size="small"
+                  variant="outlined"
                 />
               </Box>
               <Typography variant="body2" color="text.secondary">

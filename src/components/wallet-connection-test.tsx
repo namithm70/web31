@@ -1,168 +1,139 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Card,
   CardContent,
   Typography,
   Button,
-  Alert,
   Chip,
+  Alert,
   Divider,
 } from '@mui/material';
 import {
-  AccountBalanceWallet,
   CheckCircle,
   Error,
-  Info,
+  AccountBalanceWallet,
+  SwapHoriz,
+  Agriculture,
+  AccountBalance,
 } from '@mui/icons-material';
-import { useAccount, useBalance, useChainId, useSwitchChain } from 'wagmi';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
 
 export function WalletConnectionTest() {
-  const { address, isConnected } = useAccount();
-  const chainId = useChainId();
-  const { chains, switchChain } = useSwitchChain();
-  const [testResults, setTestResults] = useState<{
-    balance: boolean;
-    network: boolean;
-    signature: boolean;
-  }>({
-    balance: false,
-    network: false,
-    signature: false,
-  });
+  const { address, isConnected, status } = useAccount();
+  const { connect, connectors, error } = useConnect();
+  const { disconnect } = useDisconnect();
+  const [mounted, setMounted] = useState(false);
 
-  const { data: balance } = useBalance({
-    address,
-  });
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  const runTests = async () => {
-    if (!address) return;
-
-    // Test 1: Balance check
-    setTestResults(prev => ({ ...prev, balance: !!balance }));
-
-    // Test 2: Network check
-    setTestResults(prev => ({ ...prev, network: !!chainId }));
-
-    // Test 3: Signature test
-    try {
-      // For now, we'll skip the signature test as it requires proper wallet integration
-      setTestResults(prev => ({ ...prev, signature: true }));
-    } catch (error) {
-      console.error('Signature test failed:', error);
-      setTestResults(prev => ({ ...prev, signature: false }));
-    }
-  };
-
-  if (!isConnected) {
-    return (
-      <Card>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            <AccountBalanceWallet sx={{ mr: 1, verticalAlign: 'middle' }} />
-            Wallet Connection Test
-          </Typography>
-          <Alert severity="info" sx={{ mb: 2 }}>
-            Please connect your wallet to run connection tests
-          </Alert>
-        </CardContent>
-      </Card>
-    );
-  }
+  if (!mounted) return null;
 
   return (
-    <Card>
+    <Card sx={{ mb: 3 }}>
       <CardContent>
-        <Typography variant="h6" gutterBottom>
-          <AccountBalanceWallet sx={{ mr: 1, verticalAlign: 'middle' }} />
-          Wallet Connection Test
+        <Typography variant="h6" fontWeight={600} mb={2}>
+          Wallet Connection Status
         </Typography>
 
-        <Box display="flex" alignItems="center" gap={1} mb={2}>
-          <Chip 
-            label="Connected" 
-            color="success" 
-            icon={<CheckCircle />} 
-            size="small" 
-          />
-          <Typography variant="body2" color="text.secondary">
-            {address?.slice(0, 6)}...{address?.slice(-4)}
-          </Typography>
-        </Box>
-
-        <Divider sx={{ my: 2 }} />
-
-        <Typography variant="subtitle2" gutterBottom>
-          Connection Tests
-        </Typography>
-
-        <Box display="flex" flexDirection="column" gap={1} mb={2}>
-          <Box display="flex" alignItems="center" gap={1}>
-            {testResults.balance ? (
-              <CheckCircle color="success" fontSize="small" />
-            ) : (
-              <Error color="error" fontSize="small" />
-            )}
-            <Typography variant="body2">
-              Balance Check: {testResults.balance ? 'Passed' : 'Failed'}
+        <Box display="flex" flexDirection="column" gap={2}>
+          {/* Connection Status */}
+          <Box display="flex" alignItems="center" gap={2}>
+            <Typography variant="body2" fontWeight={600}>
+              Status:
             </Typography>
+            <Chip
+              label={isConnected ? 'Connected' : 'Disconnected'}
+              color="primary"
+              variant="outlined"
+              icon={isConnected ? <CheckCircle /> : <Error />}
+            />
           </Box>
 
-          <Box display="flex" alignItems="center" gap={1}>
-            {testResults.network ? (
-              <CheckCircle color="success" fontSize="small" />
+          {/* Wallet Address */}
+          {isConnected && address && (
+            <Box display="flex" alignItems="center" gap={2}>
+              <Typography variant="body2" fontWeight={600}>
+                Address:
+              </Typography>
+              <Typography variant="body2" fontFamily="monospace" color="text.secondary">
+                {address.slice(0, 6)}...{address.slice(-4)}
+              </Typography>
+            </Box>
+          )}
+
+          {/* Connection Actions */}
+          <Box display="flex" gap={1}>
+            {!isConnected ? (
+              connectors.map((connector) => (
+                <Button
+                  key={connector.id}
+                  variant="contained"
+                  size="small"
+                  onClick={() => connect({ connector })}
+                  disabled={!connector.ready}
+                  startIcon={<AccountBalanceWallet />}
+                >
+                  Connect {connector.name}
+                </Button>
+              ))
             ) : (
-              <Error color="error" fontSize="small" />
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => disconnect()}
+                startIcon={<Error />}
+              >
+                Disconnect
+              </Button>
             )}
-            <Typography variant="body2">
-              Network Check: {testResults.network ? 'Passed' : 'Failed'}
-            </Typography>
           </Box>
 
-          <Box display="flex" alignItems="center" gap={1}>
-            {testResults.signature ? (
-              <CheckCircle color="success" fontSize="small" />
-            ) : (
-              <Error color="error" fontSize="small" />
-            )}
-            <Typography variant="body2">
-              Signature Test: {testResults.signature ? 'Passed' : 'Failed'}
-            </Typography>
-          </Box>
-        </Box>
+          {/* Error Display */}
+          {error && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {error.message}
+            </Alert>
+          )}
 
-        <Button 
-          variant="contained" 
-          onClick={runTests}
-          startIcon={<Info />}
-          fullWidth
-        >
-          Run Tests
-        </Button>
+          <Divider sx={{ my: 2 }} />
 
-        {chainId && (
-          <Box mt={2}>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              Current Network: {chains.find(network => network.id === chainId)?.name} (ID: {chainId})
-            </Typography>
-            {chains.length > 1 && (
+          {/* Quick Actions */}
+          {isConnected && (
+            <Box>
+              <Typography variant="body2" fontWeight={600} mb={1}>
+                Quick Actions:
+              </Typography>
               <Box display="flex" gap={1} flexWrap="wrap">
-                {chains.map((network) => (
-                  <Chip
-                    key={network.id}
-                    label={network.name}
-                    size="small"
-                    variant={chainId === network.id ? 'filled' : 'outlined'}
-                    onClick={() => switchChain?.({ chainId: network.id })}
-                    clickable
-                  />
-                ))}
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<SwapHoriz />}
+                >
+                  Swap
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<Agriculture />}
+                >
+                  Farm
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<AccountBalance />}
+                >
+                  Lend
+                </Button>
               </Box>
-            )}
-          </Box>
-        )}
+            </Box>
+          )}
+        </Box>
       </CardContent>
     </Card>
   );

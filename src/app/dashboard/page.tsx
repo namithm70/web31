@@ -176,7 +176,7 @@ interface StatCardProps {
   value: number;
   change: number;
   icon: React.ReactNode;
-  color?: 'primary' | 'secondary' | 'success' | 'warning' | 'info';
+  color?: 'primary' | 'secondary';
 }
 
 // Dashboard Components
@@ -194,13 +194,13 @@ function StatCard({ title, value, change, icon, color = 'primary' }: StatCardPro
             </Typography>
             <Box display="flex" alignItems="center" gap={1}>
               {change >= 0 ? (
-                <TrendingUp sx={{ color: 'success.main', fontSize: 16 }} />
+                <TrendingUp sx={{ color: 'text.primary', fontSize: 16 }} />
               ) : (
-                <TrendingDown sx={{ color: 'error.main', fontSize: 16 }} />
+                <TrendingDown sx={{ color: 'text.secondary', fontSize: 16 }} />
               )}
               <Typography
                 variant="body2"
-                color={change >= 0 ? 'success.main' : 'error.main'}
+                color={change >= 0 ? 'text.primary' : 'text.secondary'}
                 fontWeight={600}
               >
                 {change >= 0 ? '+' : ''}{change.toFixed(2)}%
@@ -260,7 +260,7 @@ function PortfolioOverview() {
             <Typography
               variant="h4"
               fontWeight={600}
-              color={totalChangePercent >= 0 ? 'success.main' : 'error.main'}
+              color={totalChangePercent >= 0 ? 'text.primary' : 'text.secondary'}
             >
               {totalChangePercent >= 0 ? '+' : ''}{totalChangePercent.toFixed(2)}%
             </Typography>
@@ -310,7 +310,7 @@ function PortfolioOverview() {
                     <Box display="flex" alignItems="center" gap={1}>
                       <Typography
                         variant="body2"
-                        color={asset.change24h >= 0 ? 'success.main' : 'error.main'}
+                        color={asset.change24h >= 0 ? 'text.primary' : 'text.secondary'}
                       >
                         {asset.change24h >= 0 ? '+' : ''}{asset.change24h.toFixed(2)}%
                       </Typography>
@@ -401,7 +401,8 @@ function ProtocolAnalytics() {
                       <Chip
                         label={protocol.risk}
                         size="small"
-                        color={protocol.risk === 'low' ? 'success' : 'warning'}
+                        color="primary"
+                        variant="outlined"
                       />
                     </Box>
                     <Typography variant="body2" color="text.secondary" mb={1}>
@@ -412,7 +413,7 @@ function ProtocolAnalytics() {
                         <Typography variant="body2" color="text.secondary">
                           APY
                         </Typography>
-                        <Typography variant="body1" fontWeight={600} color="success.main">
+                        <Typography variant="body1" fontWeight={600} color="text.primary">
                           {protocol.apy.toFixed(1)}%
                         </Typography>
                       </Box>
@@ -423,7 +424,7 @@ function ProtocolAnalytics() {
                         <Typography
                           variant="body1"
                           fontWeight={600}
-                          color={protocol.tvlChange24h >= 0 ? 'success.main' : 'error.main'}
+                          color={protocol.tvlChange24h >= 0 ? 'text.primary' : 'text.secondary'}
                         >
                           {protocol.tvlChange24h >= 0 ? '+' : ''}{protocol.tvlChange24h.toFixed(1)}%
                         </Typography>
@@ -466,8 +467,7 @@ function RecentTransactions() {
               <ListItemAvatar>
                 <Avatar
                   sx={{
-                    bgcolor: tx.type === 'swap' ? 'primary.main' : 
-                           tx.type === 'stake' ? 'success.main' : 'warning.main',
+                    bgcolor: 'primary.main',
                   }}
                 >
                   {tx.type === 'swap' ? <SwapHoriz /> :
@@ -494,7 +494,7 @@ function RecentTransactions() {
                       <Chip
                         label={tx.status}
                         size="small"
-                        color={tx.status === 'completed' ? 'success' : 'warning'}
+                        color="primary"
                         variant="outlined"
                       />
                       <Typography variant="body2" color="text.secondary">
@@ -589,22 +589,22 @@ function MarketInsights() {
               Total DeFi TVL
             </Typography>
             <Box display="flex" alignItems="center" justifyContent="center" gap={1} mt={1}>
-              <TrendingUp sx={{ color: 'success.main', fontSize: 16 }} />
-              <Typography variant="body2" color="success.main" fontWeight={600}>
+              <TrendingUp sx={{ color: 'text.primary', fontSize: 16 }} />
+              <Typography variant="body2" color="text.primary" fontWeight={600}>
                 +2.3%
               </Typography>
             </Box>
           </Box>
           <Box textAlign="center" p={2}>
-            <Typography variant="h4" fontWeight={700} color="success.main" mb={1}>
+            <Typography variant="h4" fontWeight={700} color="primary.main" mb={1}>
               $45.2B
             </Typography>
             <Typography variant="body2" color="text.secondary">
               24h Volume
             </Typography>
             <Box display="flex" alignItems="center" justifyContent="center" gap={1} mt={1}>
-              <TrendingUp sx={{ color: 'success.main', fontSize: 16 }} />
-              <Typography variant="body2" color="success.main" fontWeight={600}>
+              <TrendingUp sx={{ color: 'text.primary', fontSize: 16 }} />
+              <Typography variant="body2" color="text.primary" fontWeight={600}>
                 +5.7%
               </Typography>
             </Box>
@@ -631,7 +631,7 @@ function MarketInsights() {
               <Box display="flex" alignItems="center" gap={1}>
                 <Typography
                   variant="body2"
-                  color={Math.random() > 0.5 ? 'success.main' : 'error.main'}
+                  color={Math.random() > 0.5 ? 'text.primary' : 'text.secondary'}
                   fontWeight={600}
                 >
                   {Math.random() > 0.5 ? '+' : ''}{(Math.random() * 10).toFixed(2)}%
@@ -705,28 +705,28 @@ export default function DashboardPage() {
           value={12500}
           change={2.8}
           icon={<AttachMoney />}
-          color="success"
+          color="primary"
         />
         <StatCard
           title="24h P&L"
           value={350}
           change={-1.2}
           icon={<TrendingUp />}
-          color="warning"
+          color="primary"
         />
         <StatCard
           title="APY Earned"
           value={1250}
           change={5.4}
           icon={<Star />}
-          color="info"
+          color="primary"
         />
         <StatCard
           title="Gas Saved"
           value={45}
           change={12.3}
           icon={<Speed />}
-          color="secondary"
+          color="primary"
         />
       </Box>
 

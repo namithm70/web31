@@ -103,17 +103,17 @@ function StablecoinCard({ stablecoin }: { stablecoin: Stablecoin }) {
 
   const getRiskColor = (risk: string) => {
     switch (risk) {
-      case 'low': return 'success';
-      case 'medium': return 'warning';
-      case 'high': return 'error';
+      case 'low': return 'primary';
+      case 'medium': return 'primary';
+      case 'high': return 'primary';
       default: return 'default';
     }
   };
 
   const getPegStatus = (deviation: number) => {
-    if (deviation < 0.01) return { status: 'Stable', color: 'success' };
-    if (deviation < 0.02) return { status: 'Slight Deviation', color: 'warning' };
-    return { status: 'Significant Deviation', color: 'error' };
+    if (deviation < 0.01) return { status: 'Stable', color: 'text.primary' };
+    if (deviation < 0.02) return { status: 'Slight Deviation', color: 'text.secondary' };
+    return { status: 'Significant Deviation', color: 'text.secondary' };
   };
 
   const pegStatus = getPegStatus(stablecoin.pegDeviation);
@@ -137,8 +137,9 @@ function StablecoinCard({ stablecoin }: { stablecoin: Stablecoin }) {
           </Box>
           <Chip
             label={stablecoin.risk.toUpperCase()}
-            color={getRiskColor(stablecoin.risk) as 'success' | 'warning' | 'error' | 'default'}
+            color={getRiskColor(stablecoin.risk) as 'primary' | 'default'}
             size="small"
+            variant="outlined"
           />
         </Box>
 
@@ -163,7 +164,7 @@ function StablecoinCard({ stablecoin }: { stablecoin: Stablecoin }) {
             <Typography variant="body2" color="text.secondary">
               Peg Deviation
             </Typography>
-            <Typography variant="body2" fontWeight={600} color={pegStatus.color as 'success' | 'warning' | 'error'}>
+            <Typography variant="body2" fontWeight={600} color={pegStatus.color as 'text.primary' | 'text.secondary'}>
               {stablecoin.pegDeviation}%
             </Typography>
           </Box>
@@ -171,7 +172,7 @@ function StablecoinCard({ stablecoin }: { stablecoin: Stablecoin }) {
             <Typography variant="body2" color="text.secondary">
               APY
             </Typography>
-            <Typography variant="body2" fontWeight={600} color="success.main">
+            <Typography variant="body2" fontWeight={600} color="text.primary">
               {stablecoin.apy}%
             </Typography>
           </Box>
@@ -218,8 +219,9 @@ function YieldOpportunities() {
                 </Typography>
                 <Chip
                   label={`${opportunity.apy}% APY`}
-                  color="success"
+                  color="primary"
                   size="small"
+                  variant="outlined"
                 />
               </Box>
               
@@ -253,20 +255,20 @@ function PegMonitoring() {
         </Typography>
 
         <Box display="flex" flexDirection="column" gap={3}>
-          <Box p={2} bgcolor="info.light" borderRadius={2}>
+          <Box p={2} bgcolor="grey.50" borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Total Market Cap
             </Typography>
-            <Typography variant="h5" fontWeight={600} color="info.main">
+            <Typography variant="h5" fontWeight={600} color="text.primary">
               ${(pegMonitoring.totalMarketCap / 1000000000).toFixed(1)}B
             </Typography>
           </Box>
 
-          <Box p={2} bgcolor="warning.light" borderRadius={2}>
+          <Box p={2} bgcolor="grey.100" borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Average Deviation
             </Typography>
-            <Typography variant="h5" fontWeight={600} color="warning.main">
+            <Typography variant="h5" fontWeight={600} color="text.primary">
               {pegMonitoring.averageDeviation}%
             </Typography>
           </Box>
@@ -298,20 +300,20 @@ function RiskAnalysis() {
         </Typography>
 
         <Box display="flex" flexDirection="column" gap={3}>
-          <Box p={2} bgcolor="success.light" borderRadius={2}>
+          <Box p={2} bgcolor="grey.50" borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Portfolio Stability
             </Typography>
-            <Typography variant="h5" fontWeight={600} color="success.main">
+            <Typography variant="h5" fontWeight={600} color="text.primary">
               Excellent
             </Typography>
           </Box>
 
-          <Box p={2} bgcolor="info.light" borderRadius={2}>
+          <Box p={2} bgcolor="grey.100" borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Diversification Score
             </Typography>
-            <Typography variant="h5" fontWeight={600} color="info.main">
+            <Typography variant="h5" fontWeight={600} color="text.primary">
               85/100
             </Typography>
           </Box>
