@@ -62,6 +62,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      await fetch('/api/auth/signout', { method: 'POST' });
+    } finally {
+      if (isConnected) disconnect();
+      router.push('/auth/signin');
+    }
+  };
+
   const isAuthRoute = pathname.startsWith('/auth');
   const isLanding = pathname === '/';
   const showNav = !isAuthRoute && !isLanding;
@@ -175,6 +184,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     }}
                   />
                 </Fade>
+              )}
+
+              {showNav && (
+                <Button variant="outlined" size="small" onClick={handleSignOut} sx={{ ml: 1 }}>
+                  Sign out
+                </Button>
               )}
 
               {/* Mobile Menu Button */}
