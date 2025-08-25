@@ -33,24 +33,37 @@ export function Providers({ children }: { children: React.ReactNode }) {
           justifyContent: 'center', 
           alignItems: 'center', 
           height: '100vh',
-          background: `
-            radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
-            linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #1E1B4B 100%)
-          `,
+          background: '#000000',
           color: '#FFFFFF',
           fontSize: '1.2rem',
           fontWeight: 500,
+          fontFamily: 'Inter, sans-serif',
         }}>
           <div style={{
-            background: 'rgba(139, 92, 246, 0.1)',
+            background: 'rgba(255, 255, 255, 0.05)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(139, 92, 246, 0.2)',
-            borderRadius: 16,
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: 8,
             padding: '2rem 3rem',
-            boxShadow: '0 8px 32px rgba(139, 92, 246, 0.1)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+            textAlign: 'center',
           }}>
+            <div style={{
+              width: '40px',
+              height: '40px',
+              border: '2px solid rgba(255, 255, 255, 0.2)',
+              borderTop: '2px solid #FFFFFF',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite',
+              margin: '0 auto 1rem auto',
+            }}></div>
             Loading DeFi Superapp...
+            <style jsx>{`
+              @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+              }
+            `}</style>
           </div>
         </div>
       </ThemeProvider>

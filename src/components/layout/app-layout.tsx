@@ -67,16 +67,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           sx={{
             cursor: 'pointer',
             fontWeight: 700,
-            background: 'linear-gradient(135deg, #8B5CF6, #A78BFA)',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
+            color: '#FFFFFF',
             '&:hover': {
-              background: 'linear-gradient(135deg, #A78BFA, #C4B5FD)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
+              color: '#CCCCCC',
             },
-            transition: 'all 0.3s ease',
+            transition: 'color 0.2s ease',
           }}
         >
           DeFi Superapp
@@ -89,28 +84,28 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               selected={pathname === item.path}
               onClick={() => handleNavigation(item.path)}
               sx={{
-                borderRadius: 12,
-                margin: '4px 8px',
+                borderRadius: 4,
+                margin: '2px 4px',
                 '&.Mui-selected': {
-                  background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2))',
+                  background: 'rgba(255, 255, 255, 0.1)',
                   backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(139, 92, 246, 0.3)',
-                  boxShadow: '0 4px 16px rgba(139, 92, 246, 0.2)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
                   '&:hover': {
-                    background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(59, 130, 246, 0.25))',
+                    background: 'rgba(255, 255, 255, 0.15)',
                   }
                 },
                 '&:hover': {
-                  background: 'rgba(139, 92, 246, 0.1)',
+                  background: 'rgba(255, 255, 255, 0.05)',
                   backdropFilter: 'blur(10px)',
-                  transform: 'translateX(4px)',
+                  transform: 'translateX(2px)',
                 },
-                transition: 'all 0.3s ease',
+                transition: 'all 0.2s ease',
               }}
             >
               <ListItemIcon sx={{ 
-                color: pathname === item.path ? '#8B5CF6' : '#E2E8F0',
-                transition: 'color 0.3s ease',
+                color: pathname === item.path ? '#FFFFFF' : '#999999',
+                transition: 'color 0.2s ease',
               }}>
                 {item.icon}
               </ListItemIcon>
@@ -119,7 +114,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 sx={{
                   '& .MuiTypography-root': {
                     fontWeight: pathname === item.path ? 600 : 500,
-                    color: pathname === item.path ? '#FFFFFF' : '#E2E8F0',
+                    color: pathname === item.path ? '#FFFFFF' : '#CCCCCC',
                   }
                 }}
               />
@@ -134,7 +129,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       
-      {/* Glassmorphism background with wave patterns */}
+      {/* Clean black background */}
       <Box
         sx={{
           position: 'fixed',
@@ -142,25 +137,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           left: 0,
           right: 0,
           bottom: 0,
-          background: `
-            radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
-            radial-gradient(circle at 40% 40%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
-            linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #1E1B4B 100%)
-          `,
+          background: '#000000',
           zIndex: -1,
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: `
-              url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='rgba(139, 92, 246, 0.03)' fill-rule='evenodd'/%3E%3C/svg%3E")
-            `,
-            opacity: 0.6,
-          },
         }}
       />
       
@@ -169,9 +147,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-          backgroundColor: 'background.paper',
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          backdropFilter: 'blur(20px)',
           color: 'text.primary',
-          borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
         }}
       >
         <Toolbar>
@@ -192,10 +171,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               flexGrow: 1,
               cursor: 'pointer',
               fontWeight: 600,
+              color: '#FFFFFF',
               '&:hover': {
-                color: '#8B5CF6',
+                color: '#CCCCCC',
               },
-              transition: 'color 0.3s ease',
+              transition: 'color 0.2s ease',
             }}
             onClick={() => handleNavigation('/')}
           >
@@ -211,16 +191,16 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 color="primary"
                 variant="outlined"
                 sx={{
-                  background: 'rgba(139, 92, 246, 0.1)',
+                  background: 'rgba(255, 255, 255, 0.05)',
                   backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(139, 92, 246, 0.3)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
                   fontWeight: 600,
-                  color: '#8B5CF6',
+                  color: '#FFFFFF',
                   '&:hover': {
-                    background: 'rgba(139, 92, 246, 0.2)',
-                    transform: 'scale(1.05)',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    transform: 'scale(1.02)',
                   },
-                  transition: 'all 0.3s ease',
+                  transition: 'all 0.2s ease',
                 }}
               />
             )}
@@ -244,8 +224,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawerWidth,
-              backgroundColor: 'background.paper',
-              borderRight: '1px solid rgba(0, 0, 0, 0.12)',
+              backgroundColor: 'rgba(0, 0, 0, 0.9)',
+              backdropFilter: 'blur(20px)',
+              borderRight: '1px solid rgba(255, 255, 255, 0.1)',
             },
           }}
         >
@@ -258,8 +239,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawerWidth,
-              backgroundColor: 'background.paper',
-              borderRight: '1px solid rgba(0, 0, 0, 0.12)',
+              backgroundColor: 'rgba(0, 0, 0, 0.9)',
+              backdropFilter: 'blur(20px)',
+              borderRight: '1px solid rgba(255, 255, 255, 0.1)',
             },
           }}
           open

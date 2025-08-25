@@ -1,0 +1,7 @@
+warning: in the working copy of 'src/app/globals.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/app/page.tsx', LF will be replaced by CRLF the next time Git touches it
+src/app/globals.css
+src/app/page.tsx
+src/components/layout/app-layout.tsx
+src/components/providers.tsx
+src/lib/theme.ts
