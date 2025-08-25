@@ -263,7 +263,7 @@ function YieldOptimization() {
         </Box>
 
         <Box display="grid" gridTemplateColumns="1fr 1fr" gap={3} mb={3}>
-          <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Current APY
             </Typography>
@@ -271,7 +271,7 @@ function YieldOptimization() {
               {yieldOptimizationData?.currentAPY ?? 0}%
             </Typography>
           </Box>
-          <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Potential APY
             </Typography>
@@ -313,7 +313,7 @@ function YieldOptimization() {
           <Typography variant="body2" fontWeight={600} mb={2}>
             Impermanent Loss Protection
           </Typography>
-          <Box p={2} bgcolor="grey.50" borderRadius={2}>
+          <Box p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
               <Typography variant="body2" color="text.secondary">
                 Coverage
@@ -452,7 +452,7 @@ function FarmingAnalytics() {
                 </Box>
 
         <Box display="grid" gridTemplateColumns="1fr 1fr" gap={3} mb={3}>
-          <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Total Staked
             </Typography>
@@ -460,7 +460,7 @@ function FarmingAnalytics() {
               ${farmingAnalytics?.totalStaked?.toLocaleString?.() ?? 0}
             </Typography>
           </Box>
-          <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Total Earned
             </Typography>
@@ -468,7 +468,7 @@ function FarmingAnalytics() {
               ${farmingAnalytics?.totalEarned ?? 0}
             </Typography>
           </Box>
-          <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Average APY
             </Typography>
@@ -476,7 +476,7 @@ function FarmingAnalytics() {
               {farmingAnalytics?.averageAPY ?? 0}%
             </Typography>
           </Box>
-          <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Projected Earnings
             </Typography>

@@ -192,7 +192,7 @@ function YieldOptimization() {
         </Box>
 
         <Box display="grid" gridTemplateColumns="1fr 1fr" gap={3} mb={3}>
-          <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Current APY
             </Typography>
@@ -200,7 +200,7 @@ function YieldOptimization() {
               {yieldOptimizationData.currentAPY}%
             </Typography>
           </Box>
-          <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
+          <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Potential APY
             </Typography>
@@ -244,7 +244,7 @@ function YieldOptimization() {
               <Typography variant="body2" fontWeight={600} mb={2}>
                 Gas Optimization
               </Typography>
-              <Box p={2} bgcolor="grey.50" borderRadius={2}>
+              <Box p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
                 <Typography variant="body2" color="text.secondary">
                   Estimated Monthly Savings
                 </Typography>
@@ -433,7 +433,7 @@ function RiskAnalytics() {
           <Typography variant="body2" color="text.secondary" mb={2}>No risk data.</Typography>
         ) : (
           <Box display="grid" gridTemplateColumns="1fr 1fr" gap={3} mb={3}>
-            <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
+            <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
               <Typography variant="body2" color="text.secondary">
                 Portfolio Risk
               </Typography>
@@ -441,7 +441,7 @@ function RiskAnalytics() {
                 {riskMetricsData.portfolioRisk.toUpperCase()}
               </Typography>
             </Box>
-            <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
+            <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
               <Typography variant="body2" color="text.secondary">
                 Diversification
               </Typography>
@@ -628,7 +628,7 @@ function PortfolioOverview() {
                     width: 60,
                     height: 6,
                     borderRadius: 3,
-                    bgcolor: 'grey.200',
+                    bgcolor: 'divider',
                     '& .MuiLinearProgress-bar': {
                       borderRadius: 3,
                     },

@@ -57,7 +57,7 @@ function PortfolioOverview() {
         </Typography>
 
         <Box display="flex" flexDirection="column" gap={3}>
-          <Box p={2} bgcolor="grey.50" borderRadius={2}>
+          <Box p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
             <Typography variant="body2" color="text.secondary">
               Total Portfolio Value
             </Typography>
@@ -70,7 +70,7 @@ function PortfolioOverview() {
           </Box>
 
           <Box display="grid" gridTemplateColumns="1fr 1fr 1fr" gap={2}>
-            <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
+            <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
               <Typography variant="body2" color="text.secondary">
                 24h Change
               </Typography>
@@ -78,7 +78,7 @@ function PortfolioOverview() {
                 +${performanceData.change24h.toLocaleString()}
               </Typography>
             </Box>
-            <Box textAlign="center" p={2} bgcolor="grey.100" borderRadius={2}>
+            <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
               <Typography variant="body2" color="text.secondary">
                 7d Change
               </Typography>
@@ -86,8 +86,8 @@ function PortfolioOverview() {
                 +${performanceData.change7d.toLocaleString()}
               </Typography>
             </Box>
-            <Box textAlign="center" p={2} bgcolor="grey.50" borderRadius={2}>
-              <Typography variant="body2" color="text.secondary">
+            <Box textAlign="center" p={2} sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
+              <Typography variant="body2" color="text.primary">
                 30d Change
               </Typography>
               <Typography variant="h6" fontWeight={600} color="text.primary">
@@ -142,7 +142,7 @@ function AssetAllocation() {
                 <Typography variant="body2" color="text.secondary">
                   Allocation: {asset.allocation}%
                 </Typography>
-                <Box width="60%" bgcolor="grey.200" borderRadius={1} height={8}>
+                <Box width="60%" sx={{ bgcolor: 'divider' }} borderRadius={1} height={8}>
                   <Box 
                     width={`${asset.allocation}%`} 
                     bgcolor="primary.main" 
@@ -279,9 +279,9 @@ function PerformanceChart() {
           Performance Chart
         </Typography>
 
-        <Box height={200} display="flex" alignItems="center" justifyContent="center" bgcolor="grey.50" borderRadius={2}>
+        <Box height={200} display="flex" alignItems="center" justifyContent="center" sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider' }} borderRadius={2}>
           <Box textAlign="center">
-            <BarChart sx={{ fontSize: 48, color: 'grey.400', mb: 2 }} />
+            <BarChart sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
             <Typography variant="body2" color="text.secondary">
               Performance chart will be displayed here
             </Typography>
