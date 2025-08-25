@@ -3,8 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   // Ensure server-only deps are resolved during RSC/Turbopack build (Next 15+)
-  serverExternalPackages: ['mongoose', 'bcryptjs', 'jose'],
-  optimizePackageImports: ['@mui/material', '@mui/icons-material'],
+  serverExternalPackages: ['mongoose', 'bcryptjs'],
   async rewrites() {
     return [
       // Keep NextAuth endpoints on this app (do not proxy to backend)

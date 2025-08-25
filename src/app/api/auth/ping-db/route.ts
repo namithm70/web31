@@ -7,7 +7,7 @@ export async function GET() {
     await connectToDatabase();
     const state = mongoose.connection.readyState; // 1 = connected
     return NextResponse.json({ ok: state === 1, state });
-  } catch (e) {
+  } catch {
     return NextResponse.json({ ok: false }, { status: 500 });
   }
 }

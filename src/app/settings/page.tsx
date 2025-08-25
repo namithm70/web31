@@ -147,14 +147,7 @@ function ProfileSettings() {
           />
         </Box>
 
-        <Box mt={3} p={2} bgcolor="grey.50" borderRadius={2}>
-          <Typography variant="body2" fontWeight={600} mb={1}>
-            Connected Wallet
-          </Typography>
-          <Typography variant="body2" color="text.secondary" fontFamily="monospace">
-            {userData.walletAddress}
-          </Typography>
-        </Box>
+        {/* Connected Wallet placeholder removed (no static address available) */}
       </CardContent>
     </Card>
   );
