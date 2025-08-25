@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Card,
@@ -31,15 +31,10 @@ import {
   Restore,
 } from '@mui/icons-material';
 import { WalletConnectionTest } from '@/components/wallet-connection-test';
+import { useSession } from 'next-auth/react';
 
-// Mock user data
+// Default preferences (used for demos/settings)
 const userData = {
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-  avatar: 'https://via.placeholder.com/150',
-  walletAddress: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
-  joinDate: '2023-01-15',
-  lastLogin: '2024-01-15T10:30:00Z',
   preferences: {
     theme: 'light',
     language: 'en',
@@ -69,11 +64,33 @@ const userData = {
 };
 
 function ProfileSettings() {
+  const { data: session } = useSession();
   const [editing, setEditing] = useState(false);
+  const [joinDate, setJoinDate] = useState<string>('');
+
+  const fullName = session?.user?.name || '';
+  const [firstName, ...rest] = fullName.split(' ').filter(Boolean);
+  const lastName = rest.length ? rest.join(' ') : '';
+
   const [formData, setFormData] = useState({
-    name: userData.name,
-    email: userData.email,
+    name: fullName,
+    email: session?.user?.email || '',
   });
+
+  useEffect(() => {
+    setFormData({ name: fullName, email: session?.user?.email || '' });
+  }, [fullName, session?.user?.email]);
+
+  useEffect(() => {
+    // Store a simple client-side join date the first time user visits settings
+    const key = 'defiapp_join_date';
+    let stored = typeof window !== 'undefined' ? window.localStorage.getItem(key) : null;
+    if (!stored) {
+      stored = new Date().toISOString();
+      if (typeof window !== 'undefined') window.localStorage.setItem(key, stored);
+    }
+    setJoinDate(stored || new Date().toISOString());
+  }, []);
 
   const handleSave = () => {
     console.log('Saving profile:', formData);
@@ -97,20 +114,19 @@ function ProfileSettings() {
         </Box>
 
         <Box display="flex" alignItems="center" gap={3} mb={3}>
-          <Avatar
-            src={userData.avatar}
-            sx={{ width: 80, height: 80 }}
-          />
+          <Avatar sx={{ width: 80, height: 80 }}>
+            {(firstName || session?.user?.email || 'U').charAt(0).toUpperCase()}
+          </Avatar>
           <Box>
             <Typography variant="h6" fontWeight={600}>
-              {userData.name}
+              {firstName}{lastName ? ` ${lastName}` : ''}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Member since {new Date(userData.joinDate).toLocaleDateString()}
+              Member since {new Date(joinDate).toLocaleDateString()}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Last login: {new Date(userData.lastLogin).toLocaleString()}
-            </Typography>
+            {session?.user?.email && (
+              <Typography variant="body2" color="text.secondary">{session.user.email}</Typography>
+            )}
           </Box>
         </Box>
 
