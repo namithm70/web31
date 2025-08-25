@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import {
   Box,
   Card,
@@ -15,6 +16,12 @@ import {
   Switch,
   FormControlLabel,
   Slider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  List,
+  ListItemButton,
+  ListItemText,
 } from '@mui/material';
 import {
   Refresh,
@@ -108,14 +115,23 @@ import {
   CalculateOutlined,
 } from '@mui/icons-material';
 
-// Enhanced mock data for advanced swap features
-const tokens = [
-  { symbol: 'ETH', name: 'Ethereum', price: 3200, change24h: 2.5, volume24h: 1500000000, marketCap: 385000000000, liquidity: 8500000000 },
-  { symbol: 'USDC', name: 'USD Coin', price: 1.00, change24h: 0.1, volume24h: 850000000, marketCap: 32000000000, liquidity: 2500000000 },
-  { symbol: 'UNI', name: 'Uniswap', price: 8.50, change24h: -1.2, volume24h: 420000000, marketCap: 5100000000, liquidity: 1800000000 },
-  { symbol: 'WBTC', name: 'Wrapped Bitcoin', price: 65000, change24h: 1.8, volume24h: 320000000, marketCap: 10000000000, liquidity: 1200000000 },
-  { symbol: 'DAI', name: 'Dai', price: 1.00, change24h: 0.05, volume24h: 280000000, marketCap: 5000000000, liquidity: 950000000 },
-];
+// Fetch real tokens from CoinGecko and map to Token interface
+async function fetchMarketTokens(): Promise<Token[]> {
+  const res = await fetch(
+    'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false'
+  );
+  if (!res.ok) throw new Error('Failed to fetch tokens');
+  const data = await res.json();
+  return (data || []).map((t: any) => ({
+    symbol: String(t.symbol || '').toUpperCase(),
+    name: t.name || '',
+    price: Number(t.current_price ?? 0),
+    change24h: Number(t.price_change_percentage_24h ?? 0),
+    volume24h: Number(t.total_volume ?? 0),
+    marketCap: Number(t.market_cap ?? 0),
+    liquidity: Number(t.total_volume ?? 0),
+  }));
+}
 
 const dexAggregators = [
   { name: '1inch', price: 0.9985, gasEstimate: 120000, route: ['Uniswap V3', 'SushiSwap'] },
@@ -200,7 +216,7 @@ interface Token {
   liquidity: number;
 }
 
-function AdvancedTokenSelector({ selectedToken, onSelect }: { selectedToken: Token; onSelect: (token: Token) => void }) {
+function AdvancedTokenSelector({ tokens, selectedToken, onSelect }: { tokens: Token[]; selectedToken: Token | null; onSelect: (token: Token) => void }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -208,7 +224,7 @@ function AdvancedTokenSelector({ selectedToken, onSelect }: { selectedToken: Tok
       <Button
         variant="outlined"
         onClick={() => setOpen(true)}
-        startIcon={<Avatar sx={{ width: 24, height: 24 }}>{selectedToken?.symbol?.charAt(0)}</Avatar>}
+        startIcon={<Avatar sx={{ width: 24, height: 24 }}>{selectedToken?.symbol?.charAt(0) || '?'}</Avatar>}
         fullWidth
         sx={{ justifyContent: 'flex-start', textTransform: 'none' }}
       >
@@ -226,7 +242,31 @@ function AdvancedTokenSelector({ selectedToken, onSelect }: { selectedToken: Tok
         )}
       </Button>
 
-      {/* Dialog removed as per edit hint */}
+      <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
+        <DialogTitle>Select a token</DialogTitle>
+        <DialogContent dividers>
+          <List>
+            {tokens.map((t) => (
+              <ListItemButton key={`${t.symbol}-${t.name}`} onClick={() => { onSelect(t); setOpen(false); }}>
+                <ListItemText
+                  primary={
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Avatar sx={{ width: 24, height: 24 }}>{t.symbol.charAt(0)}</Avatar>
+                      <Typography variant="body2" fontWeight={600}>{t.symbol}</Typography>
+                      <Typography variant="caption" color="text.secondary">{t.name}</Typography>
+                    </Box>
+                  }
+                  secondary={
+                    <Typography variant="caption" color="text.secondary">
+                      ${t.price.toLocaleString()} • 24h: {t.change24h.toFixed(2)}%
+                    </Typography>
+                  }
+                />
+              </ListItemButton>
+            ))}
+          </List>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
@@ -530,8 +570,20 @@ function GasOptimization() {
 
 export default function SwapPage() {
   const [selectedTab, setSelectedTab] = useState(0);
-  const [fromToken, setFromToken] = useState(tokens[0]);
-  const [toToken, setToToken] = useState(tokens[1]);
+  const { data: marketTokens, isLoading } = useQuery({
+    queryKey: ['marketTokens'],
+    queryFn: fetchMarketTokens,
+    staleTime: 1000 * 60,
+  });
+  const tokens = useMemo(() => marketTokens || [], [marketTokens]);
+  const [fromToken, setFromToken] = useState<Token | null>(null);
+  const [toToken, setToToken] = useState<Token | null>(null);
+  useEffect(() => {
+    if (tokens.length && (!fromToken || !toToken)) {
+      setFromToken(tokens[0]);
+      setToToken(tokens[1] || tokens[0]);
+    }
+  }, [tokens]);
   const [amount, setAmount] = useState('');
 
   return (
@@ -574,7 +626,7 @@ export default function SwapPage() {
                   <Typography variant="body2" color="text.secondary" mb={1}>
                     From
                   </Typography>
-                  <AdvancedTokenSelector selectedToken={fromToken} onSelect={setFromToken} />
+                  <AdvancedTokenSelector tokens={tokens} selectedToken={fromToken} onSelect={setFromToken} />
                 </Box>
 
                 <Box display="flex" justifyContent="center">
@@ -587,10 +639,10 @@ export default function SwapPage() {
                   <Typography variant="body2" color="text.secondary" mb={1}>
                     To
                   </Typography>
-                  <AdvancedTokenSelector selectedToken={toToken} onSelect={setToToken} />
+                  <AdvancedTokenSelector tokens={tokens} selectedToken={toToken} onSelect={setToToken} />
                 </Box>
 
-                <Button variant="contained" fullWidth size="large">
+                <Button variant="contained" fullWidth size="large" disabled={isLoading || !fromToken || !toToken}>
                   Swap Tokens
                 </Button>
               </Box>
