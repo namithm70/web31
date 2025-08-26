@@ -67,26 +67,47 @@ function ProfileSettings() {
   const { data: session, status } = useSession();
   const [editing, setEditing] = useState(false);
   const [joinDate, setJoinDate] = useState<string>('');
+  const [meLoading, setMeLoading] = useState(true);
+  const [me, setMe] = useState<{ email: string | null; name: string | null; signedInAt: string | null } | null>(null);
 
-  const fullName = session?.user?.name || '';
+  // Fetch auth info from either NextAuth or custom JWT cookie so email/password sign-ins also work
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/auth/me', { cache: 'no-store' });
+        if (!cancelled && res.ok) {
+          const data = await res.json();
+          setMe({ email: data.email ?? null, name: data.name ?? null, signedInAt: data.signedInAt ?? null });
+        }
+      } catch {}
+      finally {
+        if (!cancelled) setMeLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  const displayEmail = session?.user?.email || me?.email || '';
+  const fullName = session?.user?.name || me?.name || '';
   const [firstName, ...rest] = fullName.split(' ').filter(Boolean);
   const lastName = rest.length ? rest.join(' ') : '';
 
   const [formData, setFormData] = useState({
     name: fullName,
-    email: session?.user?.email || '',
+    email: displayEmail,
   });
 
   useEffect(() => {
     // Keep form in sync with active session when not editing
-    if (!editing && session?.user) {
-      setFormData({ name: fullName, email: session.user.email || '' });
+    if (!editing && (session?.user || me?.email)) {
+      setFormData({ name: fullName, email: displayEmail });
     }
-  }, [fullName, session?.user?.email, editing, session?.user]);
+  }, [fullName, displayEmail, editing, session?.user, me?.email]);
 
   useEffect(() => {
     // Store a simple client-side join date per user (keyed by email) the first time they visit settings
-    const email = session?.user?.email;
+    const email = displayEmail;
     if (!email) {
       setJoinDate('');
       return;
@@ -94,15 +115,20 @@ function ProfileSettings() {
     
     const key = `defiapp_join_date_${email}`;
     let stored = typeof window !== 'undefined' ? window.localStorage.getItem(key) : null;
+    // If API provided a signed-in timestamp, prefer it on first set
+    if (!stored && me?.signedInAt) {
+      stored = me.signedInAt;
+      if (typeof window !== 'undefined') window.localStorage.setItem(key, stored);
+    }
     if (!stored) {
       stored = new Date().toISOString();
       if (typeof window !== 'undefined') window.localStorage.setItem(key, stored);
     }
     setJoinDate(stored || new Date().toISOString());
-  }, [session?.user?.email]);
+  }, [displayEmail, me?.signedInAt]);
 
   // Show loading state while session is loading
-  if (status === 'loading') {
+  if (status === 'loading' || meLoading) {
     return (
       <Card className="animate-fade-in-up">
         <CardContent>
@@ -130,7 +156,7 @@ function ProfileSettings() {
   }
 
   // Show error state if not authenticated
-  if (status === 'unauthenticated') {
+  if (status === 'unauthenticated' && !me?.email) {
     return (
       <Card className="animate-fade-in-up">
         <CardContent>
