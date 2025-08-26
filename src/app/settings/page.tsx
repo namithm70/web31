@@ -222,10 +222,15 @@ function ProfileSettings() {
               {firstName}{lastName ? ` ${lastName}` : ''}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {joinDate ? `Member since ${new Date(joinDate).toLocaleDateString()}` : 'Member since today'}
+              {(me?.signedInAt || joinDate)
+                ? `Signed in on ${new Date(me?.signedInAt || joinDate).toLocaleDateString()}`
+                : 'Signed in today'}
             </Typography>
             {session?.user?.email && (
               <Typography variant="body2" color="text.secondary">{session.user.email}</Typography>
+            )}
+            {!session?.user?.email && displayEmail && (
+              <Typography variant="body2" color="text.secondary">{displayEmail}</Typography>
             )}
           </Box>
         </Box>
