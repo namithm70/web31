@@ -104,7 +104,6 @@ export default function NetworkSelector() {
 
   const availableChains = useMemo(() => {
     const configured = Object.keys(CHAIN_META).map(Number);
-    const fallback = activeChainId ? [activeChainId] : [];
     return Array.from(new Set([...configured, ...fallback].filter(Boolean))) as number[];
   }, [activeChainId]);
 
