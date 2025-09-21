@@ -18,7 +18,7 @@ import {
   CheckCircleOutline,
   Pending,
 } from '@mui/icons-material';
-import { useChainId, useChains, useSwitchChain } from 'wagmi';
+import { useChainId, useSwitchChain } from 'wagmi';
 import { useAppStore } from '@/store';
 
 const CHAIN_META: Record<number, { label: string; nativeSymbol: string; gradient: string; secondary?: string }> = {
@@ -68,7 +68,6 @@ const getChainMeta = (chainId?: number): ChainButtonState | null => {
 
 export default function NetworkSelector() {
   const chainId = useChainId();
-  const chains = useChains();
   const { switchChain, isPending: isSwitching } = useSwitchChain();
   const { selectedChain, setSelectedChain } = useAppStore((state) => ({
     selectedChain: state.selectedChain,
@@ -79,13 +78,12 @@ export default function NetworkSelector() {
 
   const activeChainId = chainId ?? selectedChain;
   const activeMeta = useMemo(() => getChainMeta(activeChainId), [activeChainId]);
-  const currentChain = useMemo(() => chains.find(c => c.id === chainId), [chains, chainId]);
 
   const statusLabel = useMemo(() => {
     if (!chainId) return 'Wallet not connected';
     if (isSwitching) return `Switching network...`;
-    return `Connected to ${currentChain?.name ?? 'Unknown Network'}`;
-  }, [chainId, isSwitching, currentChain]);
+    return `Connected to ${activeMeta?.label ?? 'Unknown Network'}`;
+  }, [chainId, isSwitching, activeMeta]);
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -106,10 +104,9 @@ export default function NetworkSelector() {
 
   const availableChains = useMemo(() => {
     const configured = Object.keys(CHAIN_META).map(Number);
-    const walletChains = chains?.map((c) => c.id) ?? [];
     const fallback = activeChainId ? [activeChainId] : [];
-    return Array.from(new Set([...configured, ...walletChains, ...fallback].filter(Boolean))) as number[];
-  }, [chains, activeChainId]);
+    return Array.from(new Set([...configured, ...fallback].filter(Boolean))) as number[];
+  }, [activeChainId]);
 
   return (
     <>
