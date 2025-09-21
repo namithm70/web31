@@ -430,7 +430,7 @@ export default function SwapPage() {
       setFromToken(tokens[0]);
       setToToken(tokens[1] || tokens[0]);
     }
-  }, [tokens, fromToken, toToken]);
+  }, [tokens]);
   const [amount, setAmount] = useState('');
 
   return (
