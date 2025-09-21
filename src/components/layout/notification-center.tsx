@@ -30,6 +30,18 @@ interface NotificationItem {
   read?: boolean;
 }
 
+const markCollectionRead = (items: NotificationItem[]) => {
+  let changed = false;
+  const next = items.map((item) => {
+    if (!item.read) {
+      changed = true;
+      return { ...item, read: true };
+    }
+    return item;
+  });
+  return changed ? next : items;
+};
+
 const MOCK_NOTIFICATIONS: NotificationItem[] = [
   {
     id: 'gas-alert',
@@ -74,6 +86,7 @@ export default function NotificationCenter() {
 
   const toggleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+    setNotifications((prev) => markCollectionRead(prev));
   };
 
   const closeMenu = () => setAnchorEl(null);
@@ -89,7 +102,7 @@ export default function NotificationCenter() {
   };
 
   const markAllRead = () => {
-    setNotifications((prev) => prev.map((item) => ({ ...item, read: true })));
+    setNotifications((prev) => markCollectionRead(prev));
   };
 
   return (
@@ -148,7 +161,7 @@ export default function NotificationCenter() {
                     bgcolor: 'action.focus',
                   },
                 }}
-                onMouseEnter={() => {
+                onClick={() => {
                   if (!item.read) {
                     markAsRead(item.id);
                   }
