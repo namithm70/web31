@@ -47,13 +47,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { address, isConnected } = useAccount();
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
+  
+  // Stabilize connectors to prevent infinite re-renders
+  const stableConnectors = useMemo(() => connectors, [connectors?.length, connectors?.map(c => c.id).join(',')]);
   const { themeMode, toggleTheme } = useTheme();
-  const { slippage, gasMode, setSlippage, setGasMode } = useAppStore((state) => ({
-    slippage: state.slippage,
-    gasMode: state.gasMode,
-    setSlippage: state.setSlippage,
-    setGasMode: state.setGasMode,
-  }));
+  const slippage = useAppStore((state) => state.slippage);
+  const gasMode = useAppStore((state) => state.gasMode);
+  const setSlippage = useAppStore((state) => state.setSlippage);
+  const setGasMode = useAppStore((state) => state.setGasMode);
 
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(null);
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -74,10 +75,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const handleWalletConnect = useCallback(() => {
     if (isConnected) {
       disconnect();
-    } else if (connectors?.length) {
-      connect({ connector: connectors[0] });
+    } else if (stableConnectors?.length) {
+      connect({ connector: stableConnectors[0] });
     }
-  }, [isConnected, disconnect, connect, connectors?.length]);
+  }, [isConnected, disconnect, connect, stableConnectors]);
 
   const handleSignOut = useCallback(async () => {
     try {

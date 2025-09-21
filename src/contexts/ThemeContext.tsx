@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkTheme } from '@/lib/theme';
 
@@ -39,15 +39,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }
   }, [themeMode, mounted]);
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     setThemeMode(prev => prev === 'light' ? 'dark' : 'light');
-  };
+  }, []);
 
-  const value = {
+  const value = useMemo(() => ({
     themeMode,
     toggleTheme,
     setThemeMode,
-  };
+  }), [themeMode, toggleTheme, setThemeMode]);
 
   const currentTheme = themeMode === 'dark' ? darkTheme : lightTheme;
 

@@ -69,10 +69,8 @@ const getChainMeta = (chainId?: number): ChainButtonState | null => {
 export default function NetworkSelector() {
   const chainId = useChainId();
   const { switchChain, isPending: isSwitching } = useSwitchChain();
-  const { selectedChain, setSelectedChain } = useAppStore((state) => ({
-    selectedChain: state.selectedChain,
-    setSelectedChain: state.setSelectedChain,
-  }));
+  const selectedChain = useAppStore((state) => state.selectedChain);
+  const setSelectedChain = useAppStore((state) => state.setSelectedChain);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
