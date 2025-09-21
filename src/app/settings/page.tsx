@@ -50,7 +50,6 @@ const userData = {
     },
     security: {
       twoFactorAuth: true,
-      biometricAuth: false,
       sessionTimeout: 30,
       autoLock: true,
     },
@@ -293,29 +292,6 @@ function SecuritySettings() {
                 <Switch
                   checked={userData.preferences.security.twoFactorAuth}
                   onChange={() => console.log('Toggle 2FA')}
-                />
-              }
-              label=""
-            />
-          </Box>
-
-          <Divider />
-
-          {/* Biometric Authentication */}
-          <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Box>
-              <Typography variant="body1" fontWeight={600}>
-                Biometric Authentication
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Use fingerprint or face recognition
-              </Typography>
-            </Box>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={userData.preferences.security.biometricAuth}
-                  onChange={() => console.log('Toggle biometric')}
                 />
               }
               label=""
