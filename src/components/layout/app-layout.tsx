@@ -15,6 +15,7 @@ import {
   Slide,
   Fade,
   Tooltip,
+  useMediaQuery,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -47,9 +48,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { address, isConnected } = useAccount();
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
-  
-  // Stabilize connectors to prevent infinite re-renders
-  const stableConnectors = useMemo(() => connectors, [connectors?.length, connectors?.map(c => c.id).join(',')]);
   const { themeMode, toggleTheme } = useTheme();
   const slippage = useAppStore((state) => state.slippage);
   const gasMode = useAppStore((state) => state.gasMode);
@@ -58,6 +56,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(null);
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)', { defaultMatches: false, noSsr: true });
+  const motionTimeout = useCallback((value: number) => (prefersReducedMotion ? 0 : value), [prefersReducedMotion]);
 
   const handleMobileMenuOpen = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setMobileMenuAnchor(event.currentTarget);
@@ -75,10 +75,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const handleWalletConnect = useCallback(() => {
     if (isConnected) {
       disconnect();
-    } else if (stableConnectors?.length) {
-      connect({ connector: stableConnectors[0] });
+    } else if (connectors?.length) {
+      connect({ connector: connectors[0] });
     }
-  }, [isConnected, disconnect, connect, stableConnectors]);
+  }, [isConnected, disconnect, connect, connectors]);
 
   const handleSignOut = useCallback(async () => {
     try {
@@ -159,8 +159,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const renderNavButton = (item: typeof navigationItems[number], index: number) => {
     const isActive = pathname.startsWith(item.href);
     return (
-      <Slide key={item.name} direction="down" in timeout={600 + index * 100}>
-        <Fade in timeout={800 + index * 100}>
+      <Slide
+        key={item.name}
+        direction="down"
+        in
+        timeout={motionTimeout(420 + index * 60)}
+        appear={!prefersReducedMotion}
+      >
+        <Fade in timeout={motionTimeout(520 + index * 60)} appear={!prefersReducedMotion}>
           <Button
             onClick={() => handleNavigation(item.href)}
             sx={{
@@ -220,7 +226,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <Container maxWidth="xl">
           <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 0 }, gap: 2, flexWrap: 'wrap' }}>
             {/* Logo */}
-            <Fade in timeout={800}>
+            <Fade in timeout={motionTimeout(520)} appear={!prefersReducedMotion}>
               <Typography
                 variant="h6"
                 component="div"
@@ -287,7 +293,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
               {/* Wallet Connection */}
               {showWalletChip && (
-                <Fade in timeout={1000}>
+                <Fade in timeout={motionTimeout(620)} appear={!prefersReducedMotion}>
                   <Chip
                     icon={<AccountBalanceWallet />}
                     label={isConnected ? `${address?.slice(0, 6)}...${address?.slice(-4)}` : 'Connect Wallet'}
@@ -378,7 +384,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         {showNav && navigationItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
           return (
-            <Fade key={item.name} in timeout={300}>
+            <Fade key={item.name} in timeout={motionTimeout(240)} appear={!prefersReducedMotion}>
               <MenuItem
                 onClick={() => handleNavigation(item.href)}
                 sx={{
@@ -412,7 +418,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           minHeight: 'calc(100vh - 64px)',
         }}
       >
-        <Fade in timeout={600}>
+        <Fade in timeout={motionTimeout(460)} appear={!prefersReducedMotion}>
           <Container maxWidth="xl" sx={{ py: 4 }}>
             {children}
           </Container>
