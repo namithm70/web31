@@ -18,7 +18,7 @@ import {
   CheckCircleOutline,
   Pending,
 } from '@mui/icons-material';
-import { useNetwork, useSwitchNetwork } from 'wagmi';
+import { useChainId, useChains, useSwitchChain } from 'wagmi';
 import { useAppStore } from '@/store';
 
 const CHAIN_META: Record<number, { label: string; nativeSymbol: string; gradient: string; secondary?: string }> = {
@@ -67,8 +67,9 @@ const getChainMeta = (chainId?: number): ChainButtonState | null => {
 };
 
 export default function NetworkSelector() {
-  const { chain, chains } = useNetwork();
-  const { switchNetworkAsync, isLoading: isSwitching, pendingChainId } = useSwitchNetwork();
+  const chainId = useChainId();
+  const chains = useChains();
+  const { switchChain, isPending: isSwitching } = useSwitchChain();
   const { selectedChain, setSelectedChain } = useAppStore((state) => ({
     selectedChain: state.selectedChain,
     setSelectedChain: state.setSelectedChain,
@@ -76,14 +77,15 @@ export default function NetworkSelector() {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const activeChainId = chain?.id ?? selectedChain;
+  const activeChainId = chainId ?? selectedChain;
   const activeMeta = useMemo(() => getChainMeta(activeChainId), [activeChainId]);
+  const currentChain = useMemo(() => chains.find(c => c.id === chainId), [chains, chainId]);
 
   const statusLabel = useMemo(() => {
-    if (!chain) return 'Wallet not connected';
-    if (isSwitching && pendingChainId) return `Switching to ${getChainMeta(pendingChainId)?.label ?? pendingChainId}`;
-    return `Connected to ${chain.name}`;
-  }, [chain, isSwitching, pendingChainId]);
+    if (!chainId) return 'Wallet not connected';
+    if (isSwitching) return `Switching network...`;
+    return `Connected to ${currentChain?.name ?? 'Unknown Network'}`;
+  }, [chainId, isSwitching, currentChain]);
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -91,12 +93,10 @@ export default function NetworkSelector() {
 
   const closeMenu = () => setAnchorEl(null);
 
-  const handleSelect = async (chainId: number) => {
-    setSelectedChain(chainId);
+  const handleSelect = async (targetChainId: number) => {
+    setSelectedChain(targetChainId);
     try {
-      if (switchNetworkAsync) {
-        await switchNetworkAsync(chainId);
-      }
+      await switchChain({ chainId: targetChainId });
     } catch (error) {
       console.error('Failed to switch network', error);
     } finally {

@@ -33,7 +33,7 @@ interface CommandPaletteProps {
 }
 
 const Transition = forwardRef(function Transition(
-  props: TransitionProps & { children: React.ReactElement<any, any> },
+  props: TransitionProps & { children: React.ReactElement<unknown, string | React.JSXElementConstructor<unknown>> },
   ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -131,7 +131,7 @@ export default function CommandPalette({ open, onClose, items }: CommandPaletteP
                 No matches found
               </Typography>
               <Typography variant="body2">
-                Try searching for dashboard, swap, or type "settings" to jump to preferences.
+                Try searching for dashboard, swap, or type &quot;settings&quot; to jump to preferences.
               </Typography>
             </Box>
           ) : null}

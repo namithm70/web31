@@ -1,9 +1,12 @@
 import mongoose from 'mongoose';
 
-const uri = process.env.MONGODB_URI as string;
-if (!uri) {
-  throw new Error('MONGODB_URI is not set');
-}
+const getUri = () => {
+  const uri = process.env.MONGODB_URI as string;
+  if (!uri) {
+    throw new Error('MONGODB_URI is not set');
+  }
+  return uri;
+};
 
 declare global {
   var _mongoose: {
@@ -20,6 +23,7 @@ if (!global._mongoose) global._mongoose = cached;
 export async function connectToDatabase() {
   if (cached.conn) return cached.conn;
   if (!cached.promise) {
+    const uri = getUri();
     cached.promise = mongoose.connect(uri, { bufferCommands: false }).then((m) => m);
   }
   cached.conn = await cached.promise;
