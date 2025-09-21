@@ -3,20 +3,13 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CssBaseline } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { WagmiProvider, createConfig, http } from 'wagmi';
-import { mainnet, sepolia } from 'wagmi/chains';
+import { WagmiProvider } from 'wagmi';
+import { config } from '@/lib/wagmi';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 
-const config = createConfig({
-  chains: [mainnet, sepolia],
-  transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http(),
-  },
-});
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
