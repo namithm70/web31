@@ -77,7 +77,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     } else if (connectors?.length) {
       connect({ connector: connectors[0] });
     }
-  }, [isConnected, disconnect, connect, connectors]);
+  }, [isConnected, disconnect, connect, connectors?.length]);
 
   const handleSignOut = useCallback(async () => {
     try {
