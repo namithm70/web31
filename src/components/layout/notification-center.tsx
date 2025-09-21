@@ -79,7 +79,13 @@ export default function NotificationCenter() {
   const closeMenu = () => setAnchorEl(null);
 
   const markAsRead = (id: string) => {
-    setNotifications((prev) => prev.map((item) => (item.id === id ? { ...item, read: true } : item)));
+    setNotifications((prev) => {
+      const target = prev.find((item) => item.id === id);
+      if (!target || target.read) {
+        return prev;
+      }
+      return prev.map((item) => (item.id === id ? { ...item, read: true } : item));
+    });
   };
 
   const markAllRead = () => {
@@ -142,7 +148,11 @@ export default function NotificationCenter() {
                     bgcolor: 'action.focus',
                   },
                 }}
-                onMouseEnter={() => markAsRead(item.id)}
+                onMouseEnter={() => {
+                  if (!item.read) {
+                    markAsRead(item.id);
+                  }
+                }}
               >
                 <ListItemAvatar>
                   <Avatar
