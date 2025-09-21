@@ -103,7 +103,7 @@ function ProfileSettings() {
     if (!editing && (session?.user || me?.email)) {
       setFormData({ name: fullName, email: displayEmail });
     }
-  }, [fullName, displayEmail, editing, session?.user, me?.email]);
+  }, [fullName, displayEmail, editing, session?.user?.email, me?.email]);
 
   useEffect(() => {
     // Store a simple client-side join date per user (keyed by email) the first time they visit settings
